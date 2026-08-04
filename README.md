@@ -36,9 +36,16 @@ See [`architecture/architecture-diagram.md`](./architecture/architecture-diagram
 
 ```
 Legacy Mainframe Core → Integration Gateway (eBPF-traced) → Generation-Typed Dependency
-Graph Builder → Cascade-Probability GNN → Predictive Alerts + Boundary-Scoped RL Circuit
-Breaker → Cloud Microservices Layer (Reservations / Crew / Baggage)
+Graph Builder → Cascade-Probability GNN → Temporal Point Process (timing) → Conformal
+Calibration (confidence bound) → LLM Explanation Agent (incident brief) + Boundary-Scoped
+Multi-Agent RL Circuit Breaker → Cloud Microservices Layer (Reservations / Crew / Baggage)
 ```
+
+**Advanced ML components** (see [`ai-models/README.md`](./ai-models/README.md) for full detail):
+- **Temporal Point Process (Neural Hawkes / RMTPP)** — estimates *when* a cascade will cross the boundary, not just whether, giving the project's lead-time metric a rigorous probabilistic foundation.
+- **Multi-Agent RL circuit breaker (MAPPO)** — coordinates throttling across boundary nodes instead of optimizing one node locally; closes a gap the original DRL rate-limiting paper's authors named as future work themselves.
+- **Conformal Prediction calibration** — wraps every cascade alert in a statistically-guaranteed confidence bound / false-alarm-rate guarantee, without retraining the underlying model.
+- **LLM Explanation Agent** — turns raw graph/timing/RL output into a human-readable incident brief, in the style of current agentic AIOps systems (e.g. AWS DevOps Agent, Azure SRE Agent).
 
 ## Technology Stack
 
@@ -46,7 +53,10 @@ Breaker → Cloud Microservices Layer (Reservations / Crew / Baggage)
 |---|---|
 | Kernel-level tracing | eBPF (socket/TCP tracepoints) |
 | Dependency graph & cascade model | Python, PyTorch / PyTorch Geometric (GAT + GRU temporal GNN) |
-| Circuit breaker | DQN + A3C hybrid (PyTorch / Stable-Baselines3) |
+| Cascade timing | Neural Hawkes Process / RMTPP (temporal point process) |
+| Alert calibration | Split conformal prediction (sliding-window temporal calibration) |
+| Explanation layer | LLM agent (function-calling / retrieval-augmented) |
+| Circuit breaker | Multi-Agent RL — MAPPO (PyTorch / Stable-Baselines3 or PettingZoo) |
 | Cloud observability | Amazon CloudWatch, AWS X-Ray |
 | ML training/serving | Amazon SageMaker |
 | Automation / alerting | AWS Lambda, Amazon SNS |

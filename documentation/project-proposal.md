@@ -96,6 +96,17 @@ Following Paper 5's methodology directly:
 
 ---
 
-## 6. What to Say in the Report
+## 6. Advanced ML Components (added to the AI/ML workstream)
+
+Four additional techniques extend the core GNN + RL pipeline, each grounded in current (2025–2026) research and each adding a distinct, defensible capability rather than complexity for its own sake. Full detail and suggested build order: `ai-models/README.md`.
+
+1. **Temporal Point Process module (Neural Hawkes Process / RMTPP)** — the GNN predicts whether a cascade will cross the boundary; a temporal point process models the self-exciting event dynamics to estimate *when*, giving the project's headline "lead time before manifestation" metric a rigorous probabilistic foundation instead of an informal threshold.
+2. **Multi-Agent RL circuit breaker (MAPPO)** — replaces the single-agent DQN+A3C breaker with one coordinated agent per boundary/gateway node. This directly closes a gap the original DRL rate-limiting paper's authors (Lyu et al.) named themselves as unsolved future work: single-service optimization can locally throttle one node while starving a dependent one, which is exactly the cascading-failure scenario this project targets.
+3. **LLM Explanation Agent** — a retrieval-augmented LLM agent that turns the pipeline's raw output (cascade probability, estimated lead time, affected boundary node, mitigation action taken) into a human-readable incident brief, in the style of current agentic AIOps systems (AWS DevOps Agent, Azure SRE Agent both reached general availability in March 2026; academic multi-agent RCA systems like RCAFlow follow the same pattern). This is the most demo-friendly addition.
+4. **Conformal Prediction calibration layer** — a model-agnostic, distribution-free wrapper around the GNN/Hawkes output that gives every cascade alert a statistically-valid confidence bound and an explicit false-alarm-rate guarantee, without retraining the underlying model. Cheapest of the four to add, and the one that makes every other component's output trustworthy enough to act on automatically.
+
+**Novelty rationale:** the multi-agent RL circuit breaker is the strongest of the four specifically because it closes a gap the original authors identified in their own paper — this is a very citable claim for the report. The temporal point process module is the second-strongest, since it upgrades the project's core predictive claim from a probability score to a calibrated timing estimate.
+
+## 7. What to Say in the Report
 
 Frame it exactly as your airline lit review's gap section already does — this project is not a new technique in isolation, it's the first system to combine validated techniques from digital twins, eBPF observability, adaptive rate limiting, and heterogeneous cascade-prediction GNNs, purpose-built for the one structural constraint none of them individually addresses: **you cannot instrument a legacy mainframe the way you instrument a cloud service, and existing cascade-prediction work quietly assumes you can.**

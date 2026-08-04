@@ -14,11 +14,18 @@ This is a proposed split across the three project workstreams. Adjust names/task
 ## Varad — AI/ML Engineering
 **Owns:** `ai-models/`
 
+Core pipeline:
 - Implement the attention-weighted temporal GNN (GAT + GRU) for cascade-probability prediction, extended with generation-gap edge features (protocol type, legacy latency variance, batch-vs-real-time semantics).
 - Implement the boundary sync-drift metric (state-synchronization error score) as an additional graph feature.
-- Implement the DQN + A3C hybrid reinforcement-learning circuit breaker, scoped to boundary/gateway nodes only.
 - Train and evaluate models against the testbed fault-injection data; run baseline comparisons (flat graph vs. domain-typed graph vs. generation-typed graph).
 - Report evaluation metrics: cascade-prediction lead time, precision/recall/F1, z-score normalized resilience, boundary-specific SLA compliance.
+
+Advanced components (see `ai-models/README.md` for full detail and suggested build order):
+- **Conformal prediction calibration layer** — wrap the GNN's cascade-probability output in a statistically-guaranteed confidence bound (build this first — cheapest of the four).
+- **Temporal point process module (Neural Hawkes / RMTPP)** — estimate cascade *timing*, not just probability, to make the lead-time metric rigorous.
+- **LLM explanation agent** — turn pipeline output into a human-readable incident brief; good demo milestone.
+- **Multi-agent RL circuit breaker (MAPPO)** — replaces the single-agent DQN+A3C breaker with per-boundary-node agents coordinated via a shared critic, so a local throttle doesn't starve a dependent service. Highest effort of the four — budget the most time here, and highlight in the report that this directly closes a gap the original DRL rate-limiting paper's authors named as future work themselves.
+- Report additional evaluation metrics: conformal interval empirical coverage rate, Hawkes-process time-to-cascade prediction error, and global-vs-local optimization comparison (multi-agent RL vs. single-agent baseline).
 
 ## Bhiwanshu — Cloud Integration, Backend/Frontend & Documentation
 **Owns:** `frontend/`, `architecture/`, `documentation/`, `presentation/`, cloud wiring inside `backend/`
