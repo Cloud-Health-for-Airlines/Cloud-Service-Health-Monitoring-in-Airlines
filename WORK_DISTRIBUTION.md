@@ -20,12 +20,11 @@ Core pipeline:
 - Train and evaluate models against the testbed fault-injection data; run baseline comparisons (flat graph vs. domain-typed graph vs. generation-typed graph).
 - Report evaluation metrics: cascade-prediction lead time, precision/recall/F1, z-score normalized resilience, boundary-specific SLA compliance.
 
-Advanced components (see `ai-models/README.md` for full detail and suggested build order):
-- **Conformal prediction calibration layer** — wrap the GNN's cascade-probability output in a statistically-guaranteed confidence bound (build this first — cheapest of the four).
-- **Temporal point process module (Neural Hawkes / RMTPP)** — estimate cascade *timing*, not just probability, to make the lead-time metric rigorous.
-- **LLM explanation agent** — turn pipeline output into a human-readable incident brief; good demo milestone.
-- **Multi-agent RL circuit breaker (MAPPO)** — replaces the single-agent DQN+A3C breaker with per-boundary-node agents coordinated via a shared critic, so a local throttle doesn't starve a dependent service. Highest effort of the four — budget the most time here, and highlight in the report that this directly closes a gap the original DRL rate-limiting paper's authors named as future work themselves.
-- Report additional evaluation metrics: conformal interval empirical coverage rate, Hawkes-process time-to-cascade prediction error, and global-vs-local optimization comparison (multi-agent RL vs. single-agent baseline).
+Advanced components (full tiered roadmap — Tier 1 recommended upgrades, Tier 2 stretch goals, and suggested build order — in `ai-models/README.md`, since the list has grown too long to duplicate here):
+- **GNN side:** heterogeneous/relational message passing (RGCN/HGT — closes the literature survey's named gap directly), continuous-time dynamic graph modeling (TGN/DySAT), multi-task prediction head (probability + lead time + failure location + severity), calibrated uncertainty & attention explainability, domain-informed topological features.
+- **RL side:** PPO/SAC in place of DQN+A3C, multi-objective/constrained reward design, and — as stretch goals — hierarchical multi-agent coordination and safe/constrained RL.
+- **Cross-cutting stretch goals:** conformal prediction calibration, LLM explanation agent, self-supervised pre-training, causal/counterfactual modeling, Mixture-of-Experts GNN, continual learning.
+- Report lead-time-aware evaluation metrics (mean minutes of warning, precision@lead-time-threshold) in addition to standard precision/recall/F1.
 
 ## Bhiwanshu — Cloud Integration, Backend/Frontend & Documentation
 **Owns:** `frontend/`, `architecture/`, `documentation/`, `presentation/`, cloud wiring inside `backend/`

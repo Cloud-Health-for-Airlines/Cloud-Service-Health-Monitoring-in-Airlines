@@ -2,68 +2,179 @@
 
 Machine learning components for BACCP. Owner: Varad.
 
-## Core Pipeline
+This folder is organized in tiers so scope stays manageable: **Tier 0** is the working baseline that must exist first, **Tier 1** is the recommended upgrade set (strong novelty-to-effort ratio, realistic in project time), **Tier 2** is stretch work (do these only if Tier 0+1 are solid and there's time left). Pick a stopping point deliberately rather than by running out of time — a well-evaluated Tier 1 system beats a half-working Tier 2 one.
 
-- `graph-builder/` — automated trace-based dependency graph construction, with generation-based node typing (`legacy` / `boundary-gateway` / `cloud-native`)
-- `cascade-predictor/` — attention-weighted temporal GNN (GAT + GRU) for cross-generation cascade-probability prediction, with generation-gap edge features and boundary sync-drift scoring
-- `circuit-breaker/` — reinforcement-learning mitigation agent(s), scoped to boundary/gateway nodes
-- `evaluation/` — training/evaluation scripts, baseline comparison harness (flat graph vs. domain-typed vs. generation-typed)
+---
 
-## Advanced Components (added on top of the core pipeline)
+## Tier 0 — Baseline (must exist first)
 
-### 1. Temporal Point Process module — cascade *timing*, not just probability
+- `graph-builder/` — automated trace-based dependency graph construction, nodes typed `legacy` / `boundary-gateway` / `cloud-native`
+- `cascade-predictor/` — attention-weighted temporal GNN (GAT + GRU) with generation-gap edge features and boundary sync-drift score
+- `circuit-breaker/` — single-agent RL mitigation, scoped to boundary/gateway nodes
+- `evaluation/` — training/evaluation scripts, baseline comparison harness
+
+---
+
+## Tier 1 — Recommended Upgrades
+
+### 1A. Heterogeneous / generation-aware message passing (replaces plain GAT)
+**Folder:** `cascade-predictor/hetero-gnn/`
+
+The baseline GAT treats "generation gap" as an edge *feature* — the message-passing weights themselves are the same regardless of whether an edge is legacy→gateway, gateway→cloud, or cloud→cloud. This is the single highest-value upgrade, because it's the one that most directly answers the literature survey's own gap statement (no reviewed work types message-passing weights by technology generation, only by domain).
+
+- **Approach:** move to a Relational GNN (RGCN) or Heterogeneous Graph Transformer (HGT), where `legacy↔gateway`, `gateway↔cloud`, and `cloud↔cloud` are distinct **relation types**, each with its own weight matrix / attention parameters — not just a scalar feature bolted onto a shared weight matrix.
+- **Reference starting points:** RGCN (Schlichtkrull et al., 2018) for the simpler relation-specific-weight formulation; HGT (Hu et al., 2020) if you want full heterogeneous attention (type-aware Q/K/V projections) and have the time budget.
+- **Complexity:** Medium-High. This should be the first Tier 1 item you build — everything else in the predictor stack sits on top of it.
+
+### 1B. Continuous-time dynamic graph modeling (replaces discrete-snapshot GRU)
+**Folder:** `cascade-predictor/temporal/`
+
+The baseline GRU processes discrete time snapshots, which is a poor fit for this specific problem: legacy batch jobs run on a completely different clock (hourly/nightly batch windows) than cloud request traffic (sub-second). Discretizing both onto the same snapshot interval either wastes resolution on the cloud side or misses the batch-job side entirely.
+
+- **Approach:** a Temporal Graph Network (TGN) or DySAT-style continuous-time model that updates each node's memory embedding on every individual eBPF event, rather than on a fixed clock tick.
+- **Integration with timing prediction:** feed the TGN's continuously-updated node memory into a Hawkes-process-style intensity function (see Tier 2 below, or fold it in here directly if time allows) — this is a genuinely good combination, since TGN gives you *when the graph state changed* and Hawkes gives you *the probability of the next event given that state*, which together produce a much better-grounded lead-time estimate than either alone.
+- **Reference starting points:** TGN (Rossi et al., 2020); DySAT (Sankar et al., 2020) as a lighter-weight alternative if TGN's memory-module complexity is too much for the time budget.
+- **Complexity:** High.
+
+### 1C. Multi-task / multi-horizon prediction head
+**Folder:** `cascade-predictor/multi-task-head/`
+
+Right now the model outputs one number (cascade probability). A multi-task head gets four outputs from the same shared representation for roughly the cost of one:
+1. Probability of cascade crossing the boundary (binary classification)
+2. Estimated lead time (regression)
+3. Most likely next-failure node (node classification)
+4. Cascade size / severity (regression)
+
+- **Approach:** shared GNN encoder (from 1A+1B) → four task-specific heads → a multi-objective loss (start with fixed weighted sum; upgrade to uncertainty-weighted loss balancing — Kendall et al., 2018 — if the fixed weights are hard to tune).
+- **Why it's worth it:** this is a cheap add once the encoder exists, and "predicts not just whether but where and how bad" is a strong, concrete claim for the report.
+- **Complexity:** Medium (assuming 1A/1B already exist — most of the work is upstream of this).
+
+### 1D. Explainability & calibrated uncertainty
+**Folder:** `cascade-predictor/explainability/`
+
+Two distinct things, both worth having:
+- **Attention visualization:** since 1A uses attention-based message passing, the attention weights are directly interpretable — surface them (e.g., "62% of the model's attention on this prediction is on the MQ-queue-depth edge") for the dashboard/report.
+- **Calibrated uncertainty:** the raw softmax/sigmoid output of a GNN is not a trustworthy probability. Use temperature scaling (cheap, one extra parameter, fit post-hoc) as the baseline, or evidential deep learning (predicts a distribution over probabilities, not just a point estimate) if you want a stronger, more citable method.
+
+This is the mechanism that gets you to the "I am 87% confident a cascade will start at Gateway-X in ~4.2 minutes" statement — genuinely useful for an airline operator, not just a metrics-table number.
+
+- **Reference starting points:** Guo et al., "On Calibration of Modern Neural Networks" (2017) for temperature scaling; Sensoy et al., "Evidential Deep Learning to Quantify Classification Uncertainty" (2018) for the evidential approach.
+- **Relationship to the conformal prediction layer (below):** these are complementary, not redundant. Temperature scaling / evidential DL calibrates the model's *own* confidence output; conformal prediction (Tier 2 — carried over from the previous round of additions) wraps *any* model's output in a distribution-free statistical guarantee regardless of whether the model is well-calibrated. Doing both is reasonable: evidential/temperature-scaled uncertainty for the human-readable confidence statement, conformal prediction as the backstop that guarantees the false-alarm rate the circuit breaker actually acts on.
+- **Complexity:** Low (temperature scaling) to Medium (evidential deep learning).
+
+### 1E. Physics-/domain-informed features
+**Folder:** `graph-builder/features/`
+
+Extends the existing boundary sync-drift score rather than replacing it: inject it as a node/edge embedding bias term (not just a scalar feature concatenated in), and add topological features — betweenness centrality of gateway nodes, generation-aware centrality (a centrality measure that weights paths crossing a generation boundary more heavily than same-generation paths).
+
+- **Complexity:** Low-Medium. Cheap to add once the graph builder exists; mostly feature engineering, not new model architecture.
+
+---
+
+## Tier 1 — RL Side
+
+### 1F. PPO / SAC instead of DQN+A3C
+**Folder:** `circuit-breaker/ppo-sac/`
+
+Replace the baseline hybrid DQN+A3C with Proximal Policy Optimization or Soft Actor-Critic. Both are generally more stable to train and more sample-efficient than DQN-style methods, particularly once the action space includes continuous or high-dimensional choices (throttle rate as a continuous value, graceful-degradation level as an ordinal choice, isolate/don't-isolate as discrete) rather than the original paper's small discrete threshold-adjustment space.
+
+- **Approach:** PPO if you want the safer, easier-to-tune default; SAC if the action space ends up meaningfully continuous and sample efficiency matters more than implementation simplicity.
+- **Complexity:** Medium. This is a good first RL upgrade to make before attempting hierarchical/multi-agent — get single-agent PPO/SAC solid first.
+
+### 1G. Multi-objective / constrained reward design
+**Folder:** `circuit-breaker/reward-design/`
+
+Instead of one scalar reward, explicitly track a vector: maximize remaining throughput, minimize cascade probability, minimize latency impact on critical paths (reservations should be weighted higher than baggage), and penalize unnecessary isolation of the gateway (false-positive throttling has a real operational cost).
+
+- **Approach:** start with scalarization (weighted sum, tuned by hand or via grid search over weight vectors); a Pareto-front / multi-objective RL method (e.g. envelope Q-learning or a multi-objective PPO variant) is a stretch goal if scalarization proves too coarse.
+- **Complexity:** Low-Medium for scalarization; High for true Pareto-front methods.
+
+---
+
+## Tier 2 — Stretch Goals (attempt only if Tier 0+1 are solid)
+
+### 2A. Hierarchical / multi-agent RL
+**Folder:** `circuit-breaker/hierarchical-multi-agent/`
+
+This is the natural merge of two ideas: a high-level agent decides *whether* to act on a given boundary node at all, and a low-level agent decides the exact throttle/isolation parameters if it does — while multiple gateway nodes are themselves coordinated as separate agents (MAPPO, as in the previous round's addition), sharing a critic so a locally-optimal action at one gateway doesn't starve a dependent cloud service. This directly closes the gap the original DRL rate-limiting paper's authors named as their own future work, and is the single strongest "we closed a named gap" claim available across the whole project.
+
+- **Reference starting points:** MAPPO (Yu et al., 2021) for the coordination layer; standard hierarchical RL (options framework / feudal RL) for the high/low-level split.
+- **Complexity:** Very High. Budget the most remaining time here if you attempt it, and treat a working two-agent (not fully general N-agent) version as an acceptable scoped result.
+
+### 2B. Safe RL / constrained MDP
+**Folder:** `circuit-breaker/safe-rl/`
+
+Airline-critical constraint: never fully isolate the reservation path, never exceed a maximum false-positive isolation rate. Formalize as a Constrained MDP and enforce with Lagrangian relaxation (a penalty term whose weight is itself learned to keep the constraint satisfied) rather than a hard-coded reward penalty, which tends to be brittle.
+
+- **Reference starting points:** Altman, "Constrained Markov Decision Processes" (1999) for the formalism; Lagrangian-PPO variants (e.g. CPO, Achiam et al., 2017) for a modern implementation.
+- **Complexity:** High, but a strong safety-oriented claim if you attempt even a simplified version (hard constraint check as a fallback, with the Lagrangian method as the "soft" primary mechanism).
+
+### 2C. Offline-to-online RL
+**Folder:** `circuit-breaker/offline-pretrain/`
+
+Pre-train the circuit breaker on logged chaos-engineering trajectories (DeathStarBench-style + injected faults) before letting it learn online — more realistic than training entirely from scratch against a live/simulated environment, and mirrors how a real deployment would actually be bootstrapped.
+
+- **Complexity:** Medium, mostly an engineering/pipeline change rather than a new algorithm (any of the above RL methods can be pretrained this way).
+
+### 2D. Temporal point process cascade timing (carried over, still valid as a standalone addition if 1B's TGN+Hawkes combination isn't attempted)
 **Folder:** `cascade-predictor/timing/`
 
-The GNN predicts *whether* a cascade will cross the legacy/cloud boundary; it is not built to predict *when*. A Hawkes-process-style temporal point process models cascades as self-exciting event sequences: each observed anomaly event raises the conditional intensity (instantaneous probability rate) of a subsequent event, which is exactly the mechanism behind cascading failures.
+If 1B (TGN) doesn't get built in time, a standalone Hawkes-process/RMTPP module can still sit on top of the Tier 0 GRU output to get a timing estimate — a lighter-weight fallback for the same capability.
 
-- **Approach:** feed the GNN's per-node risk embeddings into a neural Hawkes process (start with a Transformer Hawkes Process or the simpler RMTPP formulation before attempting a full Mamba Hawkes model) to estimate the conditional intensity function λ(t) of a boundary-crossing failure event.
-- **Output:** an estimated time-to-cascade distribution, not just a binary/probability flag — this is what makes "lead time before manifestation" a rigorous, reportable metric instead of an informal one.
-- **Reference starting points:** Recurrent Marked Temporal Point Processes (Du et al., KDD 2016) for the baseline formulation; Transformer Hawkes Process (Zuo et al., ICML 2020) for the modern attention-based version.
-- **Complexity:** Medium. RMTPP is implementable in a few weeks; only attempt the Transformer/Mamba variants if time allows.
-
-### 2. Multi-Agent RL circuit breaker — coordinated, not per-node
-**Folder:** `circuit-breaker/multi-agent/`
-
-This directly replaces the single-agent DQN+A3C circuit breaker with a multi-agent system, closing a gap the DRL rate-limiting paper's own authors named as unsolved future work (single-service rate limiting can locally optimize one node while starving a dependent one — precisely the cascading-failure scenario this project targets).
-
-- **Approach:** one RL agent per boundary/gateway node, coordinated via a shared critic or communication channel (MAPPO — Multi-Agent Proximal Policy Optimization — is the most stable and well-documented starting point; MADDPG is a valid alternative). Each agent still acts locally (throttle/isolate its own gateway) but the reward function incorporates downstream cloud-service impact, not just local throughput/latency.
-- **Output:** globally-aware throttling decisions instead of locally-optimal ones.
-- **Reference starting points:** MAPPO (Yu et al., 2021) as the base algorithm; frame the state/action/reward design directly off the original single-agent formulation (8-dim state vector, 7-action threshold-adjustment space) from the DRL rate-limiting paper in the literature review, extended with a coordination term.
-- **Complexity:** High. This is the most implementation-heavy addition — budget the most time for it. It is also the strongest "we closed a named gap" claim in the report.
-
-### 3. LLM explanation agent — natural-language incident briefs
-**Folder:** `explainability/llm-agent/`
-
-Turns the GNN + Hawkes + RL pipeline's raw output (cascade probability, estimated lead time, which boundary node, which mitigation action taken) into a human-readable diagnostic brief, in the style of current agentic AIOps systems (e.g. AWS DevOps Agent, Azure SRE Agent, and academic multi-agent RCA systems like RCAFlow).
-
-- **Approach:** a retrieval-augmented LLM agent that is given (a) the current dependency graph state, (b) the cascade-probability + timing output, (c) recent eBPF trace snippets from the boundary gateway, and produces a structured incident summary — e.g. "boundary-gateway node X shows 87% cascade probability toward reservations-service in ~40s, driven by MQ queue depth exceeding threshold."
-- **Output:** demo-ready, human-facing text — this is the component most worth showing live in a presentation.
-- **Reference starting points:** any current-generation LLM API (function-calling / tool-use pattern) with a prompt template constrained to the graph + telemetry context; keep the first version rule-based/templated if time is short, then add LLM generation on top.
-- **Complexity:** Low-Medium — this is the fastest to get a visible demo out of, since it's mostly prompt/integration engineering rather than model training.
-
-### 4. Conformal Prediction calibration layer — statistically-guaranteed alerting
+### 2E. Conformal prediction calibration (carried over)
 **Folder:** `cascade-predictor/calibration/`
 
-Wraps the GNN + Hawkes pipeline's output probability in a model-agnostic, distribution-free calibration layer so that every "trigger the circuit breaker" decision comes with a stated, statistically-valid confidence bound, rather than an uncalibrated raw score. This is a post-processing step — it does not require changing the GNN architecture.
+Distribution-free statistical guarantee wrapper described in 1D above — cheap, do this one even if other Tier 2 items are dropped.
 
-- **Approach:** split conformal prediction with a sliding calibration window (temporal quantile adjustment) to handle distribution shift in the fault-injection data over time; report false-alarm-rate guarantees rather than a bare accuracy number.
-- **Output:** a calibrated confidence interval / prediction set alongside every cascade alert, and an explicit, reportable false-alarm-rate bound.
-- **Reference starting points:** Angelopoulos & Bates, "A Gentle Introduction to Conformal Prediction" (2021) for the foundational method; adaptive/temporal conformal variants (Gibbs & Candès, 2021/2024) for the time-series-appropriate version.
-- **Complexity:** Low. This is the cheapest of the four to add — it's a wrapper around whatever the GNN/Hawkes model already outputs, and is a good first addition to get working before tackling multi-agent RL.
+### 2F. LLM explanation agent (carried over)
+**Folder:** `explainability/llm-agent/`
+
+Turns pipeline output into a human-readable incident brief. Good demo milestone, mostly integration work rather than modeling.
+
+### 2G. Self-supervised / contrastive pre-training
+**Folder:** `cascade-predictor/pretraining/`
+
+Pre-train the graph encoder via contrastive learning on normal (non-fault) traffic, so it learns a good representation of "healthy" legacy↔cloud interaction before fine-tuning on the relatively rare cascade-event labels — cascade events will always be a small fraction of your fault-injection data, so this helps sample efficiency.
+
+- **Reference starting points:** graph contrastive learning frameworks such as GraphCL or DGI (Deep Graph Infomax).
+
+### 2H. Causal / interventional modeling
+**Folder:** `cascade-predictor/causal/`
+
+Treat each chaos-engineering fault injection as an *intervention* rather than passive observation, and train the model to answer counterfactual questions ("what if we had throttled 30 seconds earlier?"). This is the most research-heavy stretch item — genuinely publishable-adjacent if it works, but also the easiest to run out of time on. Only attempt after everything else is stable.
+
+### 2I. Mixture-of-Experts GNN
+**Folder:** `cascade-predictor/moe/`
+
+Route predictions through specialized sub-networks: one expert for legacy-origin cascades (failure starts in the mainframe, propagates outward), another for cloud-origin cascades that propagate backward through the gateway into the legacy side. A gating network decides which expert(s) to weight per prediction.
+
+### 2J. Continual learning / concept drift
+**Folder:** `cascade-predictor/continual/`
+
+Handle new microservices or new mainframe batch jobs appearing after initial training without full retraining (e.g. elastic weight consolidation or a simple replay-buffer fine-tuning scheme). Lowest priority of the Tier 2 items — most relevant if you frame the system as production-deployable rather than a fixed evaluation.
+
+---
+
+## Evaluation — Lead-Time-Aware Metrics
+
+Beyond standard precision/recall/F1, report metrics that are largely absent from the reviewed literature and are a genuine contribution on their own regardless of which modeling tiers get built:
+
+- **Mean minutes of warning before cascade manifestation** — the headline number.
+- **Precision@lead-time-threshold** — e.g. precision of predictions that fired at least 2 minutes / 5 minutes before manifestation, separately, since a technically-correct prediction that fires 3 seconds before an outage is operationally useless.
+- Empirical coverage rate of calibrated/conformal intervals vs. target confidence level (if 1D/2E implemented).
+- Global vs. local optimization comparison: coordinated multi-agent circuit breaker vs. single-agent baseline, specifically on scenarios where a locally-optimal throttle would starve a dependent service (if 2A implemented).
+
+---
 
 ## Suggested Build Order
 
-1. Core GNN pipeline (baseline, must exist first)
-2. Conformal calibration layer (cheap, wraps the baseline)
-3. Temporal point process timing module (medium effort, extends the baseline's output)
-4. LLM explanation agent (medium effort, mostly integration — good demo milestone)
-5. Multi-agent RL circuit breaker (highest effort, save the most time for this)
-
-## Evaluation additions
-
-In addition to the metrics already listed in the project proposal (lead time, precision/recall/F1, z-score resilience, SLA compliance), report:
-- Empirical coverage rate of the conformal prediction intervals vs. the target confidence level
-- Time-to-cascade prediction error (Hawkes process) vs. ground-truth fault-injection timestamps
-- Global vs. local optimization comparison: multi-agent RL circuit breaker vs. the original single-agent baseline, specifically on scenarios where a locally-optimal throttle would starve a dependent service
+1. Tier 0 baseline (must exist first)
+2. 1A — Heterogeneous/relational GNN (highest-value single upgrade, closes the named literature gap directly)
+3. 1F — PPO/SAC swap-in (stabilizes the RL side before adding coordination complexity)
+4. 1C — Multi-task head + 1E — domain-informed features (cheap once 1A exists)
+5. 1D — Explainability & calibrated uncertainty (cheap, high report value)
+6. 1B — TGN/continuous-time modeling (high effort — only after 1A/1C/1D are solid)
+7. 1G — Multi-objective reward design
+8. Tier 2, in whatever order fits remaining time — 2A (hierarchical multi-agent RL) and 2E (conformal prediction) are the best time-to-value picks if you can only do two.
 
 Status: not yet implemented — placeholder for Phase-II development.

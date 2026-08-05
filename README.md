@@ -41,22 +41,24 @@ Calibration (confidence bound) → LLM Explanation Agent (incident brief) + Boun
 Multi-Agent RL Circuit Breaker → Cloud Microservices Layer (Reservations / Crew / Baggage)
 ```
 
-**Advanced ML components** (see [`ai-models/README.md`](./ai-models/README.md) for full detail):
-- **Temporal Point Process (Neural Hawkes / RMTPP)** — estimates *when* a cascade will cross the boundary, not just whether, giving the project's lead-time metric a rigorous probabilistic foundation.
-- **Multi-Agent RL circuit breaker (MAPPO)** — coordinates throttling across boundary nodes instead of optimizing one node locally; closes a gap the original DRL rate-limiting paper's authors named as future work themselves.
-- **Conformal Prediction calibration** — wraps every cascade alert in a statistically-guaranteed confidence bound / false-alarm-rate guarantee, without retraining the underlying model.
-- **LLM Explanation Agent** — turns raw graph/timing/RL output into a human-readable incident brief, in the style of current agentic AIOps systems (e.g. AWS DevOps Agent, Azure SRE Agent).
+**Advanced ML components** (tiered roadmap — recommended upgrades and stretch goals — in [`ai-models/README.md`](./ai-models/README.md)):
+- **Heterogeneous/relational GNN (RGCN/HGT)** — types message-passing weights by technology generation (legacy/gateway/cloud), not just as an edge feature; directly answers the literature survey's named gap.
+- **Continuous-time dynamic graph modeling (TGN/DySAT)** — updates node memory per eBPF event rather than on fixed snapshots, better suited to irregular legacy batch-job timing vs. cloud request traffic.
+- **Multi-task prediction head** — cascade probability, lead time, most-likely failure location, and severity from one shared model.
+- **Calibrated uncertainty & explainability** — attention visualization plus temperature scaling / evidential deep learning, so alerts come with a stated confidence.
+- **PPO/SAC circuit breaker with multi-objective reward** — replaces the DQN+A3C baseline; stretch goals include hierarchical multi-agent coordination across gateways and safe/constrained RL.
+- Additional stretch goals: conformal prediction calibration, an LLM explanation agent, self-supervised pre-training, causal/counterfactual modeling, and lead-time-aware evaluation metrics.
 
 ## Technology Stack
 
 | Layer | Technology |
 |---|---|
 | Kernel-level tracing | eBPF (socket/TCP tracepoints) |
-| Dependency graph & cascade model | Python, PyTorch / PyTorch Geometric (GAT + GRU temporal GNN) |
-| Cascade timing | Neural Hawkes Process / RMTPP (temporal point process) |
-| Alert calibration | Split conformal prediction (sliding-window temporal calibration) |
-| Explanation layer | LLM agent (function-calling / retrieval-augmented) |
-| Circuit breaker | Multi-Agent RL — MAPPO (PyTorch / Stable-Baselines3 or PettingZoo) |
+| Dependency graph & cascade model | Python, PyTorch / PyTorch Geometric — RGCN/HGT (heterogeneous message passing) + TGN/DySAT (continuous-time) |
+| Cascade timing | Neural Hawkes Process / RMTPP, or folded into the TGN continuous-time model |
+| Alert calibration | Temperature scaling / evidential deep learning + split conformal prediction |
+| Explanation layer | LLM agent (function-calling / retrieval-augmented) — stretch goal |
+| Circuit breaker | PPO / SAC (baseline upgrade); hierarchical multi-agent (MAPPO) as stretch goal |
 | Cloud observability | Amazon CloudWatch, AWS X-Ray |
 | ML training/serving | Amazon SageMaker |
 | Automation / alerting | AWS Lambda, Amazon SNS |
