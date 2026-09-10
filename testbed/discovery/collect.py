@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import selectors
 import signal
 import subprocess
 import sys
+import tempfile
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
@@ -35,7 +37,7 @@ def parse_event(line: str) -> tuple[int, int, str, int] | None:
     return int(fields[1]), int(fields[2]), fields[3], int(fields[4])
 
 
-def normalized_observation(event, resolver, start_wall, start_mono_ns):
+def normalized_observation(event, resolver, start_wall, start_mono_ns, refresh=None):
     nsecs, pid, destination_ip, destination_port = event
     if destination_port in INFRASTRUCTURE_PORTS:
         return None, INFRASTRUCTURE_PORTS[destination_port]
@@ -44,7 +46,7 @@ def normalized_observation(event, resolver, start_wall, start_mono_ns):
     # A container can restart after the collection snapshot. Refresh only on a
     # miss so normal high-volume collection does not shell out per event.
     if source is None or destination is None:
-        resolver.refresh()
+        (refresh or resolver.refresh)()
         source = resolver.source_for_pid(pid)
         destination = resolver.destination_for_ip(destination_ip)
     if source is None or destination is None:
@@ -83,11 +85,16 @@ def main() -> int:
 
     resolver = DockerIdentityResolver()
     start_wall, start_mono_ns = datetime.now(UTC), monotonic_ns()
-    process = subprocess.Popen(["bpftrace", "-q", "-B", "line", str(args.probe)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     observations, filtered, seen = [], Counter(), 0
-    selector = selectors.DefaultSelector()
-    assert process.stdout is not None
-    selector.register(process.stdout, selectors.EVENT_READ)
+    last_refresh = monotonic()
+
+    def refresh_identities() -> None:
+        nonlocal last_refresh
+        # Host-wide events often cannot map to containers. Do not shell out to
+        # Docker for every such event while processing the shutdown backlog.
+        if monotonic() - last_refresh >= 1:
+            resolver.refresh()
+            last_refresh = monotonic()
 
     def collect_line(line: str) -> None:
         nonlocal seen
@@ -95,27 +102,48 @@ def main() -> int:
         if event is None:
             return
         seen += 1
-        observation, reason = normalized_observation(event, resolver, start_wall, start_mono_ns)
+        observation, reason = normalized_observation(event, resolver, start_wall, start_mono_ns, refresh_identities)
         if observation:
             observations.append(observation)
         else:
             filtered[reason or "unknown"] += 1
 
-    try:
-        deadline = monotonic() + args.duration
-        while monotonic() < deadline:
-            for key, _ in selector.select(timeout=max(0, deadline - monotonic())):
-                collect_line(key.fileobj.readline())
-    finally:
-        process.send_signal(signal.SIGINT)
+    # Capture first, normalize after stopping the probe. Identity lookups must
+    # not delay the capture deadline or generate more events for this capture.
+    chunks = []
+    with tempfile.TemporaryFile() as errors:
+        process = subprocess.Popen(
+            ["bpftrace", "-q", "-B", "line", str(args.probe)],
+            stdout=subprocess.PIPE, stderr=errors)
+        selector = selectors.DefaultSelector()
+        assert process.stdout is not None
+        selector.register(process.stdout, selectors.EVENT_READ)
         try:
-            process.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            process.kill()
-        for line in process.stdout:
-            collect_line(line)
-        stderr = process.stderr.read() if process.stderr else ""
-        selector.close()
+            deadline = monotonic() + args.duration
+            while monotonic() < deadline:
+                ready = selector.select(timeout=max(0, deadline - monotonic()))
+                if ready:
+                    # A readable pipe need not contain a newline. Avoid blocking
+                    # readline(), and avoid mixing text buffering with selectors.
+                    chunk = os.read(process.stdout.fileno(), 65536)
+                    if not chunk:
+                        break
+                    chunks.append(chunk)
+        finally:
+            selector.close()
+            if process.poll() is None:
+                process.send_signal(signal.SIGINT)
+            try:
+                # Drain while waiting, so a full stdout pipe cannot deadlock exit.
+                tail, _ = process.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                tail, _ = process.communicate()  # Reap the killed child as well.
+            chunks.append(tail)
+        errors.seek(0)
+        stderr = errors.read().decode(errors="replace")
+    for line in b"".join(chunks).decode(errors="replace").splitlines():
+        collect_line(line)
     if process.returncode not in (0, -signal.SIGINT):
         sys.stderr.write(stderr)
         return process.returncode or 1
