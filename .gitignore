@@ -23,3 +23,5 @@ Thumbs.db
 *.ckpt
 *.log
 results/*.csv
+testbed/results/*.json
+testbed/results/*.jsonl

@@ -1,0 +1,8 @@
+/* Emits IPv4 TCP connection attempts in a parser-friendly format. */
+kprobe:tcp_v4_connect
+{
+  $destination = (struct sockaddr_in *)arg1;
+  printf("EVENT|%llu|%d|%s|%d\n", nsecs, pid,
+         ntop($destination->sin_addr.s_addr),
+         bswap($destination->sin_port));
+}
