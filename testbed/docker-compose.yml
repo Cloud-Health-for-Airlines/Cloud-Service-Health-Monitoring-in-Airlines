@@ -1,4 +1,21 @@
 services:
+  postgres:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_DB: baccp
+      POSTGRES_USER: baccp
+      POSTGRES_PASSWORD: baccp-local
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U baccp -d baccp"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks:
+      - data-tier
+
   reservations:
     build: ./services/cloud-service
     environment:
@@ -54,3 +71,9 @@ networks:
   cloud-tier:
   legacy-tier:
     internal: true
+
+  data-tier:
+    internal: true
+
+volumes:
+  postgres-data:
