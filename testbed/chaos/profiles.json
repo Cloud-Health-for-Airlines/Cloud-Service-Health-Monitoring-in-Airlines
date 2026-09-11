@@ -1,0 +1,5 @@
+{
+  "network-delay": {"low": 100, "medium": 500, "high": 1500},
+  "connection-drop": {"low": 10, "medium": 2, "high": 1},
+  "batch-job-stall": {"low": 1, "medium": 5, "high": 15}
+}
