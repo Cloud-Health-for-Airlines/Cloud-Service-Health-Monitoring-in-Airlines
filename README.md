@@ -82,15 +82,33 @@ No public real-world airline operational dataset exists, so the project uses a *
 .
 ├── README.md
 ├── WORK_DISTRIBUTION.md
-├── architecture/          → architecture & framework diagram
-├── frontend/               → monitoring dashboard (React)
-├── backend/                → gateway simulators, API services
-├── ai-models/              → cascade-prediction GNN, RL circuit breaker
-├── database/                → schema, synthetic data generators
-├── documentation/          → literature survey, research gaps, project proposal
-├── testbed/                → chaos-engineering fault injection setup
-├── results/                → evaluation outputs, metrics, plots
-└── presentation/            → slide deck
+├── architecture/          → canonical architecture, Mermaid diagrams, contracts
+├── frontend/              → monitoring dashboard (React 18, Vite 5 & standalone runner)
+├── backend/               → REST API server & dual-mode AWS cloud wiring (22 tests)
+├── ai-models/             → cascade-prediction GNN, RL circuit breaker
+├── database/              → schema.sql, synthetic data generators
+├── documentation/         → project proposal, research gaps, system design, evaluation plan
+├── testbed/               → chaos-engineering fault injection & eBPF discovery setup
+├── results/               → evaluation outputs, metrics, plots
+└── presentation/          → 18-slide Marp deck & interactive HTML presentation runner
 ```
 
-Each folder contains its own `README.md` describing its purpose and current status.
+## Quickstart & Verification
+
+```bash
+# 1. Run Backend Unit Tests (CloudWatch, X-Ray, SageMaker, Lambda, SNS)
+python3 -m unittest backend/tests/test_backend.py
+
+# 2. Launch the BACCP REST API & Cloud Integration Server (Port 8000)
+python3 backend/api/app.py
+
+# 3. View the Monitoring Dashboard (Zero Dependencies / Instant Browser Preview)
+open frontend/dist_preview/index.html
+
+# 4. View the Interactive Presentation Deck
+open presentation/presentation.html
+
+# 5. Read the Master Academic Technical Report
+open documentation/phase1-comprehensive-report.md
+```
+

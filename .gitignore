@@ -9,6 +9,10 @@ node_modules/
 dist/
 build/
 .env
+.env.*
+!.env.example
+*.pem
+*.key
 
 # OS
 .DS_Store
@@ -25,3 +29,4 @@ Thumbs.db
 results/*.csv
 testbed/results/*.json
 testbed/results/*.jsonl
+frontend/dist_preview/
