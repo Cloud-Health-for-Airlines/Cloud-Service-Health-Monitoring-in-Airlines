@@ -1,13 +1,26 @@
-# Architecture & Framework Diagrams
+# BACCP Canonical System Architecture
 
-This document contains canonical Mermaid diagrams representing the actual BACCP system. All diagrams strictly distinguish between:
-1. **[Existing]** — Fully implemented and operational in the codebase.
-2. **[Prototype]** — Working prototype / simulated provider with analytical calibration.
-3. **[Planned]** — Future research component planned for Phase-II in `ai-models/`.
+**Boundary-Aware Cross-Generation Cascade Predictor (BACCP) for Airline IT Systems**
+
+This canonical document specifies the complete system architecture of BACCP. It accurately reflects the **actual repository implementation**, explicitly distinguishing between **Existing Implementation**, **Prototype Implementation**, and **Planned / Future Components**.
 
 ---
 
-## 1. Architecture Overview (Operational Hierarchy)
+## 1. Implementation Status Legend
+
+To maintain strict scientific and engineering integrity, all components across the diagrams and specifications are classified into one of three implementation states:
+
+| Status Badge | Meaning | Implementation Location |
+| :--- | :--- | :--- |
+| `[Existing]` | **Fully implemented and operational** in the codebase. Tested with automated unit/integration suites. | `backend/api/app.py`, `backend/cloud/config.py`, `backend/cloud/cloudwatch.py`, `backend/cloud/xray.py`, `backend/cloud/sns.py`, `backend/cloud/orchestrator.py`, `frontend/src/*`, `testbed/services/*`, `testbed/discovery/*`, `database/schema.sql`. |
+| `[Prototype]` | **Functioning working prototype / simulated provider**. Uses calibrated analytical inference or simulated action guardrails pending full model training. | `backend/cloud/sagemaker.py` (Analytical engine with $1-\alpha=0.90$ conformal bounds), `backend/cloud/lambda_handler.py` (simulated local circuit breaker). |
+| `[Planned]` | **Architecture-specified design scheduled for Phase-II**. Concrete interface contracts exist, but model weights or production integration are future deliverables. | `ai-models/` (Trained PyTorch RGCN weights, continuous Hawkes point process training, online RL PPO policy training). |
+
+---
+
+## 2. BACCP End-to-End System Architecture
+
+This diagram directly models the operational hierarchy of an airline IT ecosystem: passenger and operations traffic flowing into cloud-native microservices, converging through the boundary integration gateway to the legacy mainframe, traced non-intrusively via eBPF, transformed into generation-typed dependency graphs, analyzed for cascade risk and lead time, and actuating automated circuit breaking and SNS alerts.
 
 ```mermaid
 flowchart TD
@@ -81,6 +94,7 @@ flowchart TD
     LCB -->|Actuate Throttle / Isolate| ACT
     ACT -->|429 Fast-Fail Rate Limiting| GW
 
+    %% Styling
     class OPS,RES,CREW,BAG,GW,MF,EBPF,DEP,SNS,ACT existing;
     class GNN,PROB,LEAD,LCB prototype;
     class LIVE_GNN,LIVE_RL planned;
@@ -88,112 +102,9 @@ flowchart TD
 
 ---
 
-## 2. Component Diagram
+## 3. AWS Observability & Cloud Integration Layer
 
-```mermaid
-graph TD
-    classDef existing fill:#1a365d,stroke:#3182ce,stroke-width:2px,color:#ffffff;
-    classDef prototype fill:#744210,stroke:#d69e2e,stroke-width:2px,stroke-dasharray: 4 4,color:#ffffff;
-    classDef planned fill:#2d3748,stroke:#a0aec0,stroke-width:1px,stroke-dasharray: 2 2,color:#cbd5e0;
-
-    subgraph ROOT["Repository Component Structure"]
-        subgraph F_FRONTEND["frontend/ [Existing]"]
-            FE_DASH["React 18 Dashboard: App.jsx, components/*"]
-            FE_ADAPT["Resilient API Adapter: api/adapter.js"]
-            FE_CFG["Dynamic Config: config.js (VITE_API_URL)"]
-        end
-
-        subgraph F_BACKEND["backend/ [Existing]"]
-            BE_API["REST Server: api/app.py"]
-            BE_CFG["Config Manager: cloud/config.py (.env.example)"]
-            BE_CW["CloudWatch: cloud/cloudwatch.py (8 metrics)"]
-            BE_XR["X-Ray: cloud/xray.py (6 operations context)"]
-            BE_SM["SageMaker Adapter: cloud/sagemaker.py [Prototype Engine]"]
-            BE_LM["Lambda Mitigator: cloud/lambda_handler.py [Prototype Client]"]
-            BE_SNS["SNS Publisher: cloud/sns.py (8 alert attributes)"]
-            BE_ORCH["Cloud Orchestrator: cloud/orchestrator.py"]
-            BE_TEST["Test Suite: tests/test_backend.py (22 tests)"]
-        end
-
-        subgraph F_TESTBED["testbed/ [Existing]"]
-            TB_DC["Docker Compose: docker-compose.yml"]
-            TB_SVC["Services: services/cloud-service, boundary-gateway, legacy-core"]
-            TB_BPF["eBPF Discovery: discovery/bpftrace/tcp_v4_connect.bt, collect.py"]
-            TB_CHAOS["Chaos Engine: chaos/chaos.py, network.sh, profiles.json"]
-        end
-
-        subgraph F_DB["database/ [Existing]"]
-            DB_SCH["PostgreSQL Schema: schema.sql (nodes, edges, telemetry)"]
-            DB_SEED["Seeder: seed.py"]
-        end
-
-        subgraph F_AIMODELS["ai-models/ [Planned]"]
-            AI_GNN["Trained PyTorch RGCN: cascade-predictor/ [Planned]"]
-            AI_RL["Trained PPO Agent: circuit-breaker/ [Planned]"]
-            AI_DOC["Interface Specification: README.md [Existing]"]
-        end
-    end
-
-    class FE_DASH,FE_ADAPT,FE_CFG,BE_API,BE_CFG,BE_CW,BE_XR,BE_SNS,BE_ORCH,BE_TEST,TB_DC,TB_SVC,TB_BPF,TB_CHAOS,DB_SCH,DB_SEED,AI_DOC existing;
-    class BE_SM,BE_LM prototype;
-    class AI_GNN,AI_RL planned;
-```
-
----
-
-## 3. Data-Flow Diagram
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant App as Airline Microservices (cloud-native)
-    participant Gateway as Boundary Gateway (boundary-gateway)
-    participant Kernel as eBPF Probe (tcp_v4_connect.bt)
-    participant Legacy as Legacy Mainframe (legacy)
-    participant Backend as BACCP Cloud Orchestrator
-    participant CloudWatch as Amazon CloudWatch
-    participant XRay as AWS X-Ray
-    participant SageMaker as SageMaker Adapter
-    participant Lambda as Lambda Mitigation Client
-    participant SNS as Amazon SNS Alert
-    participant Dashboard as React SRE Dashboard
-
-    App->>Gateway: HTTP REST Requests (Booking / Baggage / Crew)
-    Gateway->>Legacy: Forward over TCP:9090
-    Kernel-->>Gateway: kprobe:tcp_v4_connect captures TCP socket latency & connect time
-    Legacy-->>Gateway: TCP Response
-    Gateway-->>App: HTTP 200 OK
-
-    Note over Gateway,Kernel: Fault Injected via Chaos Engine (network-delay / connection-drop)
-    Gateway->>Legacy: TCP Connection Stalled / Dropped
-    Kernel-->>Backend: High TCP connect RTT & socket timeouts captured
-    
-    Backend->>Backend: Compute State Synchronization Drift: ε(t) = ||Φ(t) - Ψ(t)|| / ||Φ(t)|| * 100
-    Backend->>CloudWatch: Publish boundary_health_score, service_latency, error_rate
-    Backend->>XRay: Record cross-generation trace segment: cloud -> gateway -> legacy
-    
-    Backend->>SageMaker: predict_cascade(graph, telemetry_features, boundary_features, ε(t))
-    Note over SageMaker: Multi-Task Head computes P(cascade), Lead Time τ, 90% Conformal Bounds
-    SageMaker-->>Backend: Prediction: P=88%, τ=35s, Root Cause=boundary-gateway, Severity=CRITICAL
-    
-    Backend->>CloudWatch: Publish cascade_probability=0.88, prediction_lead_time=35.0
-    
-    Note over Backend: Risk Evaluation: P >= 0.75 or ε(t) >= 70% -> Action = OPEN
-    Backend->>Lambda: invoke_mitigation(event_type=cascade_mitigation, action=OPEN, gateway=boundary-gateway)
-    Lambda->>Gateway: Apply Rate-Limiting / Isolation (Simulated guardrail active)
-    Lambda-->>Backend: Status: 200 OK (State: OPEN)
-    
-    Backend->>SNS: publish_cascade_alert(severity=CRITICAL, probability=0.88, lead_time=35s)
-    SNS-->>Backend: Alert Dispatched (Buffered in local mode)
-    
-    Dashboard->>Backend: GET /api/alerts, GET /api/health/boundary (Polling every 6s)
-    Backend-->>Dashboard: Live Alert with Conformal Bounds & Recommended Mitigation
-    Dashboard->>Dashboard: Render Critical Warning Badge & Countdown Timer (35s remaining)
-```
-
----
-
-## 4. Cloud Integration Diagram
+BACCP incorporates a modular provider/adapter architecture connecting the testbed application to AWS CloudWatch, AWS X-Ray, Amazon SageMaker, AWS Lambda, and Amazon SNS. It operates in dual-mode: **local mode** (zero AWS credentials required, in-memory buffers) and **live AWS mode** (via `boto3`).
 
 ```mermaid
 flowchart TD
@@ -271,7 +182,116 @@ flowchart TD
 
 ---
 
-## 5. Prediction & Alerting Flow
+## 4. Component Architecture & Source Tree Mapping
+
+Every architectural component corresponds to concrete files in the repository:
+
+```mermaid
+graph TD
+    classDef existing fill:#1a365d,stroke:#3182ce,stroke-width:2px,color:#ffffff;
+    classDef prototype fill:#744210,stroke:#d69e2e,stroke-width:2px,stroke-dasharray: 4 4,color:#ffffff;
+    classDef planned fill:#2d3748,stroke:#a0aec0,stroke-width:1px,stroke-dasharray: 2 2,color:#cbd5e0;
+
+    subgraph ROOT["Repository Root"]
+        subgraph F_FRONTEND["frontend/ [Existing]"]
+            FE_DASH["React 18 Dashboard: App.jsx, components/*"]
+            FE_ADAPT["Resilient API Adapter: api/adapter.js"]
+            FE_CFG["Dynamic Config: config.js (VITE_API_URL)"]
+        end
+
+        subgraph F_BACKEND["backend/ [Existing]"]
+            BE_API["REST Server: api/app.py"]
+            BE_CFG["Config Manager: cloud/config.py (.env.example)"]
+            BE_CW["CloudWatch: cloud/cloudwatch.py (8 metrics)"]
+            BE_XR["X-Ray: cloud/xray.py (6 operations context)"]
+            BE_SM["SageMaker Adapter: cloud/sagemaker.py [Prototype Engine]"]
+            BE_LM["Lambda Mitigator: cloud/lambda_handler.py [Prototype Client]"]
+            BE_SNS["SNS Publisher: cloud/sns.py (8 alert attributes)"]
+            BE_ORCH["Cloud Orchestrator: cloud/orchestrator.py"]
+            BE_TEST["Test Suite: tests/test_backend.py (22 tests)"]
+        end
+
+        subgraph F_TESTBED["testbed/ [Existing]"]
+            TB_DC["Docker Compose: docker-compose.yml"]
+            TB_SVC["Services: services/cloud-service, boundary-gateway, legacy-core"]
+            TB_BPF["eBPF Discovery: discovery/bpftrace/tcp_v4_connect.bt, collect.py"]
+            TB_CHAOS["Chaos Engine: chaos/chaos.py, network.sh, profiles.json"]
+        end
+
+        subgraph F_DB["database/ [Existing]"]
+            DB_SCH["PostgreSQL Schema: schema.sql (nodes, edges, telemetry)"]
+            DB_SEED["Seeder: seed.py"]
+        end
+
+        subgraph F_AIMODELS["ai-models/ [Planned]"]
+            AI_GNN["Trained PyTorch RGCN: cascade-predictor/ [Planned]"]
+            AI_RL["Trained PPO Agent: circuit-breaker/ [Planned]"]
+            AI_DOC["Interface Specification: README.md [Existing]"]
+        end
+    end
+
+    class FE_DASH,FE_ADAPT,FE_CFG,BE_API,BE_CFG,BE_CW,BE_XR,BE_SNS,BE_ORCH,BE_TEST,TB_DC,TB_SVC,TB_BPF,TB_CHAOS,DB_SCH,DB_SEED,AI_DOC existing;
+    class BE_SM,BE_LM prototype;
+    class AI_GNN,AI_RL planned;
+```
+
+---
+
+## 5. End-to-End Data Flow Architecture
+
+The data pipeline processes information from Linux kernel probes through graph derivation, analytical inference, and presentation:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant App as Airline Microservices (cloud-native)
+    participant Gateway as Boundary Gateway (boundary-gateway)
+    participant Kernel as eBPF Probe (tcp_v4_connect.bt)
+    participant Legacy as Legacy Mainframe (legacy)
+    participant Backend as BACCP Cloud Orchestrator
+    participant CloudWatch as Amazon CloudWatch
+    participant XRay as AWS X-Ray
+    participant SageMaker as SageMaker Adapter
+    participant Lambda as Lambda Mitigation Client
+    participant SNS as Amazon SNS Alert
+    participant Dashboard as React SRE Dashboard
+
+    App->>Gateway: HTTP REST Requests (Booking / Baggage / Crew)
+    Gateway->>Legacy: Forward over TCP:9090
+    Kernel-->>Gateway: kprobe:tcp_v4_connect captures TCP socket latency & connect time
+    Legacy-->>Gateway: TCP Response
+    Gateway-->>App: HTTP 200 OK
+
+    Note over Gateway,Kernel: Fault Injected via Chaos Engine (network-delay / connection-drop)
+    Gateway->>Legacy: TCP Connection Stalled / Dropped
+    Kernel-->>Backend: High TCP connect RTT & socket timeouts captured
+    
+    Backend->>Backend: Compute State Synchronization Drift: ε(t) = ||Φ(t) - Ψ(t)|| / ||Φ(t)|| * 100
+    Backend->>CloudWatch: Publish boundary_health_score, service_latency, error_rate
+    Backend->>XRay: Record cross-generation trace segment: cloud -> gateway -> legacy
+    
+    Backend->>SageMaker: predict_cascade(graph, telemetry_features, boundary_features, ε(t))
+    Note over SageMaker: Multi-Task Head computes P(cascade), Lead Time τ, 90% Conformal Bounds
+    SageMaker-->>Backend: Prediction: P=88%, τ=35s, Root Cause=boundary-gateway, Severity=CRITICAL
+    
+    Backend->>CloudWatch: Publish cascade_probability=0.88, prediction_lead_time=35.0
+    
+    Note over Backend: Risk Evaluation: P >= 0.75 or ε(t) >= 70% -> Action = OPEN
+    Backend->>Lambda: invoke_mitigation(event_type=cascade_mitigation, action=OPEN, gateway=boundary-gateway)
+    Lambda->>Gateway: Apply Rate-Limiting / Isolation (Simulated guardrail active)
+    Lambda-->>Backend: Status: 200 OK (State: OPEN)
+    
+    Backend->>SNS: publish_cascade_alert(severity=CRITICAL, probability=0.88, lead_time=35s)
+    SNS-->>Backend: Alert Dispatched (Buffered in local mode)
+    
+    Dashboard->>Backend: GET /api/alerts, GET /api/health/boundary (Polling every 6s)
+    Backend-->>Dashboard: Live Alert with Conformal Bounds & Recommended Mitigation
+    Dashboard->>Dashboard: Render Critical Warning Badge & Countdown Timer (35s remaining)
+```
+
+---
+
+## 6. Prediction & Mitigation Decision Flow
 
 ```mermaid
 flowchart TD
@@ -311,7 +331,7 @@ flowchart TD
 
 ---
 
-## 6. Multi-Tier Deployment View
+## 7. Multi-Tier Deployment View
 
 ```mermaid
 flowchart TB
@@ -373,3 +393,30 @@ flowchart TB
     class DockerHost,HostProcesses host;
     class AWS_CW,AWS_XR,AWS_SM,AWS_LM,AWS_SNS aws;
 ```
+
+---
+
+## 8. Architectural Consistency & Traceability Matrix
+
+Every architectural node has been compared against the actual repository source code and REST APIs:
+
+| Architectural Component | Generation Type | Status | Repository Source File | Verification / Test |
+| :--- | :--- | :--- | :--- | :--- |
+| **Reservations Service** | `cloud-native` | `[Existing]` | [`testbed/services/cloud-service/app.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/services/cloud-service/app.py) | Verified via `testbed/docker-compose.yml` (Port 8081) |
+| **Crew Service** | `cloud-native` | `[Existing]` | [`testbed/services/cloud-service/app.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/services/cloud-service/app.py) | Verified via `testbed/docker-compose.yml` (Port 8082) |
+| **Baggage Service** | `cloud-native` | `[Existing]` | [`testbed/services/cloud-service/app.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/services/cloud-service/app.py) | Verified via `testbed/docker-compose.yml` (Port 8083) |
+| **Boundary Gateway** | `boundary-gateway` | `[Existing]` | [`testbed/services/boundary-gateway/app.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/services/boundary-gateway/app.py) | Verified via `testbed/docker-compose.yml` (Port 8084) |
+| **Legacy Mainframe** | `legacy` | `[Existing]` | [`testbed/services/legacy-core/app.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/services/legacy-core/app.py) | Verified via internal network (Port 9090) |
+| **eBPF Kernel Probing** | N/A | `[Existing]` | [`testbed/discovery/bpftrace/tcp_v4_connect.bt`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/discovery/bpftrace/tcp_v4_connect.bt) | Captures socket connect latency without bytecode injection |
+| **Dependency Graph** | N/A | `[Existing]` | [`testbed/discovery/aggregate.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/testbed/discovery/aggregate.py) | Generates `dependency-graph.json` with 5 typed nodes |
+| **Backend REST API** | N/A | `[Existing]` | [`backend/api/app.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/api/app.py) | Exposes `/api/health`, `/api/graph`, `/api/alerts`, etc. |
+| **Cloud Configuration** | N/A | `[Existing]` | [`backend/cloud/config.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/config.py) | Manages `CLOUD_MODE` ('local' / 'aws') and `.env.example` |
+| **Amazon CloudWatch** | N/A | `[Existing]` | [`backend/cloud/cloudwatch.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/cloudwatch.py) | Publishes all 8 metrics to `BACCP/AirlineCloudHealth` |
+| **AWS X-Ray Tracing** | N/A | `[Existing]` | [`backend/cloud/xray.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/xray.py) | Context-managed operation tracing across 6 paths |
+| **SageMaker Adapter** | N/A | `[Prototype]` | [`backend/cloud/sagemaker.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/sagemaker.py) | Analytical engine with 90% conformal intervals |
+| **Lambda Mitigator** | N/A | `[Prototype]` | [`backend/cloud/lambda_handler.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/lambda_handler.py) | Simulated circuit breaker with structured payload |
+| **Amazon SNS Alerting** | N/A | `[Existing]` | [`backend/cloud/sns.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/sns.py) | Dispatches alerts with all 8 required incident attributes |
+| **Cloud Orchestrator** | N/A | `[Existing]` | [`backend/cloud/orchestrator.py`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/backend/cloud/orchestrator.py) | End-to-end pipeline coordination |
+| **React SRE Dashboard** | N/A | `[Existing]` | [`frontend/src/App.jsx`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/frontend/src/App.jsx) | 7 core sections + interactive chaos playground |
+| **PyTorch RGCN Weights** | N/A | `[Planned]` | `ai-models/` | Varad ownership; planned for Phase-II training |
+| **Safe RL Circuit Breaker** | N/A | `[Planned]` | `ai-models/` | Varad ownership; planned for Phase-II training |
