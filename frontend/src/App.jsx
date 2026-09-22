@@ -3,6 +3,7 @@ import { fetchDashboardData, applyCircuitBreakerAction, triggerChaosSimulation }
 import { config } from './config';
 import './index.css';
 
+import HeroSection from './components/HeroSection';
 import SystemOverview from './components/SystemOverview';
 import DependencyGraph from './components/DependencyGraph';
 import BoundaryHealth from './components/BoundaryHealth';
@@ -11,12 +12,14 @@ import IncidentDetail from './components/IncidentDetail';
 import ServiceHealthTable from './components/ServiceHealthTable';
 import CircuitBreakerStatus from './components/CircuitBreakerStatus';
 import ChaosControls from './components/ChaosControls';
+import AwsObservabilityPanel from './components/AwsObservabilityPanel';
 
 export default function App() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedAlert, setSelectedAlert] = useState(null);
   const [activeFault, setActiveFault] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const loadData = async () => {
     try {
@@ -45,6 +48,15 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Track scroll position for dynamic Antigravity nav transparency
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 80);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleApplyMitigation = async (action, throttleRate, reason) => {
     await applyCircuitBreakerAction(action, throttleRate, reason);
     loadData();
@@ -60,12 +72,20 @@ export default function App() {
     setSelectedAlert(selectedAlert?.id === alert.id ? null : alert);
   };
 
+  // Smooth scroll jump helpers
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   if (loading && !data) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#090d16', color: '#9ca3af' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>✈️</div>
-        <div style={{ fontSize: '1.1rem', fontWeight: 600, color: '#f3f4f6' }}>Connecting to BACCP Airline Telemetry Stream...</div>
-        <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.5rem' }}>Polling backend API at <code>{config.apiUrl}</code></div>
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0c0d11', color: '#9aa0a6' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '1rem', animation: 'pulse 1.5s infinite' }}>✈️</div>
+        <div style={{ fontSize: '1.2rem', fontWeight: 500, color: '#ffffff', fontFamily: 'var(--font-sans)' }}>Connecting to BACCP Telemetry Stream...</div>
+        <div style={{ fontSize: '0.82rem', color: '#5f6368', marginTop: '0.5rem', fontFamily: 'var(--font-mono)' }}>Polling backend API at <code>{config.apiUrl}</code></div>
       </div>
     );
   }
@@ -84,62 +104,234 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
-      {/* SRE Navigation Header */}
-      <header style={{ background: 'rgba(17, 24, 39, 0.95)', borderBottom: '1px solid var(--border)', padding: '0.8rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span style={{ background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)', color: '#fff', fontWeight: 700, padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.85rem' }}>
-            BACCP
-          </span>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-canvas)', color: 'var(--text-primary)', display: 'flex', flexDirection: 'column' }}>
+      {/* Antigravity-Style Sticky Navigation Header */}
+      <header
+        style={{
+          background: isScrolled ? 'rgba(18, 19, 23, 0.92)' : 'rgba(12, 13, 17, 0.65)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: isScrolled ? '1px solid var(--border-card)' : '1px solid transparent',
+          padding: '0.65rem 2rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          transition: 'all 0.25s var(--ease-snappy)',
+        }}
+      >
+        {/* Left: Brand Mark */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.9rem' }}>
+          <div
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #3279f9, #1a73e8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 2px 10px rgba(50, 121, 249, 0.4)',
+            }}
+          >
+            <span style={{ fontSize: '14px' }}>✈️</span>
+          </div>
+
           <div>
-            <h1 style={{ fontSize: '1rem', fontWeight: 600, margin: 0, color: '#f3f4f6' }}>
-              Airline IT Boundary-Aware Cascade Predictor
-            </h1>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: 0 }}>
-              Mission-Critical Cloud Service Health Monitoring & Automated Circuit Breaker Console
-            </p>
+            <div style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+              BACCP <span style={{ fontWeight: 400, color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>| Airline IT Cascade Predictor</span>
+            </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', fontSize: '0.8rem' }}>
-          <div>
-            System: <strong style={{ color: overview.overallHealth === 'CRITICAL' ? '#ef4444' : (overview.overallHealth === 'DEGRADED' ? '#f59e0b' : '#10b981') }}>
+        {/* Center: Clean Nav Jumps (Hidden on Mobile) */}
+        <nav
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid var(--border-quiet)',
+            padding: '3px 6px',
+            borderRadius: 'var(--shape-corner-rounded)',
+          }}
+          className="desktop-nav-strip"
+        >
+          <button
+            onClick={() => scrollToSection('overview')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              fontSize: '12px',
+              fontWeight: 500,
+              padding: '4px 12px',
+              borderRadius: '999px',
+              cursor: 'pointer',
+              transition: 'color 0.15s ease',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#ffffff')}
+            onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => scrollToSection('topology')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              fontSize: '12px',
+              fontWeight: 500,
+              padding: '4px 12px',
+              borderRadius: '999px',
+              cursor: 'pointer',
+              transition: 'color 0.15s ease',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#ffffff')}
+            onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+          >
+            Topology
+          </button>
+          <button
+            onClick={() => scrollToSection('mitigations')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              fontSize: '12px',
+              fontWeight: 500,
+              padding: '4px 12px',
+              borderRadius: '999px',
+              cursor: 'pointer',
+              transition: 'color 0.15s ease',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#ffffff')}
+            onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+          >
+            Mitigations
+          </button>
+          <button
+            onClick={() => scrollToSection('diagnostics')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              fontSize: '12px',
+              fontWeight: 500,
+              padding: '4px 12px',
+              borderRadius: '999px',
+              cursor: 'pointer',
+              transition: 'color 0.15s ease',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#ffffff')}
+            onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+          >
+            Testbed & Cloud
+          </button>
+        </nav>
+
+        {/* Right: Authoritative Status & Antigravity CTA Button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+          {/* Authoritative Single Status Summary */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: 'rgba(255, 255, 255, 0.03)',
+              padding: '4px 10px',
+              borderRadius: '999px',
+              border: '1px solid var(--border-quiet)',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor:
+                  overview.overallHealth === 'CRITICAL'
+                    ? 'var(--status-crit)'
+                    : overview.overallHealth === 'DEGRADED'
+                    ? 'var(--status-warn)'
+                    : 'var(--status-ok)',
+              }}
+            />
+            <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-primary)' }}>
               {overview.overallHealth}
-            </strong>
+            </span>
+
+            <span style={{ color: 'var(--border-card)', margin: '0 2px' }}>·</span>
+
+            <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+              {overview.activeAlertsCount} alerts
+            </span>
           </div>
-          <div>
-            Gateway: <strong style={{ color: '#c4b5fd' }}>
-              {data?.circuitBreaker?.state || 'CLOSED'} ({Math.round((data?.circuitBreaker?.throttleRate || 0) * 100)}%)
-            </strong>
-          </div>
-          <div>
-            API: <code>{config.apiUrl}</code>
-          </div>
+
+          {/* Primary Antigravity Pill Action */}
+          <button
+            onClick={loadData}
+            className="btn-antigravity btn-antigravity-primary"
+            style={{ padding: '6px 16px', fontSize: '12px' }}
+            title="Refresh live telemetry stream"
+          >
+            <span>↻ Refresh Telemetry</span>
+          </button>
         </div>
       </header>
 
       {/* Offline Alert Banner */}
       {isOffline && (
-        <div style={{ background: 'rgba(239, 68, 68, 0.15)', borderBottom: '1px solid rgba(239, 68, 68, 0.4)', padding: '0.6rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.82rem', color: '#fca5a5' }}>
+        <div
+          style={{
+            background: 'rgba(239, 68, 68, 0.12)',
+            borderBottom: '1px solid rgba(239, 68, 68, 0.3)',
+            padding: '0.6rem 2rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '0.82rem',
+            color: '#fca5a5',
+          }}
+        >
           <div>
-            ⚠️ <strong>Backend Connection Unavailable:</strong> Displaying last known cached telemetry from {new Date(overview.lastTelemetryUpdate).toLocaleTimeString()}.
+            ⚠️ <strong>Backend connection unavailable:</strong> Displaying last known cached telemetry from {new Date(overview.lastTelemetryUpdate).toLocaleTimeString()}.
           </div>
-          <button onClick={loadData} className="sre-btn" style={{ padding: '0.2rem 0.6rem', fontSize: '0.75rem' }}>
-            Retry Connection
+          <button
+            onClick={loadData}
+            className="btn-antigravity btn-antigravity-secondary"
+            style={{ padding: '4px 12px', fontSize: '11px' }}
+          >
+            Retry connection
           </button>
         </div>
       )}
 
-      {/* Main Container */}
-      <main style={{ maxWidth: '1600px', margin: '0 auto', padding: '1.5rem 2rem', width: '100%', flex: 1 }}>
-        {/* Section 1: System Overview */}
-        <SystemOverview
-          overview={overview}
-          connectionState={data?.connectionState || 'offline'}
-          onRefresh={loadData}
+      {/* Hero / Entry Moment (Antigravity Style with Magnetic Buttons & Custom Cursor) */}
+      <HeroSection
+        overview={overview}
+        onExploreGraph={() => scrollToSection('topology')}
+        onExploreBoundary={() => scrollToSection('mitigations')}
+      />
+
+      {/* Main Container — Calmer, Dense Operations SRE Cockpit */}
+      <main style={{ maxWidth: '1600px', margin: '0 auto', padding: '2rem 2rem 4rem', width: '100%', flex: 1 }}>
+        {/* Section 1: System Overview (Differentiated KPIs) */}
+        <div id="overview">
+          <SystemOverview overview={overview} />
+        </div>
+
+        {/* Section 2: Predictive Alerts & Incident Triage Drawer */}
+        <PredictiveAlerts
+          alerts={data?.alerts}
+          onSelectAlert={handleSelectAlert}
+          selectedAlertId={selectedAlert?.id}
         />
 
-        {/* Selected Incident Detail (Section 6) */}
+        {/* Selected Incident Detail Drawer (If Alert Selected) */}
         {selectedAlert && (
           <IncidentDetail
             incident={selectedAlert}
@@ -147,76 +339,41 @@ export default function App() {
           />
         )}
 
-        {/* Two-Column Layout */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          {/* Left Column: Dependency Graph & Chaos Controls */}
-          <div>
-            {/* Section 2: Dependency Graph */}
-            <DependencyGraph
-              graph={data?.dependencyGraph}
-              activeFault={activeFault}
-            />
+        {/* Section 3: Hero Stage — Mission-Critical Dependency Topology & Drift Gauge */}
+        <div id="topology" className="hero-stage-grid">
+          {/* Generation-Typed Dependency Graph */}
+          <DependencyGraph
+            graph={data?.dependencyGraph}
+            activeFault={activeFault}
+          />
 
-            {/* Section 7: Circuit Breaker Status */}
-            <CircuitBreakerStatus
-              circuitBreaker={data?.circuitBreaker}
-              onApplyMitigation={handleApplyMitigation}
-            />
+          {/* Boundary Health & Comparative Latency Meter */}
+          <BoundaryHealth boundaryHealth={data?.boundaryHealth} />
+        </div>
 
-            {/* Testbed Chaos Fault Injection Playground */}
-            <ChaosControls onTriggerChaos={handleTriggerChaos} />
-          </div>
-
-          {/* Right Column: Boundary Health & Predictive Alerts */}
-          <div>
-            {/* Section 3: Boundary Health */}
-            <BoundaryHealth boundaryHealth={data?.boundaryHealth} />
-
-            {/* Section 4: Predictive Alerts */}
-            <PredictiveAlerts
-              alerts={data?.alerts}
-              onSelectAlert={handleSelectAlert}
-              selectedAlertId={selectedAlert?.id}
-            />
-
-            {/* AWS Cloud Observability Status */}
-            <div className="sre-card">
-              <div className="sre-card-header">
-                <span className="sre-card-title">
-                  <span>☁️ AWS Cloud Observability Infrastructure</span>
-                </span>
-                <span className="sre-badge sre-badge-cloud">
-                  {(data?.cloudStatus?.mode || 'mock').toUpperCase()} MODE
-                </span>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.6rem', fontSize: '0.75rem' }}>
-                <div style={{ background: '#0f172a', padding: '0.6rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-                  <div style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>Amazon CloudWatch</div>
-                  <div>Namespace: <code>{data?.cloudStatus?.cloudwatch?.namespace || 'BACCP/AirlineHealth'}</code></div>
-                  <div style={{ color: '#10b981', marginTop: '0.2rem' }}>● Ingesting ε(t) & P(cascade)</div>
-                </div>
-                <div style={{ background: '#0f172a', padding: '0.6rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-                  <div style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>AWS X-Ray Tracing</div>
-                  <div>Daemon: <code>{data?.cloudStatus?.xray?.daemon_address || '127.0.0.1:2000'}</code></div>
-                  <div style={{ color: '#10b981', marginTop: '0.2rem' }}>● Cross-Generation Subsegments</div>
-                </div>
-                <div style={{ background: '#0f172a', padding: '0.6rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-                  <div style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>Amazon SageMaker</div>
-                  <div>Endpoint: <code>{data?.cloudStatus?.sagemaker?.endpoint_name || 'baccp-cascade-predictor'}</code></div>
-                  <div style={{ color: '#10b981', marginTop: '0.2rem' }}>● Multi-Task Head Online</div>
-                </div>
-                <div style={{ background: '#0f172a', padding: '0.6rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-                  <div style={{ fontWeight: 600, color: 'var(--accent-cyan)' }}>AWS Lambda & SNS</div>
-                  <div>Function: <code>baccp-circuit-breaker-mitigator</code></div>
-                  <div style={{ color: '#10b981', marginTop: '0.2rem' }}>● Automated Mitigation Active</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Section 4: Boundary Circuit Breaker & Mitigation Controls */}
+        <div id="mitigations">
+          <CircuitBreakerStatus
+            circuitBreaker={data?.circuitBreaker}
+            onApplyMitigation={handleApplyMitigation}
+          />
         </div>
 
         {/* Section 5: Service Health Matrix (Full Width) */}
         <ServiceHealthTable services={data?.serviceHealth} />
+
+        {/* Section 6: Diagnostics & Admin Testbed (Collapsible / Progressive Disclosure) */}
+        <div id="diagnostics" style={{ marginTop: 'var(--space-6)' }}>
+          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+            System diagnostics & testing controls:
+          </div>
+
+          {/* Testbed Chaos Fault Injection Playground */}
+          <ChaosControls onTriggerChaos={handleTriggerChaos} activeFault={activeFault} />
+
+          {/* AWS Cloud Observability Infrastructure (Flattened 4-Column Strip) */}
+          <AwsObservabilityPanel cloudStatus={data?.cloudStatus} />
+        </div>
       </main>
     </div>
   );

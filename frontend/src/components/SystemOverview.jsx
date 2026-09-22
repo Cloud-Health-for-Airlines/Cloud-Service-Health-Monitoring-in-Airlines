@@ -1,83 +1,148 @@
 import React from 'react';
 
-export default function SystemOverview({ overview, connectionState, onRefresh }) {
+export default function SystemOverview({ overview }) {
   const isHealthy = overview.overallHealth === 'HEALTHY';
   const isCritical = overview.overallHealth === 'CRITICAL';
+  const isDegraded = overview.overallHealth === 'DEGRADED';
 
-  let healthColor = '#10b981';
-  if (isCritical) healthColor = '#ef4444';
-  else if (!isHealthy) healthColor = '#f59e0b';
+  const cascadeProb = overview.cascadeProbability;
+  const isProbHigh = cascadeProb !== null && cascadeProb > 0.5;
+  const isProbCritical = cascadeProb !== null && cascadeProb > 0.8;
+
+  const drift = overview.boundaryHealthScore ?? 0;
+  const threshold = overview.boundaryThreshold ?? 45.0;
+  const isDriftHigh = drift >= threshold;
+  const isDriftCritical = drift >= 70.0;
 
   return (
-    <div>
-      {/* Top Connection & Status Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#9ca3af' }}>SYSTEM OVERVIEW</span>
-          <span className={`sre-badge ${connectionState === 'connected' ? 'sre-badge-ok' : 'sre-badge-crit'}`}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: connectionState === 'connected' ? '#10b981' : '#ef4444' }}></span>
-            {connectionState === 'connected' ? 'API CONNECTED' : 'BACKEND OFFLINE'}
-          </span>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-            Model Engine: <strong>{overview.modelStatus}</strong>
-          </span>
-        </div>
-
-        <button onClick={onRefresh} className="sre-btn" title="Refresh telemetry from backend">
-          <span>↻</span> Refresh Telemetry
-        </button>
-      </div>
-
-      {/* Overview Metric Pills */}
+    <div style={{ marginBottom: 'var(--space-4)' }}>
+      {/* Differentiated KPI Readout Strip (2 Heroes + 2 Secondary Stats) */}
       <div className="overview-grid">
-        <div className="overview-pill" style={{ borderLeft: `3px solid ${healthColor}` }}>
-          <div className="overview-pill-label">Overall System Health</div>
-          <div className="overview-pill-val" style={{ color: healthColor }}>
-            {overview.overallHealth}
+        {/* Hero KPI 1: Cascade Probability */}
+        <div
+          className="metric-card-hero"
+          style={{
+            borderLeft: isProbCritical
+              ? '3px solid var(--status-crit)'
+              : isProbHigh
+              ? '3px solid var(--status-warn)'
+              : '3px solid var(--status-ok)',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span className="metric-label">Cascade probability</span>
+            <span
+              className={`sre-badge ${
+                isProbCritical
+                  ? 'sre-badge-crit'
+                  : isProbHigh
+                  ? 'sre-badge-warn'
+                  : 'sre-badge-ok'
+              }`}
+            >
+              {cascadeProb !== null
+                ? cascadeProb > 0.6
+                  ? 'Elevated risk'
+                  : 'Nominal'
+                : 'Calibrating'}
+            </span>
           </div>
-          <div className="overview-pill-sub">Status: {overview.systemStatus}</div>
+
+          <div
+            className="metric-hero-val"
+            style={{
+              color: isProbCritical
+                ? 'var(--status-crit)'
+                : isProbHigh
+                ? 'var(--status-warn)'
+                : 'var(--status-ok)',
+            }}
+          >
+            {cascadeProb !== null ? `${(cascadeProb * 100).toFixed(1)}%` : '—'}
+          </div>
+
+          <div className="metric-sub">
+            {cascadeProb !== null
+              ? 'Multi-task RGCN model · 90% conformal coverage'
+              : 'Awaiting model telemetry feed'}
+          </div>
         </div>
 
-        <div className="overview-pill">
-          <div className="overview-pill-label">Boundary Health Drift ε(t)</div>
-          <div className="overview-pill-val">
-            {overview.boundaryHealthScore.toFixed(1)}%
+        {/* Hero KPI 2: Boundary Sync Drift ε(t) */}
+        <div
+          className="metric-card-hero"
+          style={{
+            borderLeft: isDriftCritical
+              ? '3px solid var(--status-crit)'
+              : isDriftHigh
+              ? '3px solid var(--status-warn)'
+              : '3px solid var(--accent-brand)',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span className="metric-label">Boundary sync drift ε(t)</span>
+            <span
+              className={`sre-badge ${
+                isDriftCritical
+                  ? 'sre-badge-crit'
+                  : isDriftHigh
+                  ? 'sre-badge-warn'
+                  : 'sre-badge-ok'
+              }`}
+            >
+              {isDriftHigh ? 'Diverged' : 'Synchronized'}
+            </span>
           </div>
-          <div className="overview-pill-sub">Threshold: {overview.boundaryThreshold.toFixed(1)}%</div>
+
+          <div
+            className="metric-hero-val"
+            style={{
+              color: isDriftCritical
+                ? 'var(--status-crit)'
+                : isDriftHigh
+                ? 'var(--status-warn)'
+                : 'var(--text-primary)',
+            }}
+          >
+            {drift.toFixed(1)}%
+          </div>
+
+          <div className="metric-sub">
+            Warning threshold: {threshold.toFixed(1)}% | Critical: 70.0%
+          </div>
         </div>
 
-        <div className="overview-pill">
-          <div className="overview-pill-label">Cascade Probability</div>
-          <div className="overview-pill-val" style={{ color: overview.cascadeProbability !== null ? (overview.cascadeProbability > 0.6 ? '#ef4444' : '#f59e0b') : '#94a3b8' }}>
-            {overview.cascadeProbability !== null ? `${(overview.cascadeProbability * 100).toFixed(1)}%` : 'Awaiting'}
+        {/* Secondary Metric 1: System Severity & Envelope */}
+        <div className="metric-card-secondary">
+          <div className="metric-label">Assessed impact severity</div>
+          <div
+            className="metric-secondary-val"
+            style={{
+              color: isCritical
+                ? 'var(--status-crit)'
+                : isDegraded
+                ? 'var(--status-warn)'
+                : 'var(--status-ok)',
+            }}
+          >
+            {overview.severity || 'LOW'}
           </div>
-          <div className="overview-pill-sub">
-            {overview.cascadeProbability !== null ? 'RGCN multi-task inference' : 'Awaiting model telemetry'}
+          <div className="metric-sub">
+            Status: {overview.systemStatus || 'Nominal'}
           </div>
         </div>
 
-        <div className="overview-pill">
-          <div className="overview-pill-label">Current Severity</div>
-          <div className="overview-pill-val" style={{ color: healthColor, fontSize: '1.2rem' }}>
-            {overview.severity}
+        {/* Secondary Metric 2: Live Telemetry Stream */}
+        <div className="metric-card-secondary">
+          <div className="metric-label">Telemetry observation</div>
+          <div className="metric-secondary-val" style={{ color: 'var(--text-primary)' }}>
+            {overview.lastTelemetryUpdate
+              ? new Date(overview.lastTelemetryUpdate).toLocaleTimeString()
+              : 'Live'}
           </div>
-          <div className="overview-pill-sub">Impact Level Assessment</div>
-        </div>
-
-        <div className="overview-pill">
-          <div className="overview-pill-label">Active Alerts</div>
-          <div className="overview-pill-val" style={{ color: overview.activeAlertsCount > 0 ? '#ef4444' : '#10b981' }}>
-            {overview.activeAlertsCount}
+          <div className="metric-sub">
+            Zero-instrumentation eBPF stream active
           </div>
-          <div className="overview-pill-sub">Predictive Boundary Alarms</div>
-        </div>
-
-        <div className="overview-pill">
-          <div className="overview-pill-label">Last Telemetry Update</div>
-          <div className="overview-pill-val" style={{ fontSize: '0.95rem', fontWeight: 600 }}>
-            {new Date(overview.lastTelemetryUpdate).toLocaleTimeString()}
-          </div>
-          <div className="overview-pill-sub">eBPF polling active</div>
         </div>
       </div>
     </div>

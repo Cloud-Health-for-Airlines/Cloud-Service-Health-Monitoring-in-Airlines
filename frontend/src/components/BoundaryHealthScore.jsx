@@ -1,50 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function BoundaryHealthScore({ health }) {
+  const [showFormula, setShowFormula] = useState(false);
   const drift = health?.sync_drift_score ?? 14.2;
   const threshold = health?.threshold ?? 45.0;
   const status = health?.status ?? 'HEALTHY';
 
-  const circumference = 2 * Math.PI * 75; // ~471
-  const dashoffset = circumference - (circumference * (drift / 100));
+  const circumference = 2 * Math.PI * 65;
+  const dashoffset = circumference - circumference * (Math.min(100, drift) / 100);
 
-  let color = '#10b981';
-  let badgeClass = 'badge-ok';
+  let statusColor = 'var(--status-ok)';
+  let badgeClass = 'sre-badge-ok';
   if (drift >= 70.0) {
-    color = '#ef4444';
-    badgeClass = 'badge-crit';
+    statusColor = 'var(--status-crit)';
+    badgeClass = 'sre-badge-crit';
   } else if (drift >= threshold) {
-    color = '#f59e0b';
-    badgeClass = 'badge-legacy';
+    statusColor = 'var(--status-warn)';
+    badgeClass = 'sre-badge-warn';
   }
 
   return (
-    <div style={{ background: '#111827', border: '1px solid #374151', borderRadius: '10px', padding: '1.25rem', marginBottom: '1.5rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #374151', paddingBottom: '0.5rem' }}>
-        <span style={{ fontWeight: 600 }}>Digital-Twin Boundary Health</span>
-        <span style={{ padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, background: `${color}20`, color: color, border: `1px solid ${color}60` }}>
-          {status}
-        </span>
+    <div className="panel-hero">
+      <div className="sre-card-header">
+        <div>
+          <h2 className="sre-card-title">
+            <span>🛡️ Digital-twin boundary health</span>
+          </h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
+            Real-time synchronization divergence tracker
+          </span>
+        </div>
+        <span className={`sre-badge ${badgeClass}`}>{status}</span>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem 0' }}>
-        <div style={{ position: 'relative', width: '190px', height: '190px' }}>
-          <svg width="190" height="190" style={{ transform: 'rotate(-90deg)' }}>
-            <circle cx="95" cy="95" r="75" fill="none" stroke="#1f2937" strokeWidth="14" />
-            <circle cx="95" cy="95" r="75" fill="none" stroke={color} strokeWidth="14"
-              strokeDasharray={circumference} strokeDashoffset={dashoffset} strokeLinecap="round"
-              style={{ transition: 'stroke-dashoffset 0.5s ease, stroke 0.5s ease' }} />
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 'var(--space-3) 0' }}>
+        <div style={{ position: 'relative', width: '160px', height: '160px' }}>
+          <svg width="160" height="160" style={{ transform: 'rotate(-90deg)' }}>
+            <circle cx="80" cy="80" r="65" fill="none" stroke="var(--border-quiet)" strokeWidth="10" />
+            <circle
+              cx="80"
+              cy="80"
+              r="65"
+              fill="none"
+              stroke={statusColor}
+              strokeWidth="10"
+              strokeDasharray={circumference}
+              strokeDashoffset={dashoffset}
+              strokeLinecap="round"
+              style={{ transition: 'stroke-dashoffset 0.5s ease, stroke 0.5s ease' }}
+            />
           </svg>
           <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 700 }}>{drift.toFixed(1)}%</div>
-            <div style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Sync Drift ε(t)</div>
+            <div style={{ fontSize: '26px', fontWeight: 700, fontFamily: 'monospace', color: statusColor }}>
+              {drift.toFixed(1)}%
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Sync drift ε(t)</div>
           </div>
         </div>
       </div>
 
-      <div style={{ fontSize: '0.78rem', color: '#9ca3af', textAlign: 'center', lineHeight: 1.4 }}>
-        Formal State Divergence: <code>ε(t) = ||Φ(t) - Ψ(t)|| / ||Φ(t)|| * 100</code><br />
-        Baseline Threshold: <strong>{threshold}%</strong> | Critical: <strong>70.0%</strong>
+      <div style={{ textAlign: 'center', marginTop: 'var(--space-2)' }}>
+        <button
+          onClick={() => setShowFormula(!showFormula)}
+          className="sre-btn sre-btn-secondary"
+          style={{ padding: '3px 8px', fontSize: '11px' }}
+        >
+          {showFormula ? 'Hide formula' : 'ℹ️ How drift is calculated'}
+        </button>
+        {showFormula && (
+          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+            <code>ε(t) = ||Φ(t) - Ψ(t)|| / ||Φ(t)|| * 100</code><br />
+            Baseline threshold: <strong>{threshold}%</strong> | Critical: <strong>70.0%</strong>
+          </div>
+        )}
       </div>
     </div>
   );

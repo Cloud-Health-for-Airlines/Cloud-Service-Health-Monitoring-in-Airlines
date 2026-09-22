@@ -86,18 +86,47 @@ def lambda_handler(event: Dict[str, Any], context: Any = None) -> Dict[str, Any]
     sns = SNSPublisher()
 
     # Determine mitigation action
-    if rec_action in ("OPEN", "ISOLATE") or cascade_prob >= 0.80 or drift_score >= 70.0:
+    if rec_action in ("OPEN", "ISOLATE"):
         action = "OPEN"
         throttle_rate = 1.0
         reason = f"Critical cascade risk (P={cascade_prob:.2f}, drift={drift_score:.1f}%). Boundary isolation actuated."
-    elif rec_action in ("THROTTLE", "THROTTLED") or cascade_prob >= 0.55 or drift_score >= 45.0:
+    elif rec_action in ("THROTTLE", "THROTTLED"):
         action = "THROTTLED"
         throttle_rate = round(min(0.75, 0.30 + (cascade_prob - 0.55) * 2.0), 2)
         reason = f"Elevated cascade risk (P={cascade_prob:.2f}). Throttling boundary requests by {throttle_rate:.0%}."
     else:
-        action = "CLOSED"
-        throttle_rate = 0.0
-        reason = "System within nominal health boundaries. Resetting circuit breaker."
+        # Attempt learned RL policy (Tier 1F PPO)
+        applied_rl = False
+        try:
+            from pathlib import Path
+            import sys
+            repo_root = Path(__file__).resolve().parent.parent.parent
+            if str(repo_root) not in sys.path:
+                sys.path.insert(0, str(repo_root))
+            from importlib import import_module
+            breaker_mod = import_module("ai-models.circuit-breaker.inference")
+            action, throttle_rate, reason = breaker_mod.choose_action(
+                cascade_probability=cascade_prob,
+                boundary_sync_drift=drift_score,
+                state=event,
+            )
+            applied_rl = True
+        except Exception as exc:
+            logger.debug(f"Learned RL circuit breaker unavailable ({exc}). Using threshold ladder.")
+
+        if not applied_rl:
+            if cascade_prob >= 0.80 or drift_score >= 70.0:
+                action = "OPEN"
+                throttle_rate = 1.0
+                reason = f"Critical cascade risk (P={cascade_prob:.2f}, drift={drift_score:.1f}%). Boundary isolation actuated."
+            elif cascade_prob >= 0.55 or drift_score >= 45.0:
+                action = "THROTTLED"
+                throttle_rate = round(min(0.75, 0.30 + (cascade_prob - 0.55) * 2.0), 2)
+                reason = f"Elevated cascade risk (P={cascade_prob:.2f}). Throttling boundary requests by {throttle_rate:.0%}."
+            else:
+                action = "CLOSED"
+                throttle_rate = 0.0
+                reason = "System within nominal health boundaries. Resetting circuit breaker."
 
     record = breaker_manager.apply_action(action, throttle_rate, reason, caller=f"lambda:{source}")
     cw.publish_circuit_breaker_action(action, throttle_rate * 100.0, breaker_manager.target_node)

@@ -3,86 +3,168 @@ import React from 'react';
 export default function PredictiveAlerts({ alerts, onSelectAlert, selectedAlertId }) {
   if (!alerts || alerts.length === 0) {
     return (
-      <div className="sre-card">
-        <div className="sre-card-header">
-          <span className="sre-card-title">
-            <span>🚨 Predictive Cascade Alerts</span>
-          </span>
-          <span className="sre-badge sre-badge-ok">NOMINAL ENVELOPE</span>
-        </div>
-        <div style={{ padding: '1.5rem', textAlign: 'center', color: '#9ca3af', fontSize: '0.85rem' }}>
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>✅</div>
-          <div>No active cascade alerts. Boundary state is operating within nominal statistical thresholds.</div>
-          <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.4rem' }}>
-            Awaiting model telemetry or chaos fault injection on testbed.
+      <div
+        className="panel-subtle"
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '12px 18px',
+          borderLeft: '3px solid var(--status-ok)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '14px', color: 'var(--status-ok)' }}>●</span>
+          <div>
+            <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
+              Nominal operating envelope
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+              No cascade predicted. Boundary latency and synchronization drift are within statistical limits.
+            </div>
           </div>
         </div>
+        <span className="sre-badge sre-badge-ok">0 active alarms</span>
       </div>
     );
   }
 
   return (
-    <div className="sre-card">
-      <div className="sre-card-header">
-        <span className="sre-card-title">
-          <span>🚨 Predictive Cascade Alerts</span>
-          <span style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 400 }}>(Click an alert to view Incident Detail)</span>
+    <div
+      style={{
+        background: 'rgba(239, 68, 68, 0.06)',
+        border: '1px solid var(--status-crit-border)',
+        borderRadius: '8px',
+        padding: 'var(--space-4)',
+        marginBottom: 'var(--space-4)',
+        boxShadow: '0 0 15px -3px rgba(239, 68, 68, 0.15)',
+      }}
+    >
+      <div className="sre-card-header" style={{ borderColor: 'rgba(239, 68, 68, 0.25)' }}>
+        <div>
+          <h2 className="sre-card-title" style={{ color: 'var(--status-crit)' }}>
+            <span>🚨 Predictive cascade alerts</span>
+          </h2>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+            Actionable early warnings from multi-task cascade predictor before service outage
+          </span>
+        </div>
+        <span className="sre-badge sre-badge-crit">
+          {alerts.length} active alarm{alerts.length > 1 ? 's' : ''}
         </span>
-        <span className="sre-badge sre-badge-crit">{alerts.length} ACTIVE ALARM</span>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
         {alerts.map((alert) => {
           const isSelected = selectedAlertId === alert.id;
           const isCritical = alert.severity === 'CRITICAL';
           const isHigh = alert.severity === 'HIGH';
-          const color = isCritical ? '#ef4444' : (isHigh ? '#f59e0b' : '#3b82f6');
+          const alertColor = isCritical
+            ? 'var(--status-crit)'
+            : isHigh
+            ? 'var(--status-warn)'
+            : 'var(--accent-brand)';
 
           return (
             <div
               key={alert.id}
               onClick={() => onSelectAlert(alert)}
               style={{
-                background: isSelected ? 'rgba(30, 41, 59, 0.8)' : '#0f172a',
-                border: `1px solid ${isSelected ? color : '#1e293b'}`,
-                borderLeft: `4px solid ${color}`,
+                background: isSelected ? 'rgba(30, 41, 59, 0.95)' : 'var(--bg-surface)',
+                border: `1px solid ${isSelected ? alertColor : 'var(--border-card)'}`,
+                borderLeft: `4px solid ${alertColor}`,
                 borderRadius: '6px',
-                padding: '0.9rem 1.1rem',
+                padding: '12px 16px',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              {/* Top Headline: Location & Countdown Lead Time */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'baseline',
+                  marginBottom: '8px',
+                  flexWrap: 'wrap',
+                  gap: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span className={`sre-badge ${isCritical ? 'sre-badge-crit' : 'sre-badge-warn'}`}>
                     {alert.severity}
                   </span>
-                  <strong style={{ fontSize: '0.88rem' }}>Predicted Failure at: <code>{alert.predictedFailureLocation}</code></strong>
+                  <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    Predicted failure at <code style={{ color: alertColor, fontSize: '13px' }}>{alert.predictedFailureLocation}</code>
+                  </span>
                 </div>
 
-                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: alert.estimatedLeadTimeSeconds < 60 ? '#ef4444' : '#f59e0b' }}>
-                  ⏱️ Lead Time: ~{alert.estimatedLeadTimeSeconds.toFixed(0)}s
+                {/* Prominent Lead Time Readout */}
+                <div
+                  style={{
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    color: alert.estimatedLeadTimeSeconds < 60 ? 'var(--status-crit)' : 'var(--status-warn)',
+                    background: 'var(--bg-canvas)',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border-quiet)',
+                  }}
+                >
+                  ⏱️ ~{alert.estimatedLeadTimeSeconds.toFixed(0)}s lead time
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.8rem', fontSize: '0.78rem', color: '#9ca3af', margin: '0.6rem 0' }}>
+              {/* Supporting Details Strip (Quieter Secondary Metrics) */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+                  gap: '8px',
+                  fontSize: '11.5px',
+                  color: 'var(--text-secondary)',
+                  background: 'var(--bg-canvas)',
+                  padding: '8px 12px',
+                  borderRadius: '4px',
+                  marginBottom: '8px',
+                }}
+              >
                 <div>
-                  Cascade Probability: <strong style={{ color: '#f3f4f6' }}>{(alert.cascadeProbability * 100).toFixed(1)}%</strong>
+                  Cascade probability:{' '}
+                  <strong style={{ color: 'var(--text-primary)', fontFamily: 'monospace' }}>
+                    {(alert.cascadeProbability * 100).toFixed(1)}%
+                  </strong>
                 </div>
                 <div>
-                  Conformal Confidence: <strong style={{ color: '#f3f4f6' }}>{alert.confidence}</strong>
+                  Conformal confidence:{' '}
+                  <strong style={{ color: 'var(--text-primary)' }}>{alert.confidence}</strong>
                 </div>
                 <div>
-                  Timestamp: <strong style={{ color: '#f3f4f6' }}>{new Date(alert.timestamp).toLocaleTimeString()}</strong>
+                  Detected at:{' '}
+                  <strong style={{ color: 'var(--text-primary)', fontFamily: 'monospace' }}>
+                    {new Date(alert.timestamp).toLocaleTimeString()}
+                  </strong>
                 </div>
               </div>
 
-              <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
-                <strong>Affected Dependency:</strong> {alert.affectedDependency}
-              </div>
+              {/* Propagation Path & CTA */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '11.5px',
+                }}
+              >
+                <div style={{ color: 'var(--text-secondary)' }}>
+                  <span style={{ color: 'var(--text-tertiary)' }}>Propagation path: </span>
+                  <code>{alert.affectedDependency}</code>
+                </div>
 
-              <div style={{ fontSize: '0.72rem', color: '#38bdf8', marginTop: '0.4rem', textAlign: 'right' }}>
-                {isSelected ? '▲ Viewing Incident Details' : '▶ Click for full incident brief & recommended mitigation'}
+                <div style={{ color: 'var(--accent-brand)', fontWeight: 500, cursor: 'pointer' }}>
+                  {isSelected ? '▲ Hide incident brief' : '▼ Click for diagnosis & mitigation brief'}
+                </div>
               </div>
             </div>
           );

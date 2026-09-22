@@ -1,18 +1,108 @@
+/* ==========================================================================
+   BACCP x Antigravity.google Design Tokens & Core Primitives
+   ========================================================================== */
+
 :root {
-  --bg-dark: #090d16;
-  --bg-card: #111827;
-  --bg-card-hover: #1e293b;
-  --border: #1f293d;
-  --border-light: #374151;
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-purple: #8b5cf6;
+  /* Fonts */
+  --font-sans: 'Google Sans Flex', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Google Sans Code', 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Surfaces & Canvas (Antigravity Exact Palette) */
+  --palette-grey-1200: #121317;
+  --palette-grey-1100: #18191d;
+  --palette-grey-1000: #212226;
+  --palette-grey-900: #2f3034;
+  --palette-grey-800: #45474d;
+  --palette-grey-50: #e6eaf0;
+  --palette-grey-0: #ffffff;
+  --palette-blue-600: #3279f9;
+
+  --bg-canvas: #0c0d11;
+  --bg-surface: #121317;
+  --bg-surface-subtle: #18191d;
+  --bg-surface-elevated: #212226;
+
+  /* Subtle Borders & Dividers */
+  --border-quiet: rgba(230, 234, 240, 0.07);
+  --border-card: rgba(230, 234, 240, 0.12);
+  --border-focus: #3279f9;
+
+  /* Typography */
+  --text-primary: #ffffff;
+  --text-secondary: #9aa0a6;
+  --text-tertiary: #5f6368;
+
+  /* Brand / Interactive Accent (Electric Blue, Strictly Non-Semantic) */
+  --accent-brand: #3279f9;
+  --accent-brand-hover: #1a73e8;
+  --accent-brand-bg: rgba(50, 121, 249, 0.12);
+  --accent-brand-glow: rgba(50, 121, 249, 0.25);
+
+  /* Strict Semantic Status (Operational Health ONLY - Never Brand Colored) */
+  --status-ok: #10b981;
+  --status-ok-bg: rgba(16, 185, 129, 0.10);
+  --status-ok-border: rgba(16, 185, 129, 0.28);
+
+  --status-warn: #f59e0b;
+  --status-warn-bg: rgba(245, 158, 11, 0.10);
+  --status-warn-border: rgba(245, 158, 11, 0.28);
+
+  --status-crit: #ef4444;
+  --status-crit-bg: rgba(239, 68, 68, 0.14);
+  --status-crit-border: rgba(239, 68, 68, 0.35);
+
+  /* Quiet Architectural Taxonomy (Muted, non-status tones) */
+  --tax-legacy-text: #d4c5b9;
+  --tax-legacy-bg: #221c17;
+  --tax-legacy-border: #3d3228;
+
+  --tax-gateway-text: #cbd5e1;
+  --tax-gateway-bg: #1e1e2e;
+  --tax-gateway-border: #33334d;
+
+  --tax-cloud-text: #94a3b8;
+  --tax-cloud-bg: #141c28;
+  --tax-cloud-border: #233144;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Antigravity Corner Radii */
+  --shape-corner-rounded: 999px;
+  --shape-corner-xl: 16px;
+  --shape-corner-md: 8px;
+
+  /* Antigravity Motion & Transitions */
+  --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-snappy: 150ms;
+  --dur-smooth: 350ms;
+
+  /* Backward Compatibility Aliases */
+  --bg-dark: var(--bg-canvas);
+  --bg-card: var(--bg-surface);
+  --bg-card-hover: var(--bg-surface-elevated);
+  --border: var(--border-card);
+  --border-light: rgba(230, 234, 240, 0.18);
+  --text-main: var(--text-primary);
+  --text-muted: var(--text-secondary);
+  --accent-blue: #3279f9;
+  --accent-cyan: #38bdf8;
+  --accent-purple: #818cf8;
   --accent-amber: #f59e0b;
   --accent-red: #ef4444;
   --accent-green: #10b981;
 }
+
+/* ==========================================================================
+   Global Reset & Base Typography
+   ========================================================================== */
 
 * {
   box-sizing: border-box;
@@ -21,107 +111,296 @@
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.5;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
-code, pre {
-  font-family: 'JetBrains Mono', monospace;
+/* Monospace restricted to technical readouts */
+code, pre, .font-mono {
+  font-family: var(--font-mono);
 }
 
-/* Card */
-.sre-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border);
+/* Accessible focus ring across all controls */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Antigravity Pill Buttons & Magnetic Styling
+   ========================================================================== */
+
+.btn-antigravity {
+  border-radius: var(--shape-corner-rounded);
+  cursor: pointer;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: fit-content;
+  padding: 10px 24px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13.5px;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: all var(--dur-snappy) var(--ease-snappy);
+  display: inline-flex;
+  gap: 8px;
+  border: 1px solid transparent;
+  will-change: transform;
+}
+
+.btn-antigravity-primary {
+  background: var(--palette-blue-600);
+  color: #ffffff;
+  box-shadow: 0 4px 14px -2px rgba(50, 121, 249, 0.4);
+}
+
+.btn-antigravity-primary:hover, .btn-antigravity-primary:focus-visible {
+  background: #1a73e8;
+  box-shadow: 0 6px 20px -2px rgba(50, 121, 249, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-antigravity-secondary {
+  color: #ffffff;
+  background: rgba(183, 191, 217, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-antigravity-secondary:hover, .btn-antigravity-secondary:focus-visible {
+  background: rgba(183, 191, 217, 0.16);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Custom Cursor Styling (Scoped Exclusively to Hero Section)
+   ========================================================================== */
+
+.hero-entry-zone {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-entry-zone {
+    cursor: none;
+  }
+
+  .hero-entry-zone * {
+    cursor: none !important;
+  }
+}
+
+.antigravity-cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  transform: translate3d(-100px, -100px, 0);
+  transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease;
+}
+
+/* Default Dot State */
+.antigravity-cursor-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 16px 2px rgba(50, 121, 249, 0.8), 0 0 4px 1px rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+/* Morphing Pill State (Contextual Affordance over Hero CTA / interactive targets) */
+.antigravity-cursor-pill {
+  transform: translate(-50%, -50%);
+  padding: 8px 16px;
+  border-radius: var(--shape-corner-rounded);
+  background: rgba(255, 255, 255, 0.95);
+  color: #0c0d11;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(50, 121, 249, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Disable Custom Cursor under prefers-reduced-motion or touch */
+@media (prefers-reduced-motion: reduce) {
+  .antigravity-cursor-follower {
+    display: none !important;
+  }
+  .hero-entry-zone {
+    cursor: default !important;
+  }
+  .hero-entry-zone * {
+    cursor: default !important;
+  }
+}
+
+/* Accessible focus ring across all controls */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Differentiated Panel Primitives
+   ========================================================================== */
+
+/* Hero Stage Panel (Dominant canvas visual weight) */
+.panel-hero {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), 0 0 15px -3px rgba(56, 189, 248, 0.05);
   border-radius: 8px;
-  padding: 1.25rem;
-  margin-bottom: 1.25rem;
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+  position: relative;
+}
+
+/* Hero Stage Grid */
+.hero-stage-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 1080px) {
+  .hero-stage-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Secondary / Subtle Panel (Quiet, borderless or quiet border) */
+.panel-subtle {
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-quiet);
+  border-radius: 8px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+/* Backward-compatible base card */
+.sre-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
 }
 
 .sre-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid rgba(55, 65, 81, 0.4);
+  margin-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-quiet);
 }
 
 .sre-card-title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-main);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
-/* Badges */
+/* ==========================================================================
+   Status Badges vs Architectural Taxonomy Badges
+   ========================================================================== */
+
 .sre-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0.55rem;
+  gap: 4px;
+  padding: 2px 7px;
   border-radius: 4px;
-  font-size: 0.72rem;
+  font-size: 11px;
   font-weight: 600;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
 }
 
-.sre-badge-cloud {
-  background: rgba(59, 130, 246, 0.15);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.4);
-}
-
-.sre-badge-gateway {
-  background: rgba(139, 92, 246, 0.15);
-  color: #c4b5fd;
-  border: 1px solid rgba(139, 92, 246, 0.4);
-}
-
-.sre-badge-legacy {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fde68a;
-  border: 1px solid rgba(245, 158, 11, 0.4);
-}
-
-.sre-badge-ok {
-  background: rgba(16, 185, 129, 0.15);
+/* Strict Semantic Status Badges */
+.sre-badge-ok, .badge-status-ok {
+  background: var(--status-ok-bg);
   color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  border: 1px solid var(--status-ok-border);
 }
 
-.sre-badge-warn {
-  background: rgba(245, 158, 11, 0.15);
+.sre-badge-warn, .badge-status-warn {
+  background: var(--status-warn-bg);
   color: #fde68a;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  border: 1px solid var(--status-warn-border);
 }
 
-.sre-badge-crit {
-  background: rgba(239, 68, 68, 0.15);
+.sre-badge-crit, .badge-status-crit {
+  background: var(--status-crit-bg);
   color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.5);
+  border: 1px solid var(--status-crit-border);
 }
 
-/* Buttons */
+/* Quiet Architectural Taxonomy Chips (NOT confused with status) */
+.sre-badge-legacy, .badge-tax-legacy {
+  background: var(--tax-legacy-bg);
+  color: var(--tax-legacy-text);
+  border: 1px solid var(--tax-legacy-border);
+  text-transform: none;
+  font-weight: 500;
+}
+
+.sre-badge-gateway, .badge-tax-gateway {
+  background: var(--tax-gateway-bg);
+  color: var(--tax-gateway-text);
+  border: 1px solid var(--tax-gateway-border);
+  text-transform: none;
+  font-weight: 500;
+}
+
+.sre-badge-cloud, .badge-tax-cloud {
+  background: var(--tax-cloud-bg);
+  color: var(--tax-cloud-text);
+  border: 1px solid var(--tax-cloud-border);
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Button Hierarchy
+   ========================================================================== */
+
 .sre-btn {
-  background-color: #1e293b;
-  color: var(--text-main);
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
   border: 1px solid #334155;
-  padding: 0.45rem 0.85rem;
+  padding: 6px 12px;
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  gap: 6px;
+  transition: all 0.15s ease;
 }
 
 .sre-btn:hover {
@@ -129,88 +408,207 @@ code, pre {
   border-color: #475569;
 }
 
+/* Primary Action: Distinctive Brand Accent */
 .sre-btn-primary {
-  background-color: #2563eb;
-  border-color: #3b82f6;
+  background-color: #0284c7;
+  border-color: #38bdf8;
   color: #ffffff;
+  font-weight: 600;
 }
 
 .sre-btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: #0369a1;
+  border-color: #7dd3fc;
 }
 
-.sre-btn-danger {
-  background-color: #991b1b;
-  border-color: #dc2626;
+/* Destructive / High-Consequence Action: Warning Red with Border */
+.sre-btn-danger, .sre-btn-destructive {
+  background-color: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+  font-weight: 600;
+}
+
+.sre-btn-danger:hover, .sre-btn-destructive:hover {
+  background-color: #ef4444;
   color: #ffffff;
+  border-color: #dc2626;
 }
 
-.sre-btn-danger:hover {
-  background-color: #7f1d1d;
+/* Secondary / Ghost Action */
+.sre-btn-secondary {
+  background-color: transparent;
+  border-color: var(--border-card);
+  color: var(--text-secondary);
 }
 
-/* Tables */
+.sre-btn-secondary:hover {
+  background-color: var(--bg-surface-elevated);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Table Styling (Clean, Monospace Data, Sentence Case)
+   ========================================================================== */
+
 .sre-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.82rem;
+  font-size: 13px;
 }
 
 .sre-table th {
   text-align: left;
-  padding: 0.6rem 0.75rem;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-quiet);
   font-weight: 500;
-  background-color: rgba(15, 23, 42, 0.4);
+  font-size: 12px;
+  background-color: rgba(15, 23, 42, 0.6);
 }
 
 .sre-table td {
-  padding: 0.65rem 0.75rem;
-  border-bottom: 1px solid rgba(55, 65, 81, 0.25);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border-quiet);
   color: #e2e8f0;
 }
 
 .sre-table tr:hover td {
-  background-color: rgba(30, 41, 59, 0.3);
+  background-color: rgba(30, 41, 59, 0.4);
 }
 
-/* Overview Banner */
+/* ==========================================================================
+   Differentiated KPI / Metric Grid (Replacing Equal Pills)
+   ========================================================================== */
+
 .overview-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  grid-template-columns: 1.3fr 1.3fr 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
-.overview-pill {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border);
+@media (max-width: 1100px) {
+  .overview-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Hero Metric (Prominent, High-Triage) */
+.metric-card-hero {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-card);
   border-radius: 8px;
-  padding: 0.9rem 1.1rem;
+  padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.metric-hero-val {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.metric-sub {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Compact Secondary Metric */
+.metric-card-secondary {
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-quiet);
+  border-radius: 8px;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.metric-secondary-val {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Old pill class mapped smoothly */
+.overview-pill {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .overview-pill-label {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 12px;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .overview-pill-val {
-  font-size: 1.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--text-primary);
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
+  gap: 6px;
 }
 
 .overview-pill-sub {
-  font-size: 0.72rem;
-  color: var(--text-muted);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* Tab Navigation Styles */
+.sre-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-quiet);
+  padding-bottom: var(--space-2);
+}
+
+.sre-tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sre-tab-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface-elevated);
+}
+
+.sre-tab-btn.active {
+  color: var(--text-primary);
+  background-color: var(--accent-brand-bg);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-weight: 600;
 }

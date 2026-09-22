@@ -4,74 +4,106 @@ export default function IncidentDetail({ incident, onClose }) {
   if (!incident) return null;
 
   const isCritical = incident.severity === 'CRITICAL';
-  const color = isCritical ? '#ef4444' : '#f59e0b';
+  const color = isCritical ? 'var(--status-crit)' : 'var(--status-warn)';
 
   return (
-    <div className="sre-card" style={{ border: `1px solid ${color}`, background: '#0d1322' }}>
-      <div className="sre-card-header" style={{ borderBottom: `1px solid ${color}40` }}>
-        <span className="sre-card-title" style={{ color }}>
-          <span>📋 Incident Detail: Cross-Generation Cascade Diagnosis</span>
-        </span>
-        <button onClick={onClose} className="sre-btn" style={{ padding: '0.2rem 0.6rem', fontSize: '0.75rem' }}>
-          ✕ Close Detail
+    <div
+      className="panel-subtle"
+      style={{
+        border: `1px solid ${color}`,
+        borderLeft: `4px solid ${color}`,
+        background: 'var(--bg-surface)',
+        marginBottom: 'var(--space-4)',
+        boxShadow: '0 4px 16px -2px rgba(0, 0, 0, 0.4)',
+      }}
+    >
+      <div className="sre-card-header" style={{ borderColor: 'var(--border-quiet)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '15px' }}>📋</span>
+          <h3 className="sre-card-title" style={{ fontSize: '14px', color }}>
+            Incident diagnosis: cross-generation cascade brief
+          </h3>
+        </div>
+        <button
+          onClick={onClose}
+          className="sre-btn sre-btn-secondary"
+          style={{ padding: '2px 8px', fontSize: '11px' }}
+        >
+          ✕ Close brief
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
         {/* Incident Summary */}
-        <div style={{ background: '#0a0f1d', padding: '1rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-          <div style={{ fontSize: '0.75rem', color: '#9ca3af', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-            What Happened (AIOps Incident Brief)
+        <div style={{ background: 'var(--bg-canvas)', padding: '12px', borderRadius: '6px', border: '1px solid var(--border-quiet)' }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, marginBottom: '4px' }}>
+            What happened (AIOps incident brief)
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#f3f4f6', lineHeight: 1.5 }}>
+          <div style={{ fontSize: '12.5px', color: 'var(--text-primary)', lineHeight: 1.5 }}>
             {incident.explanation}
           </div>
         </div>
 
         {/* Origin & Affected Path */}
-        <div style={{ background: '#0a0f1d', padding: '1rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-          <div style={{ fontSize: '0.75rem', color: '#9ca3af', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-            Likely Origin & Dependency Path
+        <div style={{ background: 'var(--bg-canvas)', padding: '12px', borderRadius: '6px', border: '1px solid var(--border-quiet)' }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: 600, marginBottom: '4px' }}>
+            Likely origin & propagation path
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#f3f4f6', marginBottom: '0.5rem' }}>
-            <strong>Originating Failure Node:</strong> <code>{incident.rootCause}</code>
+          <div style={{ fontSize: '12px', color: 'var(--text-primary)', marginBottom: '6px' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>Originating failure node: </span>
+            <code>{incident.rootCause}</code>
           </div>
-          <div style={{ fontSize: '0.82rem', color: '#cbd5e1' }}>
-            <strong>Propagation Path:</strong><br />
+          <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+            <span style={{ color: 'var(--text-tertiary)' }}>Propagation path: </span>
             <code>{incident.affectedDependency}</code>
           </div>
         </div>
       </div>
 
-      {/* Relevant Telemetry & Predicted Risk */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.8rem', marginBottom: '1.25rem' }}>
-        <div style={{ background: '#0a0f1d', padding: '0.6rem 0.8rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-          <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Cascade Probability</div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color }}>{(incident.cascadeProbability * 100).toFixed(1)}%</div>
+      {/* Relevant Telemetry & Predicted Risk (Monospace metrics) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px', marginBottom: 'var(--space-3)' }}>
+        <div style={{ background: 'var(--bg-canvas)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-quiet)' }}>
+          <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>Cascade probability</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, fontFamily: 'monospace', color }}>
+            {(incident.cascadeProbability * 100).toFixed(1)}%
+          </div>
         </div>
 
-        <div style={{ background: '#0a0f1d', padding: '0.6rem 0.8rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-          <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Estimated Lead Time</div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f59e0b' }}>~{incident.estimatedLeadTimeSeconds.toFixed(0)}s</div>
+        <div style={{ background: 'var(--bg-canvas)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-quiet)' }}>
+          <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>Estimated lead time</div>
+          <div style={{ fontSize: '16px', fontWeight: 700, fontFamily: 'monospace', color: 'var(--status-warn)' }}>
+            ~{incident.estimatedLeadTimeSeconds.toFixed(0)}s
+          </div>
         </div>
 
-        <div style={{ background: '#0a0f1d', padding: '0.6rem 0.8rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-          <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Conformal Confidence</div>
-          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#93c5fd', marginTop: '0.2rem' }}>{incident.confidence}</div>
+        <div style={{ background: 'var(--bg-canvas)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-quiet)' }}>
+          <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>Conformal confidence</div>
+          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '2px' }}>
+            {incident.confidence}
+          </div>
         </div>
 
-        <div style={{ background: '#0a0f1d', padding: '0.6rem 0.8rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-          <div style={{ fontSize: '0.7rem', color: '#9ca3af' }}>Detection Timestamp</div>
-          <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#e2e8f0', marginTop: '0.2rem' }}>{new Date(incident.timestamp).toLocaleTimeString()}</div>
+        <div style={{ background: 'var(--bg-canvas)', padding: '8px 12px', borderRadius: '6px', border: '1px solid var(--border-quiet)' }}>
+          <div style={{ fontSize: '10.5px', color: 'var(--text-tertiary)' }}>Detection timestamp</div>
+          <div style={{ fontSize: '12.5px', fontWeight: 500, fontFamily: 'monospace', color: 'var(--text-primary)', marginTop: '2px' }}>
+            {new Date(incident.timestamp).toLocaleTimeString()}
+          </div>
         </div>
       </div>
 
-      {/* Recommended Action */}
-      <div style={{ background: `${color}15`, border: `1px solid ${color}50`, padding: '0.9rem 1.1rem', borderRadius: '6px' }}>
-        <div style={{ fontWeight: 600, fontSize: '0.82rem', color, marginBottom: '0.2rem' }}>
-          RECOMMENDED MITIGATION ACTION:
+      {/* Recommended Action Box */}
+      <div
+        style={{
+          background: isCritical ? 'var(--status-crit-bg)' : 'var(--status-warn-bg)',
+          border: `1px solid ${color}`,
+          padding: '10px 14px',
+          borderRadius: '6px',
+        }}
+      >
+        <div style={{ fontWeight: 600, fontSize: '11.5px', color, marginBottom: '2px' }}>
+          Recommended mitigation action:
         </div>
-        <div style={{ fontSize: '0.82rem', color: '#f3f4f6' }}>
+        <div style={{ fontSize: '12.5px', color: 'var(--text-primary)' }}>
           {incident.recommendedAction}
         </div>
       </div>

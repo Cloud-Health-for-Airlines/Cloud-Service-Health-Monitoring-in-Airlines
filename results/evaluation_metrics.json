@@ -1,0 +1,61 @@
+{
+  "evaluation_timestamp": "2026-09-22T08:44:06.645353+00:00",
+  "dataset_version": "baccp-v1.0",
+  "generation_mode": "synthetic",
+  "test_split_size": 12,
+  "cascade_classification": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0
+  },
+  "lead_time_aware_metrics": {
+    "mean_warning_seconds": 42.2,
+    "mean_warning_minutes": 0.7,
+    "mean_lead_time_mae_seconds": 11.8,
+    "precision_at_2min_threshold": 1.0,
+    "precision_at_5min_threshold": 1.0
+  },
+  "calibrated_uncertainty": {
+    "target_confidence_level": 0.9,
+    "empirical_conformal_coverage": 1.0,
+    "conformal_quantile_margin": 0.0001
+  },
+  "three_way_graph_comparison": {
+    "flat_graph": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0
+    },
+    "domain_typed_graph": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0
+    },
+    "generation_typed_hetero_rgcn": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0
+    }
+  },
+  "circuit_breaker_mitigation": {
+    "rule": {
+      "mean_reward": -22.1,
+      "cascade_avoidance_pct": 18.2,
+      "false_alarm_pct": 0.0
+    },
+    "dqn": {
+      "mean_reward": -10.47,
+      "cascade_avoidance_pct": 100.0,
+      "false_alarm_pct": 0.0
+    },
+    "ppo": {
+      "mean_reward": -30.02,
+      "cascade_avoidance_pct": 100.0,
+      "false_alarm_pct": 100.0
+    }
+  }
+}

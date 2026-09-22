@@ -246,6 +246,37 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
                 self._set_cors_headers(200)
                 self.wfile.write(json.dumps(cloud_status, indent=2).encode("utf-8"))
 
+            elif path == "/metrics":
+                health = compute_boundary_health()
+                drift = health.get("sync_drift_score", 12.4)
+                prob = 0.05
+                if simulated_state["active_fault"]:
+                    prob = 0.85 if simulated_state["fault_level"] == "critical" else 0.65
+                
+                prom_lines = [
+                    "# HELP baccp_sync_drift_score Digital twin boundary synchronization drift percentage",
+                    "# TYPE baccp_sync_drift_score gauge",
+                    f"baccp_sync_drift_score {drift:.2f}",
+                    "# HELP baccp_cascade_probability Current boundary cascade failure probability",
+                    "# TYPE baccp_cascade_probability gauge",
+                    f"baccp_cascade_probability {prob:.4f}",
+                    "# HELP baccp_circuit_breaker_throttle_rate Gateway load shedding throttle percentage",
+                    "# TYPE baccp_circuit_breaker_throttle_rate gauge",
+                    f"baccp_circuit_breaker_throttle_rate {breaker_manager.throttle_rate:.2f}",
+                    "# HELP baccp_circuit_breaker_state Current state: 0=CLOSED, 1=THROTTLED, 2=OPEN",
+                    "# TYPE baccp_circuit_breaker_state gauge",
+                    f"baccp_circuit_breaker_state {0 if breaker_manager.state == 'CLOSED' else (1 if breaker_manager.state == 'THROTTLED' else 2)}",
+                    "# HELP baccp_telemetry_requests_total Total API requests received",
+                    "# TYPE baccp_telemetry_requests_total counter",
+                    "baccp_telemetry_requests_total 42",
+                ]
+                prom_body = "\n".join(prom_lines) + "\n"
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; version=0.0.4; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(prom_body.encode("utf-8"))
+
             else:
                 self._set_cors_headers(404)
                 self.wfile.write(json.dumps({"error": f"Endpoint '{path}' not found"}).encode("utf-8"))
@@ -354,6 +385,40 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
                 )
                 self._set_cors_headers(200)
                 self.wfile.write(json.dumps(trace, indent=2).encode("utf-8"))
+
+            elif path in ("/api/circuit-breaker/multi-agent", "/api/circuit-breaker/mappo"):
+                try:
+                    from ai_models.circuit_breaker import MAPPOAgent
+                    mappo = MAPPOAgent(num_gateways=2)
+                    gw_states = body.get("gateways", {
+                        "boundary-gateway-jfk": {
+                            "cascade_probability": body.get("cascade_probability", 0.75),
+                            "boundary_sync_drift": simulated_state["current_sync_drift"],
+                            "gateway_latency_ms": 250.0,
+                            "gateway_error_rate": 0.05,
+                            "current_throttle_rate": 0.0,
+                        },
+                        "boundary-gateway-lhr": {
+                            "cascade_probability": 0.40,
+                            "boundary_sync_drift": 22.0,
+                            "gateway_latency_ms": 45.0,
+                            "gateway_error_rate": 0.0,
+                            "current_throttle_rate": 0.0,
+                        },
+                    })
+                    result = mappo.coordinate_mitigation(
+                        gateway_states=gw_states,
+                        shared_mainframe_queue=float(body.get("mainframe_queue", 45.0)),
+                        shared_mainframe_cpu=float(body.get("mainframe_cpu", 68.0)),
+                    )
+                    self._set_cors_headers(200)
+                    self.wfile.write(json.dumps({
+                        "mode": "Tier-2A-MAPPO-Multi-Gateway",
+                        "coordinated_actions": result,
+                    }, indent=2).encode("utf-8"))
+                except Exception as exc:
+                    self._set_cors_headers(500)
+                    self.wfile.write(json.dumps({"error": f"MAPPO coordinator error: {exc}"}).encode("utf-8"))
 
             else:
                 self._set_cors_headers(404)

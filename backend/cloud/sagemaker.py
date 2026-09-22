@@ -98,7 +98,31 @@ class SageMakerCascadePredictor:
                 self._normalize_output(result, drift)
                 return result
             except Exception as exc:
-                logger.warning(f"SageMaker endpoint '{self.endpoint_name}' invocation failed: {exc}. Falling back to local analytical engine.")
+                logger.warning(f"SageMaker endpoint '{self.endpoint_name}' invocation failed: {exc}. Falling back to local engine.")
+
+        # Trained model local inference engine (Tier 1A Hetero-RGCN + MultiTaskHead)
+        # Invoked when graph topology is available; falls back to analytical engine when empty
+        if graph_data and len(graph_data.get("nodes", [])) > 0:
+            try:
+                from pathlib import Path
+                import sys
+                repo_root = Path(__file__).resolve().parent.parent.parent
+                if str(repo_root) not in sys.path:
+                    sys.path.insert(0, str(repo_root))
+                from importlib import import_module
+                predictor_mod = import_module("ai-models.cascade-predictor.inference")
+                trained_result = predictor_mod.predict(
+                    graph_data=graph_data,
+                    sync_drift_score=drift,
+                    telemetry_features=telemetry_features,
+                    boundary_features=boundary_features,
+                    active_fault=active_fault,
+                    fault_level=fault_level,
+                )
+                self._normalize_output(trained_result, drift)
+                return trained_result
+            except Exception as exc:
+                logger.debug(f"Trained model local inference unavailable ({exc}). Falling back to local analytical engine.")
 
         # Analytical multi-task inference engine (calibrated to testbed fault profiles)
         return self._compute_calibrated_prediction(drift, active_fault, fault_level, graph_data)
