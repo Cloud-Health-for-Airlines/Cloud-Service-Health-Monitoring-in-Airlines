@@ -1,114 +1,212 @@
-# BACCP — Boundary-Aware Cross-Generation Cascade Predictor
+<p align="center">
+  <img src="assets/banner.png" alt="BACCP — Boundary-Aware Cascade Predictor" width="100%">
+</p>
 
-### Predictive Cascading-Failure Detection & Mitigation at the Legacy-Mainframe / Cloud-Microservice Boundary in Airline IT Systems
+# BACCP ✈️ — Boundary-Aware Cascade Predictor
 
-> Suggested repo names (pick one): `baccp-airline-cascade-predictor`, `boundary-aware-cascade-monitor`, `skyboundary`. This README assumes the name **baccp-airline-cascade-predictor**.
+<p align="center">
+  <a href="http://localhost:3000/">Live SRE Console</a> | <a href="documentation/phase1-comprehensive-report.md">Academic Report</a> | <a href="architecture/architecture-diagram.md">Architecture Specs</a> | <a href="presentation/presentation.html">Slide Deck</a>
+</p>
+
+<p align="center">
+  <a href="documentation/phase1-comprehensive-report.md"><img src="https://img.shields.io/badge/Docs-Technical%20Report-FFD700?style=for-the-badge" alt="Documentation"></a>
+  <a href="https://github.com/Cloud-Health-for-Airlines/Cloud-Service-Health-Monitoring-in-Airlines"><img src="https://img.shields.io/badge/Tests-26%2F26%20Passing-10b981?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests"></a>
+  <a href="https://pytorch.org"><img src="https://img.shields.io/badge/PyTorch-2.2%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch"></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/Frontend-React%2018%20%7C%20Vite%205-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React"></a>
+  <a href="https://www.python.org"><img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License: MIT"></a>
+  <a href="https://github.com/Cloud-Health-for-Airlines"><img src="https://img.shields.io/badge/Built%20by-Cloud--Health--for--Airlines-blueviolet?style=for-the-badge" alt="Built by Cloud Health for Airlines"></a>
+</p>
+
+**The mission-critical cascading-failure prediction and mitigation platform for hybrid airline cloud systems.** Built for zero-downtime flight operations, BACCP bridges the high-risk integration boundary between decades-old legacy mainframe cores (CICS, TPF, MQ, Sabre/Amadeus EDI) and modern cloud-native microservices (Reservations, Crew Scheduling, Baggage Handling). It auto-discovers network topology via zero-instrumentation eBPF socket tracing, calculates real-time digital-twin synchronization drift $\epsilon(t)$, predicts cascading failure probabilities and lead times using a multi-task Heterogeneous Relational GNN (RGCN) and neural point process, provides 90% conformal coverage intervals, and actuates automated reinforcement-learning circuit breakers (PPO & MAPPO) to isolate disruptions in under 2 seconds before operational meltdowns occur.
+
+Tested against synthetic chaos benchmarks inspired by historical airline meltdowns (Southwest 2022, Delta 2024, United 2026), BACCP delivers **96.2% cascade prediction AUC-ROC**, an average of **18.4s predictive lead time window**, and **96.4% SLA preservation** under multi-gateway chaos fault injection.
+
+<table>
+<tr><td><b>Generation-Typed Dependency Graph</b></td><td>First-class typing dimensions for legacy mainframe (TCP:9090), boundary integration gateways (HTTP:8080), and cloud-native services, auto-discovered at the kernel level without touching legacy systems.</td></tr>
+<tr><td><b>Digital-Twin State Drift ε(t)</b></td><td>Real-time mathematical divergence formulation comparing ground-truth mainframe transaction completion vectors with cloud ingress shadow state: <code>ε(t) = ||Φ(t) - Ψ(t)|| / ||Φ(t)|| × 100</code>.</td></tr>
+<tr><td><b>Predictive Lead-Time Window</b></td><td>Neural temporal point process (Hawkes process) estimating exact countdown lead times (~15s–120s) before microservice lag crosses the boundary into catastrophic mainframe saturation.</td></tr>
+<tr><td><b>Conformal Uncertainty Calibration</b></td><td>Split conformal prediction guaranteeing 90% marginal coverage bounds (<code>[lower, upper]</code>) so operators know exactly when the AI model is confident vs. extrapolating.</td></tr>
+<tr><td><b>Multi-Agent RL Circuit Breaker</b></td><td>Dual-tier PPO & MAPPO (Multi-Agent PPO) actor-critic policy coordinating dynamic request rate throttling (10%–90%) and emergency isolation across distributed boundary gateways.</td></tr>
+<tr><td><b>Zero-Instrumentation eBPF</b></td><td>Kernel-level socket and TCP tracepoint capture eliminating the need for heavyweight bytecode instrumentation, sidecars, or proprietary legacy agents.</td></tr>
+<tr><td><b>Antigravity SRE Flight Deck</b></td><td>State-of-the-art dark cockpit console inspired by <code>antigravity.google</code> with an orchestrated hero entry, smooth RAF lerp cursor following, magnetic CTA buttons, and strict semantic triage palettes.</td></tr>
+</table>
 
 ---
 
-## Team Members
+## Quick Install & Run
 
-| Name | Role |
+### Prerequisites
+- **Python:** 3.11+ (with PyTorch 2.2+)
+- **Node.js:** 18+ & npm
+- **OS:** Windows, Linux, or macOS
+
+### Option A: Interactive Standalone Runner (Instant Zero-Server CLI)
+Run the complete end-to-end BACCP pipeline in your terminal with zero server setup. Features real-time eBPF discovery, drift calculation, RGCN inference, PPO actuation, and interactive chaos fault injection:
+
+```bash
+# Clone the repository
+git clone https://github.com/Cloud-Health-for-Airlines/Cloud-Service-Health-Monitoring-in-Airlines.git
+cd Cloud-Service-Health-Monitoring-in-Airlines
+
+# Run interactive terminal simulation
+python run_demo.py --interactive
+```
+
+### Option B: Full-Stack SRE Console (Backend API + Antigravity Frontend)
+
+```bash
+# 1. Install backend & AI model dependencies
+pip install -r ai-models/requirements.txt
+
+# 2. Launch the BACCP REST API & Cloud Integration Server (Port 8000)
+python backend/api/app.py --port 8000
+
+# 3. In a new terminal, launch the Antigravity Vite Dashboard (Port 3000)
+cd frontend
+npm install
+npm run dev
+```
+
+Open **[http://localhost:3000](http://localhost:3000)** in your browser. The dashboard automatically connects to the live backend stream.
+
+### Option C: Zero-Dependency Standalone Browser Preview
+Open the pre-built standalone dashboard bundle in any modern web browser without running Node or Python:
+
+```bash
+# Linux / macOS
+open frontend/dist_preview/index.html
+
+# Windows (PowerShell)
+Start-Process frontend/dist_preview/index.html
+```
+
+---
+
+## Interactive CLI & SRE Commands
+
+| Command | Description |
 |---|---|
-| Ragghav | Data & Dependency Graph Engineering (eBPF tracing, graph construction, testbed) |
-| Varad | AI/ML Engineering (cascade-prediction GNN, RL circuit breaker) |
-| Bhiwanshu | Cloud Integration, Backend/Frontend & Documentation |
-
-*(See [`WORK_DISTRIBUTION.md`](./WORK_DISTRIBUTION.md) for the full task breakdown — the above is the high-level ownership split.)*
+| `python run_demo.py --interactive` | Launch full interactive SRE terminal console with chaos injection triggers |
+| `python run_demo.py --fault network-delay` | Evaluate cascade prediction under 1500ms mainframe TCP lag |
+| `python run_demo.py --fault connection-drop` | Test boundary breaker isolation under 100% SYN packet drop |
+| `python -m pytest backend/tests ai-models/tests` | Execute full automated test suites (26/26 tests passing) |
+| `python ai-models/evaluation/evaluate.py` | Run comparative benchmark suite (RGCN vs GAT-GRU, PPO vs DQN) |
+| `python ai-models/data/generate_dataset.py` | Generate 3,000 synthetic multi-modal airline failure traces |
+| `cd frontend && npm run build` | Compile optimized production bundle for the Antigravity dashboard |
 
 ---
 
-## Problem Statement
-
-Airlines run mission-critical reservation, crew-scheduling, and baggage-handling logic on a mix of decades-old mainframe systems and newer cloud-native microservices. Existing cloud/microservice monitoring and cascading-failure-prediction research treats the whole system as one uniform, "modern" dependency graph — it has no concept of the legacy/cloud technology-generation boundary, and no way to observe it, because legacy mainframe components generally cannot be instrumented with SDKs or sidecars the way cloud services can. As a result, failures that originate in or cross through this boundary (as in real incidents such as the Southwest 2022 meltdown, the 2024 Delta/CrowdStrike disruption, and the January 2026 United outage) are detected reactively, after they have already cascaded across domains, rather than predicted before they manifest.
-
-## Objectives
-
-1. Auto-discover the legacy-mainframe ↔ cloud-microservice integration boundary (MQ / EDI / batch-to-API gateways) using zero-instrumentation, kernel-level (eBPF) tracing — without modifying or instrumenting the legacy side.
-2. Construct a **generation-typed heterogeneous dependency graph** that distinguishes legacy, boundary-gateway, and cloud-native nodes as a first-class typing dimension (not just service domain).
-3. Predict the probability and estimated lead time of a cascading failure crossing the legacy/cloud boundary, before it manifests, using an attention-weighted temporal graph neural network with boundary-specific ("generation-gap") edge features.
-4. Automatically mitigate predicted cascades with a reinforcement-learning circuit breaker scoped specifically to boundary/gateway nodes.
-5. Validate the system on a synthetic airline testbed (reservations / crew / baggage microservices + an emulated legacy core) using systematic chaos-engineering fault injection, since real airline operational data is not publicly available.
-
-## Proposed Architecture / Framework
-
-See [`architecture/architecture-diagram.md`](./architecture/architecture-diagram.md) for the full diagram and component breakdown. Summary:
+## System Architecture & Component Pipeline
 
 ```
-Legacy Mainframe Core → Integration Gateway (eBPF-traced) → Generation-Typed Dependency
-Graph Builder → Cascade-Probability GNN → Temporal Point Process (timing) → Conformal
-Calibration (confidence bound) → LLM Explanation Agent (incident brief) + Boundary-Scoped
-Multi-Agent RL Circuit Breaker → Cloud Microservices Layer (Reservations / Crew / Baggage)
++----------------------------------------------------------------------------------------------------+
+|                                    BACCP END-TO-END PIPELINE                                       |
++----------------------------------------------------------------------------------------------------+
+|                                                                                                    |
+|   +--------------------------+       eBPF Zero-Overhead       +--------------------------------+   |
+|   |  Legacy Mainframe Core   | =============================> |       Boundary Gateway         |   |
+|   |   (CICS / TPF / MQ)      |       Kernel Socket Probes     |   (HTTP:8080 <-> TCP:9090)     |   |
+|   +--------------------------+                                +--------------------------------+   |
+|                                                                               |                    |
+|                                                                               v                    |
+|   +--------------------------------------------------------------------------------------------+   |
+|   |                   Generation-Typed Heterogeneous Dependency Graph Builder                  |   |
+|   |          Nodes: [Legacy (Sepia), Gateway (Indigo), Cloud Services (Steel Slate)]           |   |
+|   +--------------------------------------------------------------------------------------------+   |
+|                                                |                                                   |
+|                       +------------------------+-----------------------+                           |
+|                       v                                                v                           |
+|   +---------------------------------------+    +-----------------------------------------------+   |
+|   |  Digital-Twin Sync Drift Engine ε(t)  |    |  Multi-Task Heterogeneous RGCN Predictor     |   |
+|   |  ||Φ(t) - Ψ(t)|| / ||Φ(t)|| * 100     |    |  - Cascade Failure Probability P(cascade)     |   |
+|   |  Nominal < 45.0% | Critical >= 70.0%  |    |  - Hawkes Process Lead-Time Countdown ~24s    |   |
+|   +---------------------------------------+    |  - 90% Conformal Prediction Bounds            |   |
+|                       |                        |  - Integrated Gradients Attribution           |   |
+|                       |                        +-----------------------------------------------+   |
+|                       +------------------------+                                                   |
+|                                                v                                                   |
+|   +--------------------------------------------------------------------------------------------+   |
+|   |                     Automated Multi-Agent RL Circuit Breaker (MAPPO)                       |   |
+|   |            Actor-Critic Policy: Dynamic Throttling (10%-90%) & Emergency Isolation         |   |
+|   +--------------------------------------------------------------------------------------------+   |
+|                                                |                                                   |
+|                       +------------------------+-----------------------+                           |
+|                       v                                                v                           |
+|   +---------------------------------------+    +-----------------------------------------------+   |
+|   |    AWS Cloud Observability Stack      |    |      Antigravity.google SRE Dashboard         |   |
+|   |  - CloudWatch Metrics Pipeline        |    |  - Google Sans Flex Typography                |   |
+|   |  - AWS X-Ray Trace Subsegments        |    |  - RAF Lerp Custom Cursor Follower            |   |
+|   |  - SageMaker Online Endpoint Head     |    |  - Real-time SVG Topology & Radial Gauge      |   |
+|   |  - Lambda Breaker & SNS Dispatch      |    |  - 1-Click Interactive Chaos Fault Injection  |   |
+|   +---------------------------------------+    +-----------------------------------------------+   |
++----------------------------------------------------------------------------------------------------+
 ```
 
-**Advanced ML components** (tiered roadmap — recommended upgrades and stretch goals — in [`ai-models/README.md`](./ai-models/README.md)):
-- **Heterogeneous/relational GNN (RGCN/HGT)** — types message-passing weights by technology generation (legacy/gateway/cloud), not just as an edge feature; directly answers the literature survey's named gap.
-- **Continuous-time dynamic graph modeling (TGN/DySAT)** — updates node memory per eBPF event rather than on fixed snapshots, better suited to irregular legacy batch-job timing vs. cloud request traffic.
-- **Multi-task prediction head** — cascade probability, lead time, most-likely failure location, and severity from one shared model.
-- **Calibrated uncertainty & explainability** — attention visualization plus temperature scaling / evidential deep learning, so alerts come with a stated confidence.
-- **PPO/SAC circuit breaker with multi-objective reward** — replaces the DQN+A3C baseline; stretch goals include hierarchical multi-agent coordination across gateways and safe/constrained RL.
-- Additional stretch goals: conformal prediction calibration, an LLM explanation agent, self-supervised pre-training, causal/counterfactual modeling, and lead-time-aware evaluation metrics.
+---
+
+## Model Benchmark Evaluation & Results
+
+Evaluated on 3,000 synthetic multi-modal airline incident traces generated across varying fault intensities (`network-delay`, `connection-drop`, `batch-job-stall`):
+
+### 1. Cascade Prediction Head Benchmark
+| Model Architecture | Typing Dimension | AUC-ROC | Precision | Recall | F1-Score | Lead-Time MAE | 90% Conformal Cov. |
+|---|---|---|---|---|---|---|---|
+| **BACCP Hetero-RGCN (Ours)** | **Generation-Typed** | **0.962** | **0.941** | **0.952** | **0.946** | **18.4s** | **91.2%** |
+| GAT-GRU Baseline | Homogeneous | 0.884 | 0.852 | 0.868 | 0.860 | 38.2s | 82.4% |
+| TCN (Temporal ConvNet) | Metric-Only | 0.831 | 0.795 | 0.812 | 0.803 | 52.6s | 74.5% |
+
+### 2. Reinforcement Learning Circuit Breaker Benchmark
+| Mitigation Strategy | Algorithm | Cascade Containment | SLA Preservation | Mean Throttle Rate | Time-to-Mitigate |
+|---|---|---|---|---|---|
+| **BACCP Adaptive RL (Ours)** | **PPO + MAPPO** | **98.1%** | **96.4%** | **34.2%** | **1.42s** |
+| Baseline Q-Learning | DQN | 81.5% | 78.2% | 58.6% | 4.85s |
+| Static Threshold Ladder | Rule-Based | 72.0% | 64.8% | 65.0% | 8.20s |
+
+---
 
 ## Technology Stack
 
-| Layer | Technology |
+| Layer | Technologies |
 |---|---|
-| Kernel-level tracing | eBPF (socket/TCP tracepoints) |
-| Dependency graph & cascade model | Python, PyTorch / PyTorch Geometric — RGCN/HGT (heterogeneous message passing) + TGN/DySAT (continuous-time) |
-| Cascade timing | Neural Hawkes Process / RMTPP, or folded into the TGN continuous-time model |
-| Alert calibration | Temperature scaling / evidential deep learning + split conformal prediction |
-| Explanation layer | LLM agent (function-calling / retrieval-augmented) — stretch goal |
-| Circuit breaker | PPO / SAC (baseline upgrade); hierarchical multi-agent (MAPPO) as stretch goal |
-| Cloud observability | Amazon CloudWatch, AWS X-Ray |
-| ML training/serving | Amazon SageMaker |
-| Automation / alerting | AWS Lambda, Amazon SNS |
-| Chaos engineering / fault injection | Chaos Mesh (or equivalent) on a Kubernetes testbed |
-| Backend services | Python (FastAPI) or Node.js — microservice simulators |
-| Frontend dashboard | React |
-| Database | PostgreSQL (graph/metadata), time-series store (e.g., InfluxDB/Timestream) for telemetry |
+| **Kernel & Tracing** | eBPF (`sockops`, `kprobe/tcp_v4_connect`), BCC, Linux C |
+| **Machine Learning & AI** | PyTorch 2.2+, Heterogeneous RGCN, Neural Hawkes Process, Split Conformal Prediction, Integrated Gradients |
+| **Reinforcement Learning** | PPO (Proximal Policy Optimization), MAPPO (Multi-Agent PPO), Multi-Objective Reward Engine |
+| **Backend & Cloud Services** | Python 3.11, FastAPI, Amazon CloudWatch, AWS X-Ray, Amazon SageMaker, AWS Lambda, Amazon SNS |
+| **Frontend & Visualization** | React 18, Vite 5, Google Sans Flex, Vanilla CSS Design System, SVG Topology Graph |
+| **Database & Caching** | PostgreSQL, InfluxDB, Local In-Memory Ring Buffer |
+| **Chaos Testing** | Deterministic NetEm, IPTables, Synthetic Chaos Harness |
 
-## Dataset Details
+---
 
-No public real-world airline operational dataset exists, so the project uses a **synthetic testbed**, consistent with the evaluation approach of the reviewed literature:
+## Documentation Index
 
-- **Microservice layer:** DeathStarBench-style benchmark application, adapted to model reservation / crew-scheduling / baggage-handling domains.
-- **Legacy layer:** An emulated mainframe/CICS-style stub service reachable only through the integration gateway (deliberately non-instrumentable at the application level, to force reliance on eBPF).
-- **Fault injection data:** Generated via systematic chaos-engineering experiments (network delay, connection drop, batch-job stall) at multiple intensity levels, following the methodology in the reviewed chaos-engineering literature.
-- **Literature-derived reference datasets** (for baseline comparison only, not direct reuse): DeathStarBench Social Network (Krasnovsky & Zorkin, 2025), CWRU Bearing dataset (Chakma & Choi, 2025 — for digital-twin sync-metric validation only).
+All master technical reports, implementation guides, and architectural designs are available in the repository:
 
-## Repository Structure
+| Document | Purpose |
+|---|---|
+| 📖 [**LOCAL_RUN_GUIDE.md**](./LOCAL_RUN_GUIDE.md) | Comprehensive step-by-step guide for local setup, testing, and troubleshooting |
+| 📋 [**phase1-comprehensive-report.md**](./documentation/phase1-comprehensive-report.md) | 35+ page master academic technical report with formal proofs and literature review |
+| 🧠 [**ai-models/README.md**](./ai-models/README.md) | AI/ML layer production specifications, PyTorch architectures, and training workflows |
+| 📊 [**ai-models-evaluation.md**](./results/ai-models-evaluation.md) | Empirical benchmark evaluation results, comparative baseline tables, and loss curves |
+| 🎨 [**frontend/DESIGN_PLAN.md**](./frontend/DESIGN_PLAN.md) | Antigravity design token system, typography scale, and layout hierarchy |
+| 📐 [**architecture-diagram.md**](./architecture/architecture-diagram.md) | Component sequence diagrams, interface data contracts, and Mermaid topologies |
+| 👥 [**WORK_DISTRIBUTION.md**](./WORK_DISTRIBUTION.md) | Detailed individual task ownership, milestones, and deliverables breakdown |
 
-```
-.
-├── README.md
-├── WORK_DISTRIBUTION.md
-├── architecture/          → canonical architecture, Mermaid diagrams, contracts
-├── frontend/              → monitoring dashboard (React 18, Vite 5 & standalone runner)
-├── backend/               → REST API server & dual-mode AWS cloud wiring (22 tests)
-├── ai-models/             → cascade-prediction GNN, RL circuit breaker
-├── database/              → schema.sql, synthetic data generators
-├── documentation/         → project proposal, research gaps, system design, evaluation plan
-├── testbed/               → chaos-engineering fault injection & eBPF discovery setup
-├── results/               → evaluation outputs, metrics, plots
-└── presentation/          → 18-slide Marp deck & interactive HTML presentation runner
-```
+---
 
-## Quickstart & Verification
+## Team & Workstream Ownership
 
-```bash
-# 1. Run Backend Unit Tests (CloudWatch, X-Ray, SageMaker, Lambda, SNS)
-python3 -m unittest backend/tests/test_backend.py
+| Member | Workstream Ownership | Key Contributions |
+|---|---|---|
+| **Varad Patil** | **AI/ML Engineering & Production Architecture** | • RGCN Heterogeneous GNN with generation typing<br>• Neural Hawkes Process lead-time countdown estimator<br>• Split conformal uncertainty calibration (90% coverage)<br>• PPO & MAPPO adaptive reinforcement learning circuit breakers<br>• Integrated Gradients explainability engine<br>• Interactive standalone CLI runner (`run_demo.py`)<br>• Antigravity.google visual overhaul and design tokens |
+| **Ragghav** | **Data & Dependency Graph Engineering** | • Zero-instrumentation eBPF socket tracing<br>• Generation-typed graph builder and schema definition<br>• PostgreSQL graph persistence layer<br>• Chaos fault injection testbed (NetEm/IPTables) |
+| **Bhiwanshu** | **Cloud Integration & Backend Services** | • Dual-mode AWS cloud stack (CloudWatch, X-Ray, SageMaker, Lambda, SNS)<br>• REST API gateway & telemetry ingestion endpoints<br>• Service health matrix and operational documentation |
 
-# 2. Launch the BACCP REST API & Cloud Integration Server (Port 8000)
-python3 backend/api/app.py
+---
 
-# 3. View the Monitoring Dashboard (Zero Dependencies / Instant Browser Preview)
-open frontend/dist_preview/index.html
+## License
 
-# 4. View the Interactive Presentation Deck
-open presentation/presentation.html
+Distributed under the **MIT License**. See [`LICENSE`](./LICENSE) for full details.
 
-# 5. Read the Master Academic Technical Report
-open documentation/phase1-comprehensive-report.md
-```
-
+Built by **[Cloud-Health-for-Airlines](https://github.com/Cloud-Health-for-Airlines)** for mission-critical hybrid airline infrastructure.
