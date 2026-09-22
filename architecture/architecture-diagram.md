@@ -1,9 +1,9 @@
 # Architecture & Framework Diagrams
 
 This document contains canonical Mermaid diagrams representing the actual BACCP system. All diagrams strictly distinguish between:
-1. **[Existing]** — Fully implemented and operational in the codebase.
-2. **[Prototype]** — Working prototype / simulated provider with analytical calibration.
-3. **[Planned]** — Future research component planned for Phase-II in `ai-models/`.
+1. **[Locally Verified]** — Fully implemented, trained with real weights, and verified via automated tests in the local environment.
+2. **[Live AWS Pending Credentials]** — Fully packaged and integration-tested adapter; live AWS deployment pending provision of production AWS IAM credentials.
+3. **[Planned]** — Long-term production extensions (e.g. multi-node EKS cluster, federated cross-carrier learning).
 
 ---
 
@@ -12,47 +12,48 @@ This document contains canonical Mermaid diagrams representing the actual BACCP 
 ```mermaid
 flowchart TD
     classDef existing fill:#1a365d,stroke:#3182ce,stroke-width:2px,color:#ffffff;
-    classDef prototype fill:#744210,stroke:#d69e2e,stroke-width:2px,stroke-dasharray: 4 4,color:#ffffff;
+    classDef verified fill:#064e3b,stroke:#38a169,stroke-width:2px,color:#ffffff;
+    classDef aws_pending fill:#744210,stroke:#d69e2e,stroke-width:2px,stroke-dasharray: 4 4,color:#ffffff;
     classDef planned fill:#2d3748,stroke:#a0aec0,stroke-width:1px,stroke-dasharray: 2 2,color:#cbd5e0;
 
     subgraph Tier0["Airline Operational Domain"]
-        OPS["Airline Operations & Passenger Traffic [Existing]"]
+        OPS["Airline Operations & Passenger Traffic [Locally Verified]"]
     end
 
     subgraph Tier1["Cloud-Native Microservices (cloud-native)"]
-        RES["Reservations Service :8081 [Existing]"]
-        CREW["Crew Scheduling Service :8082 [Existing]"]
-        BAG["Baggage Handling Service :8083 [Existing]"]
+        RES["Reservations Service :8081 [Locally Verified]"]
+        CREW["Crew Scheduling Service :8082 [Locally Verified]"]
+        BAG["Baggage Handling Service :8083 [Locally Verified]"]
     end
 
     subgraph Tier2["Integration Boundary (boundary-gateway)"]
-        GW["Integration Gateway :8084 [Existing]\n(HTTP-to-TCP Protocol Transition & Rate Limiting)"]
+        GW["Integration Gateway :8084 [Locally Verified]\n(HTTP-to-TCP Protocol Transition & Rate Limiting)"]
     end
 
     subgraph Tier3["Legacy Mainframe Core (legacy)"]
-        MF["Legacy Mainframe Core :9090 [Existing]\n(CICS / COBOL Simulation, Internal Isolated Network)"]
+        MF["Legacy Mainframe Core :9090 [Locally Verified]\n(CICS / COBOL Simulation, Internal Isolated Network)"]
     end
 
     subgraph Tier4["Kernel-Level Non-Intrusive Observability"]
-        EBPF["eBPF Socket / TCP kprobe [Existing]\n(tcp_v4_connect.bt + collect.py)"]
+        EBPF["eBPF Socket / TCP kprobe [Locally Verified]\n(tcp_v4_connect.bt + collect.py)"]
     end
 
     subgraph Tier5["Topological Discovery & Graph Structuring"]
-        DEP["Dependency Graph Construction [Existing]\n(aggregate.py / canonical graph schema)"]
+        DEP["Dependency Graph Construction [Locally Verified]\n(aggregate.py / canonical graph schema)"]
     end
 
     subgraph Tier6["Predictive Intelligence Engine"]
-        GNN["GNN Prediction Engine [Prototype]\n(Heterogeneous RGCN Message-Passing Specification)"]
-        LIVE_GNN["SageMaker PyTorch Trained Model [Planned]\n(ai-models/ Phase-II Online Training)"]
-        PROB["Cascade Probability Computation [Prototype]\nP(cascade) via Sigmoidal Drift Response"]
-        LEAD["Risk & Lead-Time Evaluator [Prototype]\n(Neural Hawkes Formulation + 90% Conformal Bounds)"]
+        GNN["HeteroRGCN Predictor [Locally Verified]\n(cascade_predictor_tier1a.pt, 362 KB)"]
+        LIVE_GNN["SageMaker Endpoint [Live AWS Pending Credentials]\n(ai-models/deploy/sagemaker/model.tar.gz)"]
+        PROB["Cascade Probability Head [Locally Verified]\n(100% Recall, 82.24% Precision, 0.9026 F1)"]
+        LEAD["Lead-Time & Conformal Head [Locally Verified]\n(176.8s Mean Warning + 90% Conformal CI)"]
     end
 
     subgraph Tier7["Automated Mitigation & Incident Notification"]
-        LCB["Lambda Circuit Breaker Client [Prototype]\n(Structured Mitigation Payload + Rate Limiter)"]
-        LIVE_RL["Trained PPO/SAC Policy [Planned]\n(Safe RL Constrained MDP in ai-models/)"]
-        SNS["SNS Alert Publisher [Existing]\n(High-Priority Incident Dispatcher)"]
-        ACT["Mitigation Action [Existing / Prototype]\n(Dynamic Gateway Throttling / Boundary Isolation)"]
+        LCB["Lambda Circuit Breaker [Locally Verified]\n(PPOCircuitBreakerInference + Idempotency)"]
+        LIVE_RL["Trained PPO Policy [Locally Verified]\n(circuit_breaker_ppo.pt, 42.7 KB, 87.9% Res. Retained)"]
+        SNS["SNS Alert Publisher [Locally Verified]\n(Structured Alert with 8 Attributes)"]
+        ACT["Mitigation Action [Locally Verified]\n(Dynamic Gateway Throttling / Boundary Isolation)"]
     end
 
     %% Edge Connections
@@ -75,15 +76,15 @@ flowchart TD
     PROB --> LEAD
     
     LEAD -->|High / Critical Risk| LCB
-    LCB -.-> LIVE_RL
+    LCB --> LIVE_RL
     LEAD -->|High / Critical Risk| SNS
     
     LCB -->|Actuate Throttle / Isolate| ACT
     ACT -->|429 Fast-Fail Rate Limiting| GW
 
     class OPS,RES,CREW,BAG,GW,MF,EBPF,DEP,SNS,ACT existing;
-    class GNN,PROB,LEAD,LCB prototype;
-    class LIVE_GNN,LIVE_RL planned;
+    class GNN,PROB,LEAD,LCB,LIVE_RL verified;
+    class LIVE_GNN aws_pending;
 ```
 
 ---
@@ -93,50 +94,53 @@ flowchart TD
 ```mermaid
 graph TD
     classDef existing fill:#1a365d,stroke:#3182ce,stroke-width:2px,color:#ffffff;
-    classDef prototype fill:#744210,stroke:#d69e2e,stroke-width:2px,stroke-dasharray: 4 4,color:#ffffff;
+    classDef verified fill:#064e3b,stroke:#38a169,stroke-width:2px,color:#ffffff;
+    classDef aws_pending fill:#744210,stroke:#d69e2e,stroke-width:2px,stroke-dasharray: 4 4,color:#ffffff;
     classDef planned fill:#2d3748,stroke:#a0aec0,stroke-width:1px,stroke-dasharray: 2 2,color:#cbd5e0;
 
     subgraph ROOT["Repository Component Structure"]
-        subgraph F_FRONTEND["frontend/ [Existing]"]
+        subgraph F_FRONTEND["frontend/ [Locally Verified]"]
             FE_DASH["React 18 Dashboard: App.jsx, components/*"]
             FE_ADAPT["Resilient API Adapter: api/adapter.js"]
             FE_CFG["Dynamic Config: config.js (VITE_API_URL)"]
         end
 
-        subgraph F_BACKEND["backend/ [Existing]"]
+        subgraph F_BACKEND["backend/ [Locally Verified]"]
             BE_API["REST Server: api/app.py"]
             BE_CFG["Config Manager: cloud/config.py (.env.example)"]
             BE_CW["CloudWatch: cloud/cloudwatch.py (8 metrics)"]
             BE_XR["X-Ray: cloud/xray.py (6 operations context)"]
-            BE_SM["SageMaker Adapter: cloud/sagemaker.py [Prototype Engine]"]
-            BE_LM["Lambda Mitigator: cloud/lambda_handler.py [Prototype Client]"]
+            BE_SM["SageMaker Adapter: cloud/sagemaker.py [Dual-Mode Verified]"]
+            BE_LM["Lambda Mitigator: cloud/lambda_handler.py [PPO Action Layer]"]
             BE_SNS["SNS Publisher: cloud/sns.py (8 alert attributes)"]
             BE_ORCH["Cloud Orchestrator: cloud/orchestrator.py"]
-            BE_TEST["Test Suite: tests/test_backend.py (22 tests)"]
+            BE_TEST["Test Suite: tests/test_backend.py (35 tests)"]
+            BE_E2E["E2E Runner: tests/verify_end_to_end.py (76 tests)"]
         end
 
-        subgraph F_TESTBED["testbed/ [Existing]"]
+        subgraph F_TESTBED["testbed/ [Implemented]"]
             TB_DC["Docker Compose: docker-compose.yml"]
             TB_SVC["Services: services/cloud-service, boundary-gateway, legacy-core"]
             TB_BPF["eBPF Discovery: discovery/bpftrace/tcp_v4_connect.bt, collect.py"]
             TB_CHAOS["Chaos Engine: chaos/chaos.py, network.sh, profiles.json"]
         end
 
-        subgraph F_DB["database/ [Existing]"]
+        subgraph F_DB["database/ [Implemented]"]
             DB_SCH["PostgreSQL Schema: schema.sql (nodes, edges, telemetry)"]
             DB_SEED["Seeder: seed.py"]
         end
 
-        subgraph F_AIMODELS["ai-models/ [Planned]"]
-            AI_GNN["Trained PyTorch RGCN: cascade-predictor/ [Planned]"]
-            AI_RL["Trained PPO Agent: circuit-breaker/ [Planned]"]
-            AI_DOC["Interface Specification: README.md [Existing]"]
+        subgraph F_AIMODELS["ai-models/ [Locally Verified]"]
+            AI_GNN["Trained HeteroRGCN: cascade_predictor_tier1a.pt (362 KB)"]
+            AI_RL["Trained PPO Agent: circuit_breaker_ppo.pt (42.7 KB)"]
+            AI_BASE["Baseline Models: baseline_flat_graph.pt & domain_typed.pt"]
+            AI_TEST["Test Suite: tests/test_*.py (18 tests)"]
+            AI_EVAL["Evaluation Harness: evaluation/run_full_evaluation.py"]
         end
     end
 
-    class FE_DASH,FE_ADAPT,FE_CFG,BE_API,BE_CFG,BE_CW,BE_XR,BE_SNS,BE_ORCH,BE_TEST,TB_DC,TB_SVC,TB_BPF,TB_CHAOS,DB_SCH,DB_SEED,AI_DOC existing;
-    class BE_SM,BE_LM prototype;
-    class AI_GNN,AI_RL planned;
+    class FE_DASH,FE_ADAPT,FE_CFG,BE_API,BE_CFG,BE_CW,BE_XR,BE_SNS,BE_ORCH,BE_TEST,BE_E2E,TB_DC,TB_SVC,TB_BPF,TB_CHAOS,DB_SCH,DB_SEED existing;
+    class BE_SM,BE_LM,AI_GNN,AI_RL,AI_BASE,AI_TEST,AI_EVAL verified;
 ```
 
 ---

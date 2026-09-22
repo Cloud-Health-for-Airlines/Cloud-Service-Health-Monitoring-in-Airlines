@@ -1,0 +1,185 @@
+{
+  "model_architecture": "HeteroRGCN-GRU-MultiTask (Tier 1A)",
+  "training_timestamp": "2026-09-22T17:03:28.266731+00:00",
+  "training_seed": 42,
+  "training_duration_seconds": 4.88,
+  "dataset_hash": "6618af9c38b24eb0",
+  "dataset_samples": 1200,
+  "split_counts": {
+    "train": 840,
+    "validation": 180,
+    "test": 180
+  },
+  "hyperparameters": {
+    "node_in_dim": 7,
+    "hidden_dim": 64,
+    "num_relations": 5,
+    "num_nodes": 5,
+    "num_severities": 5,
+    "gru_layers": 2,
+    "learning_rate": 0.001,
+    "batch_size": 32,
+    "epochs_trained": 18,
+    "early_stopping_patience": 10
+  },
+  "feature_schema": {
+    "node_features": [
+      "norm_latency",
+      "norm_req_rate",
+      "error_rate",
+      "cpu_saturation",
+      "is_cloud_native",
+      "is_boundary_gateway",
+      "is_legacy_core"
+    ],
+    "relation_types": {
+      "0": "cloud_to_gateway",
+      "1": "gateway_to_cloud",
+      "2": "gateway_to_legacy",
+      "3": "legacy_to_gateway",
+      "4": "cloud_to_cloud"
+    },
+    "boundary_drift_feature": "sync_drift_score_normalized"
+  },
+  "test_metrics": {
+    "accuracy": 0.8944,
+    "precision": 0.8224,
+    "recall": 1.0,
+    "f1": 0.9026,
+    "mae_lead_time_seconds": 47.91,
+    "root_cause_accuracy": 0.7333,
+    "severity_accuracy": 0.8889,
+    "tp": 88,
+    "fp": 19,
+    "tn": 73,
+    "fn": 0
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.7824,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 100.18
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.09,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 69.85
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.8699,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 72.41
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.8211,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 61.56
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.7188,
+      "val_f1": 0.8153,
+      "val_accuracy": 0.8389,
+      "val_lead_time_mae": 63.25
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.6414,
+      "val_f1": 0.8027,
+      "val_accuracy": 0.8389,
+      "val_lead_time_mae": 62.92
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.6554,
+      "val_f1": 0.805,
+      "val_accuracy": 0.8278,
+      "val_lead_time_mae": 61.24
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.6971,
+      "val_f1": 0.8617,
+      "val_accuracy": 0.8556,
+      "val_lead_time_mae": 62.45
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.6324,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 70.5
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.6105,
+      "val_f1": 0.805,
+      "val_accuracy": 0.8278,
+      "val_lead_time_mae": 59.2
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.5902,
+      "val_f1": 0.8333,
+      "val_accuracy": 0.8444,
+      "val_lead_time_mae": 59.37
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.5772,
+      "val_f1": 0.8391,
+      "val_accuracy": 0.8444,
+      "val_lead_time_mae": 61.04
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.5623,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 61.87
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.5752,
+      "val_f1": 0.805,
+      "val_accuracy": 0.8278,
+      "val_lead_time_mae": 57.94
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.5763,
+      "val_f1": 0.7945,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 59.03
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.5647,
+      "val_f1": 0.8125,
+      "val_accuracy": 0.8333,
+      "val_lead_time_mae": 57.75
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.5749,
+      "val_f1": 0.805,
+      "val_accuracy": 0.8278,
+      "val_lead_time_mae": 58.16
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.5553,
+      "val_f1": 0.7919,
+      "val_accuracy": 0.8278,
+      "val_lead_time_mae": 58.87
+    }
+  ]
+}

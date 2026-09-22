@@ -1,0 +1,16 @@
+{
+  "true_negative": 73,
+  "false_positive": 19,
+  "false_negative": 0,
+  "true_positive": 88,
+  "matrix_2x2": [
+    [
+      73,
+      19
+    ],
+    [
+      0,
+      88
+    ]
+  ]
+}

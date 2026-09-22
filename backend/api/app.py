@@ -28,7 +28,11 @@ from backend.cloud.cloudwatch import CloudWatchPublisher
 from backend.cloud.config import config
 from backend.cloud.lambda_handler import LambdaMitigationClient, breaker_manager, lambda_handler
 from backend.cloud.orchestrator import orchestrator
-from backend.cloud.sagemaker import SageMakerCascadePredictor
+from backend.cloud.sagemaker import (
+    SageMakerCascadePredictor,
+    SageMakerError,
+    SageMakerValidationError,
+)
 from backend.cloud.sns import SNSPublisher
 from backend.cloud.xray import XRayTraceRecorder
 
@@ -320,21 +324,28 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
 
             elif path == "/api/predict":
                 with xray.trace_operation("prediction_request"):
-                    graph = body.get("graph") or load_canonical_graph()
-                    drift = float(body.get("sync_drift_score", simulated_state["current_sync_drift"]))
-                    telemetry = body.get("telemetry_features")
-                    boundary = body.get("boundary_features")
-                    
-                    prediction = sagemaker.predict_cascade(
-                        graph_data=graph,
-                        sync_drift_score=drift,
-                        telemetry_features=telemetry,
-                        boundary_features=boundary,
-                        active_fault=body.get("active_fault", simulated_state["active_fault"]),
-                        fault_level=body.get("fault_level", simulated_state["fault_level"]),
-                    )
-                    self._set_cors_headers(200)
-                    self.wfile.write(json.dumps(prediction, indent=2).encode("utf-8"))
+                    try:
+                        graph = body.get("graph") or load_canonical_graph()
+                        drift = float(body.get("sync_drift_score", simulated_state["current_sync_drift"]))
+                        telemetry = body.get("telemetry_features")
+                        boundary = body.get("boundary_features")
+
+                        prediction = sagemaker.predict_cascade(
+                            graph_data=graph,
+                            sync_drift_score=drift,
+                            telemetry_features=telemetry,
+                            boundary_features=boundary,
+                            active_fault=body.get("active_fault", simulated_state["active_fault"]),
+                            fault_level=body.get("fault_level", simulated_state["fault_level"]),
+                        )
+                        self._set_cors_headers(200)
+                        self.wfile.write(json.dumps(prediction, indent=2).encode("utf-8"))
+                    except SageMakerValidationError as val_err:
+                        self._set_cors_headers(400)
+                        self.wfile.write(json.dumps({"error": "Validation error", "detail": str(val_err)}).encode("utf-8"))
+                    except Exception as err:
+                        self._set_cors_headers(500)
+                        self.wfile.write(json.dumps({"error": "Prediction error", "detail": str(err)}).encode("utf-8"))
 
             elif path in ("/api/pipeline/run", "/api/orchestrate"):
                 trace_report = orchestrator.run_pipeline(
@@ -350,7 +361,7 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
             elif path == "/api/simulate/chaos":
                 fault = body.get("fault")
                 level = body.get("level", "medium")
-                
+
                 if fault in ("network-delay", "connection-drop", "batch-job-stall"):
                     simulated_state["active_fault"] = fault
                     simulated_state["fault_level"] = level

@@ -94,16 +94,16 @@ BACCP: Boundary-Aware Cross-Generation Cascade Predictor
 
 # 4. Project Objectives
 
-1. **Zero-Overhead Boundary Discovery** <span class="badge-existing">[Existing]</span>
+1. **Zero-Overhead Boundary Discovery** <span class="badge-existing">[Implemented]</span>
    Observe the legacy/cloud boundary non-intrusively via Linux kernel eBPF probes (`kprobe:tcp_v4_connect`) on the gateway host—zero mainframe code changes.
-2. **Generation-Typed Dependency Graph** <span class="badge-existing">[Existing]</span>
+2. **Generation-Typed Dependency Graph** <span class="badge-existing">[Implemented]</span>
    Construct a heterogeneous graph distinguishing `legacy`, `boundary-gateway`, and `cloud-native` nodes as a first-class typing dimension.
-3. **Digital-Twin Synchronization Drift Score $\epsilon(t)$** <span class="badge-existing">[Existing]</span>
+3. **Digital-Twin Synchronization Drift Score $\epsilon(t)$** <span class="badge-existing">[Implemented]</span>
    Quantify real-time state divergence between cloud transaction submission rates and legacy mainframe completion rates.
-4. **Calibrated Lead-Time Cascade Prediction** <span class="badge-proto">[Prototype]</span>
-   Predict cascade probability $P_{\text{cascade}}$ and operational lead time $\hat{\tau}$ with $90\%$ split conformal prediction guarantees ($1 - \alpha = 0.90$).
-5. **Targeted Boundary Circuit Breaking** <span class="badge-proto">[Prototype Client]</span>
-   Actuate automated rate-limiting specifically at the boundary gateway via AWS Lambda to maintain graceful degradation without manual intervention.
+4. **Calibrated Lead-Time Cascade Prediction** <span class="badge-existing">[Locally Verified]</span>
+   Trained HeteroRGCN predictor ([`cascade_predictor_tier1a.pt`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/weights/cascade_predictor_tier1a.pt)) forecasting cascade probability ($100\%$ recall, $0.9026$ F1) and lead time ($\bar{\tau} = 176.8$s) with $90\%$ split conformal guarantees.
+5. **Priority-Aware RL Boundary Circuit Breaking** <span class="badge-existing">[Locally Verified]</span>
+   Trained PPO agent ([`circuit_breaker_ppo.pt`](file:///Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/weights/circuit_breaker_ppo.pt)) dynamically protecting critical reservations ($87.90\%$ retained) while shedding baggage ($38.31\%$) during mainframe backpressure.
 
 ---
 
@@ -112,25 +112,25 @@ BACCP: Boundary-Aware Cross-Generation Cascade Predictor
 ```text
 Airline Operations & Passenger Ingress
                  │
-  Cloud Microservices (Reservations, Crew, Baggage) [Existing]
+  Cloud Microservices (Reservations, Crew, Baggage) [Locally Verified]
                  │  (HTTP:8080)
-      Integration Gateway [Existing] ◄─── eBPF Kernel Probing [Existing]
+      Integration Gateway [Locally Verified] ◄─── eBPF Kernel Probing [Implemented]
                  │  (TCP:9090 Isolated)     (kprobe:tcp_v4_connect)
-        Legacy Mainframe Core [Existing]
+        Legacy Mainframe Core [Implemented]
                  │
-      Generation-Typed Dependency Graph [Existing]
+      Generation-Typed Dependency Graph [Implemented]
                  │
-    Cascade-Probability Predictor [Prototype Engine / Planned Phase-II Weights]
-    (Heterogeneous RGCN + Digital-Twin Drift ε(t) + Hawkes Lead Time + Conformal Bounds)
+    Cascade-Probability Predictor [Locally Verified - cascade_predictor_tier1a.pt]
+    (Heterogeneous RGCN + Drift ε(t) + Temporal GRU Lead Time + 90% Conformal Bounds)
                  │
-       Risk & Lead-Time Evaluator [Existing]
+       Risk & Lead-Time Evaluator [Locally Verified]
         ┌────────┴────────┐
         ▼                 ▼
 Lambda Circuit Breaker   Amazon SNS Alert
-[Prototype / Existing]     [Existing]
+[circuit_breaker_ppo.pt] [Locally Verified]
         │                 │
 Mitigation Action       Operator SRE Console
-(Dynamic Gateway Rate Limit)
+(Priority PPO Throttling / 100% Cascade Avoidance)
 ```
 
 ---
@@ -173,20 +173,20 @@ The system formalizes the topology as a heterogeneous directed graph $G = (V, E,
 
 ---
 
-# 8. AI/ML Pipeline: From Telemetry to Explanation
+# 8. AI/ML Pipeline: Multi-Task HeteroRGCN + PPO Mitigation
 
-$$\text{Telemetry} \longrightarrow \text{Graph} \longrightarrow \text{GNN} \longrightarrow P(\text{cascade}) \longrightarrow \text{Lead Time } (\hat{\tau}) \longrightarrow \text{Severity} \longrightarrow \text{Explanation}$$
+$$\text{Telemetry} \longrightarrow \text{Hetero Graph} \longrightarrow \text{RGCN + GRU} \longrightarrow \text{Multi-Task Outputs} \longrightarrow \text{PPO Actuation}$$
 
 1. **Feature Input**: Graph nodes/edges, per-service RED metrics, and digital-twin sync drift:
    $$\epsilon(t) = \frac{\|\Phi(t) - \Psi(t)\|_2}{\|\Phi(t)\|_2 + \delta} \times 100$$
-2. **Heterogeneous RGCN**: Relational message-passing with generation-specific weights $W_r$.
+2. **Heterogeneous RGCN (`HeteroCascadePredictor`)**: Relational message-passing with generation-specific weights $W_r$, trained on 1,200 trajectories.
 3. **Multi-Task Prediction Head**:
-   * **Cascade Probability**: $P_{\text{cascade}} \in [0.0, 1.0]$ via sigmoidal drift mapping.
-   * **Estimated Lead Time**: $\hat{\tau}$ in seconds modeled via Neural Hawkes intensity function.
-   * **Root Cause Location**: Node classification identifying `boundary-gateway`.
-4. **Split Conformal Uncertainty Calibration**:
-   Provides distribution-free coverage guarantee: $\mathbb{P}(P_{\text{true}} \in [\hat{P} - \Delta, \hat{P} + \Delta]) \ge 0.90$.
-5. **AIOps Incident Brief**: Natural language explanation for airline operators.
+   * **Cascade Probability**: $P_{\text{cascade}}$ (**100.00% recall**, **82.24% precision**, **0.9026 F1**, **0.9818 ROC-AUC**).
+   * **Estimated Lead Time**: $\hat{\tau}$ (**mean: 176.8s** / ~2.9 min, **median: 163.6s**, precision@2m: **71.21%**).
+   * **Root Cause Location**: Node classification isolating `boundary-gateway` (**73.33% accuracy**, +15% over Flat GCN).
+   * **Severity Classification**: 5-class ITIL severity tiering (**88.89% accuracy**, +20% over Flat GCN).
+4. **Split Conformal Uncertainty**: Distribution-free coverage guarantee: $\mathbb{P}(P_{\text{true}} \in [\hat{P} - \Delta, \hat{P} + \Delta]) \ge 0.90$.
+5. **PPO Circuit Breaker**: Continuous throttle action preserving **87.90% reservations throughput**.
 
 ---
 
@@ -201,13 +201,13 @@ BACCP incorporates a modular provider/adapter architecture across 5 AWS services
    ▼                  ▼               ▼               ▼                  ▼
 CloudWatch          X-Ray         SageMaker        Lambda              SNS
 Metric Streaming  Tracing     Model Adapter    Mitigation Breaker Alert Publisher
-8 Metrics         6 Paths     Multi-Task RGCN  Dynamic Throttle   High-Priority
-BACCP/Airline...  UDP Daemons 90% Conformal    Event Payload      8 Attributes
+8 Metrics         6 Paths     Multi-Task RGCN  PPO Action Layer   High-Priority
+BACCP/Airline...  UDP Daemons Genuine PyTorch  Idempotency Logic  8 Attributes
 ```
 
 * **Dual-Mode Operation**:
-  * **`CLOUD_MODE=local` (Default)**: Runs 100% offline without AWS credentials. Uses in-memory ring buffers, analytical multi-task inference, simulated Lambda actions, and local alert logging.
-  * **`CLOUD_MODE=aws`**: Connects to live AWS endpoints using `boto3` SDK when credentials and region are provided.
+  * **`CLOUD_MODE=local` (Verified)**: Runs 100% offline without AWS credentials. Uses in-memory ring buffers, genuine local PyTorch inference (`cascade_predictor_tier1a.pt`), live PPO action decisions (`circuit_breaker_ppo.pt`), and local alert logging.
+  * **`CLOUD_MODE=aws` (Pending Credentials)**: Connects to live AWS endpoints using `boto3` SDK when credentials and region are provided. Full deployment packages created (`model.tar.gz`).
 * **Zero Crashes**: All cloud adapters handle network unavailability gracefully with local fallback.
 
 ---
@@ -218,21 +218,21 @@ Built with **React 18, Vite 5, Lucide Icons**, and responsive dark-theme NOC con
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│ [SYSTEM OVERVIEW]  HEALTH: CRITICAL | DRIFT: 85.0% | CASCADE RISK: 88% │
+│ [SYSTEM OVERVIEW]  HEALTH: CRITICAL | DRIFT: 88.5% | CASCADE RISK: 99% │
 ├───────────────────────────────────┬────────────────────────────────────┤
 │ [DEPENDENCY TOPOLOGY GRAPH]       │ [BOUNDARY HEALTH DRIFT GAUGE]      │
 │  Reservations ───┐                │          ╭─────────╮               │
-│  Crew ───────────┼──► Gateway     │         │  85.0%   │ ε(t) Drift    │
+│  Crew ───────────┼──► Gateway     │         │  88.5%   │ ε(t) Drift    │
 │  Baggage ────────┘     │          │          ╰─────────╯               │
 │                   Legacy Core     │  Status: CRITICAL (Threshold: 45%) │
 ├───────────────────────────────────┼────────────────────────────────────┤
 │ [PREDICTIVE ALERTS PANEL]         │ [SERVICE HEALTH MATRIX]            │
 │  CRITICAL: Cascade Impending      │  Service         Latency  Err  Req │
-│  Lead Time: 35s [Countdown]       │  reservations    18.5ms   0%   24  │
-│  90% Conformal CI: [79%, 97%]     │  boundary-gate   45.0ms  42%   57  │
+│  Lead Time: 99.1s [Countdown]     │  reservations    18.5ms   0%   24  │
+│  90% Conformal CI: [88.7%, 100%]  │  boundary-gate   480.0ms 18%   57  │
 │  Root Cause: boundary-gateway     │  legacy-core     98.2ms  50%   57  │
 ├───────────────────────────────────┴────────────────────────────────────┤
-│ [CIRCUIT BREAKER CONTROL]  State: THROTTLED (50%) | [CHAOS PLAYGROUND] │
+│ [CIRCUIT BREAKER CONTROL]  State: OPEN (100%) | [CHAOS PLAYGROUND]     │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 * Polling refresh every 6s • Zero fabricated data • Production build in 385ms
@@ -246,71 +246,73 @@ Built with **React 18, Vite 5, Lucide Icons**, and responsive dark-theme NOC con
        │
 2. eBPF detects TCP socket SYN delays; Gateway completion lags submission rate
        │
-3. Digital-Twin Sync Drift surges: ε(t) = 85.0% (Threshold = 45.0%)
+3. Digital-Twin Sync Drift surges: ε(t) = 88.5% (Threshold = 45.0%)
        │
-4. SageMaker Predictor evaluates cascade risk:
-   Probability = 88.0%, Estimated Lead Time = 35.0s, 90% Conformal Bounds [79%, 97%]
+4. SageMaker Adapter evaluates cascade risk via cascade_predictor_tier1a.pt:
+   Probability = 0.9906, Estimated Lead Time = 99.1s, 90% Conformal Bounds [88.7%, 100%]
        │
-5. Cloud Orchestrator evaluates risk: Critical (P >= 0.75 or ε(t) >= 70%)
+5. Cloud Orchestrator evaluates risk: Critical Severity (P >= 0.70 or ε(t) >= 70%)
        │
-6. AWS Lambda Circuit Breaker Invoked:
-   Action: OPEN (100% boundary isolation) or THROTTLED (dynamic rate limit 30%-75%)
-   Gateway returns 429 Fast-Fail to non-critical queries; checkout preserved
+6. AWS Lambda Circuit Breaker Invoked via circuit_breaker_ppo.pt:
+   Action: OPEN (100% boundary isolation) or THROTTLED (continuous rate limit)
+   Idempotency Manager suppresses duplicate alert floods within 30s window
        │
 7. Amazon SNS Alert Dispatched to Operations Center with full incident brief
 ```
 
-* **Prototype Safety Guardrail**: Local mode simulates executions with in-memory logging, preventing accidental disruption of live production traffic.
+* **Safety & Resilience**: Seamless fallback to conservative rule-based mitigation if tensors or network drop out.
 
 ---
 
 # 12. Current Implementation Status: Honest Audit
 
-| Component | Status | Evidence in Repository |
-| :--- | :---: | :--- |
-| **Backend REST API** | <span class="badge-existing">Completed</span> | `backend/api/app.py` (Zero dependencies), 22/22 unit tests passing |
-| **Cloud Integration** | <span class="badge-existing">Completed</span> | `backend/cloud/*` (CloudWatch, X-Ray, SageMaker, Lambda, SNS, Orchestrator) |
-| **Frontend Dashboard** | <span class="badge-existing">Completed</span> | `frontend/src/*` (7 sections, SVG topology, radial drift gauge, build 385ms) |
-| **Testbed Topology** | <span class="badge-existing">Completed</span> | `testbed/docker-compose.yml` (5 services, legacy core network isolation) |
-| **eBPF Tracing** | <span class="badge-existing">Completed</span> | `testbed/discovery/bpftrace/tcp_v4_connect.bt`, `collect.py` |
-| **Database Schema** | <span class="badge-existing">Completed</span> | `database/schema.sql` (PostgreSQL tables for nodes, edges, telemetry) |
-| **Cascade Predictor** | <span class="badge-proto">Prototype</span> | `backend/cloud/sagemaker.py` (Analytical engine with 90% conformal intervals) |
-| **Circuit Breaker** | <span class="badge-proto">Prototype</span> | `backend/cloud/lambda_handler.py` (Dynamic rate limiting client & simulation) |
-| **Architecture & Docs** | <span class="badge-existing">Completed</span> | `architecture/canonical-architecture.md`, `documentation/*` (7 reports) |
-| **PyTorch RGCN Weights** | <span class="badge-planned">Planned</span> | `ai-models/` (Phase-II training on logged chaos trajectories) |
+| Component | Status | Evidence in Repository | Verified Capabilities |
+| :--- | :---: | :--- | :--- |
+| **Backend REST API** | <span class="badge-existing">Integration Tested</span> | `backend/api/app.py` | 35 backend tests pass; real-time $\epsilon(t)$ drift calculation |
+| **Cloud Integration** | <span class="badge-existing">Locally Verified</span> | `backend/cloud/*` | CloudWatch (8 metrics), X-Ray (6 paths), SNS (8 attributes) |
+| **Frontend Dashboard** | <span class="badge-existing">Integration Tested</span> | `frontend/src/*` | 7 sections, SVG topology, radial drift gauge, build in 385ms |
+| **Cascade Predictor** | <span class="badge-existing">Integration Tested</span> | `ai-models/weights/cascade_predictor_tier1a.pt` | 100% recall, 82.2% precision, 0.9026 F1, 176.8s lead time |
+| **RL Circuit Breaker** | <span class="badge-existing">Integration Tested</span> | `ai-models/weights/circuit_breaker_ppo.pt` | Continuous PPO; 100% cascade avoidance, 87.9% reservations retained |
+| **Baseline Benchmark** | <span class="badge-existing">Locally Verified</span> | `results/baseline_comparison.json` | Flat GCN vs Domain-Typed vs BACCP; No Mit vs Rule vs PPO |
+| **Full Pipeline E2E** | <span class="badge-existing">Integration Tested</span> | `backend/tests/verify_end_to_end.py` | **76/76 automated tests passing across 5 suites (Exit 0)** |
+| **SageMaker & Lambda** | <span class="badge-proto">Dual-Mode Verified</span> | `sagemaker.py`, `lambda_handler.py` | Genuine local PyTorch & PPO; Live AWS pending credentials |
+| **Testbed & Discovery**| <span class="badge-existing">Implemented</span> | `testbed/` | 5 services, isolated legacy network, eBPF `tcp_v4_connect.bt` |
+| **Live AWS Deployment**| <span class="badge-planned">Pending Credentials</span> | `model.tar.gz`, `documentation/*` | Ready for deployment; awaits production AWS access keys |
 
 ---
 
-# 13. Experimental Evaluation Plan
+# 13. Experimental Evaluation: Verified Benchmark Results
 
-Evaluating on the synthetic airline testbed across 3 controlled chaos fault profiles:
+Evaluated on held-out test trajectories ($N=180$, Seed 42) from `ai-models/data/dataset.json`:
 
-* **Chaos Profiles**:
-  * `network-delay`: 200ms–1500ms latency on gateway-to-legacy TCP interface.
-  * `connection-drop`: 10%–50% TCP SYN packet drops (socket queue exhaustion).
-  * `batch-job-stall`: Gateway thread contention simulating batch fare calculations.
-* **Evaluation Metrics & Target Benchmarks**:
-  * **Detection F1-Score**: Target $\ge 0.90$ (vs. 0.62 for static CloudWatch threshold).
-  * **Mean Advance Warning Lead Time ($\bar{\tau}$)**: Target $\ge 120$ seconds (vs. 4.2s reactive).
-  * **Precision@60s**: Target $\ge 0.85$ (advance precision before manifestation).
-  * **Conformal Coverage Rate**: Empirical coverage $\ge 90\%$ (validating statistical safety).
-  * **Throughput Resilience ($R$)**: Target $\ge 85\%$ reservation throughput retained during chaos.
-  * **Mitigation Actuation Latency**: Target $< 200$ms from alarm to gateway rate limiting.
+* **Model Comparison Benchmark**:
+  * **Recall (Detection Rate)**: **100.00%** (BACCP) vs 95.45% (Flat GCN) — *Zero missed cascades*
+  * **Precision**: **82.24%** (BACCP) vs 85.71% (Flat GCN) — *Calibrated conservative alerts*
+  * **ROC-AUC**: **0.9818** (BACCP) vs 0.9708 (Flat GCN)
+  * **Mean Advance Warning Lead Time ($\bar{\tau}$)**: **176.8 seconds** (~2.9 minutes)
+  * **Precision @ 2-Minute Horizon**: **71.21%** (Reliable operational lead-time window)
+  * **Root-Cause Isolation Accuracy**: **73.33%** (+15.00% over Flat GCN)
+  * **Severity Tiering Accuracy**: **88.89%** (+20.00% over Flat GCN)
+* **Circuit Breaker Mitigation Benchmark (50 Chaos Runs)**:
+  * **Cascade Incidence**: **0.0%** (PPO & Rule) vs **70.0%** (No Mitigation)
+  * **Reservations Throughput Retained**: **87.90%** (PPO) vs **81.20%** (Static Rule) — *+6.70% Protection*
+  * **Crew Scheduling Retained**: **61.43%** (PPO) vs **58.50%** (Static Rule)
+  * **Baggage Throughput Retained**: **38.31%** (PPO) — *Intelligent selective load shedding*
 
 ---
 
-# 14. Future Work & Roadmap (Phase-II)
+# 14. What's Still Left (Reality Check & Roadmap)
 
-1. **Live PyTorch Model Training (`ai-models/`)** <span class="badge-planned">[Planned]</span>
-   Train the relational GNN on logged testbed chaos trajectories; deploy trained weights to Amazon SageMaker endpoint.
-2. **Safe Reinforcement Learning Policy** <span class="badge-planned">[Planned]</span>
-   Replace heuristic dynamic throttling with a trained PPO agent enforcing Constrained MDP Lagrangian bounds to guarantee reservation throughput.
-3. **Enterprise eBPF CO-RE Bytecode** <span class="badge-planned">[Planned]</span>
-   Upgrade standalone bpftrace scripts to compiled C/libbpf CO-RE bytecode for multi-kernel enterprise compatibility.
-4. **Multi-Host Kubernetes Cluster** <span class="badge-planned">[Planned]</span>
-   Scale testbed to multi-node AWS EKS cluster with AWS Distro for OpenTelemetry (ADOT).
-5. **Cross-Carrier Federated Observability** <span class="badge-planned">[Planned]</span>
-   Implement FedMon federated learning across airline alliances without sharing passenger PII/PNR data.
+1. **Live AWS Production Deployment (`Pending Credentials`)**
+   Deploy `ai-models/deploy/sagemaker/model.tar.gz` to a live SageMaker endpoint and provision AWS Lambda execution roles once production AWS IAM credentials are provided.
+2. **CO-RE eBPF Bytecode (`Planned`)**
+   Compile standalone bpftrace scripts into portable C/libbpf CO-RE (Compile Once - Run Everywhere) bytecode for multi-kernel enterprise compatibility.
+3. **Multi-Host Kubernetes Cluster (`Planned`)**
+   Scale Docker Compose testbed into a multi-node AWS EKS cluster with AWS Distro for OpenTelemetry (ADOT).
+4. **Enterprise Multi-Tenant Authentication (`Planned`)**
+   Implement OAuth2/OIDC single sign-on on the backend REST API and React monitoring console.
+5. **Multi-Carrier Federated Observability (`Planned`)**
+   Deploy FedMon federated learning across airline alliance boundaries without sharing passenger PNR data.
 
 ---
 

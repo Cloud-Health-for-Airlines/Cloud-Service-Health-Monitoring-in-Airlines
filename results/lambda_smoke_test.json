@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-09-22T17:45:00.154952+00:00",
+  "overall_status": "LOCAL_VERIFIED (LIVE AWS PENDING CREDENTIALS)",
+  "local_status": "LOCAL_VERIFIED",
+  "live_aws_status": "PENDING_CREDENTIALS",
+  "function_name": "baccp-circuit-breaker-mitigator",
+  "aws_region": "us-east-1",
+  "live_credentials_present": false,
+  "ppo_weights_loaded": true,
+  "ppo_checkpoint": "circuit_breaker_ppo.pt",
+  "notes": "AWS credentials not configured. Local Lambda handler and PPO inference fully verified; live Lambda deployment ready upon credential provision.",
+  "tests": {
+    "1_nominal_state": {
+      "status": "PASS",
+      "action": "CLOSED",
+      "throttle_rate": 0.0,
+      "engine_mode": "trained-ppo"
+    },
+    "2_high_risk_state": {
+      "status": "PASS",
+      "action": "THROTTLED",
+      "throttle_rate": 0.3537,
+      "engine_mode": "trained-ppo"
+    },
+    "3_critical_cascade": {
+      "status": "PASS",
+      "action": "OPEN",
+      "throttle_rate": 1.0,
+      "engine_mode": "trained-ppo"
+    },
+    "4_malformed_event": {
+      "status": "PASS",
+      "statusCode": 400,
+      "error": "ValidationError",
+      "message": "cascade_probability must be a float in [0.0, 1.0], got 2.5"
+    },
+    "5_missing_fields": {
+      "status": "PASS",
+      "statusCode": 200,
+      "action": "CLOSED",
+      "throttle_rate": 0.0
+    },
+    "6_repeated_mitigation": {
+      "status": "PASS",
+      "first_call_idempotent": false,
+      "second_call_idempotent": true,
+      "repeat_count": 1,
+      "note": "Duplicate SNS alerts successfully suppressed."
+    },
+    "7_model_unavailable": {
+      "status": "PASS",
+      "action": "OPEN",
+      "engine_mode": "safe-rule-fallback"
+    },
+    "8_invalid_ppo_output": {
+      "status": "PASS",
+      "action": "OPEN",
+      "engine_mode": "safe-rule-fallback",
+      "note": "NaN output caught safely, recovered via rule fallback."
+    }
+  },
+  "architecture_flow": "Cascade Predictor -> cascade_probability + boundary_sync_drift -> PPO Circuit Breaker -> CLOSED / THROTTLED / OPEN -> Structured Mitigation Payload -> Lambda"
+}

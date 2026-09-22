@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-09-22T17:03:33.889908+00:00",
+  "model_checkpoint": "cascade_predictor_tier1a.pt",
+  "test_sample_count": 180,
+  "accuracy": 0.8944,
+  "precision": 0.8224,
+  "recall": 1.0,
+  "f1": 0.9026,
+  "roc_auc": 0.9818,
+  "mean_lead_time_error_seconds": 47.91,
+  "mean_warning_time_seconds": 176.78,
+  "precision_at_2min_lead_time": 0.7121,
+  "precision_at_5min_lead_time": 0.3704,
+  "root_cause_accuracy": 0.7333,
+  "severity_accuracy": 0.8889,
+  "confusion_matrix": {
+    "true_negative": 73,
+    "false_positive": 19,
+    "false_negative": 0,
+    "true_positive": 88,
+    "matrix_2x2": [
+      [
+        73,
+        19
+      ],
+      [
+        0,
+        88
+      ]
+    ]
+  }
+}

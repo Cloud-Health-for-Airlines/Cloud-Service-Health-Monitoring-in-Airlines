@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-09-22T17:44:58.384985+00:00",
+  "overall_status": "LOCAL_VERIFIED (LIVE AWS PENDING CREDENTIALS)",
+  "local_status": "LOCAL_VERIFIED",
+  "live_aws_status": "PENDING_CREDENTIALS",
+  "aws_region": "us-east-1",
+  "endpoint_name": "baccp-cascade-predictor",
+  "live_credentials_present": false,
+  "notes": "AWS credentials not configured. Mocked AWS pipeline fully verified; live deployment ready upon credential provision.",
+  "deployment_package": {
+    "status": "PASS",
+    "model_tarball_path": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/deploy/sagemaker/model.tar.gz",
+    "model_tarball_bytes": 655975,
+    "inference_handler_path": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/deploy/sagemaker/inference.py",
+    "deployment_script_path": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/deploy/sagemaker/deploy_endpoint.py"
+  },
+  "local_inference_smoke_test": {
+    "status": "PASS",
+    "model_architecture": "HeteroRGCN-GRU-MultiTask",
+    "checkpoint": "cascade_predictor_tier1a.pt",
+    "checkpoint_bytes": 362133,
+    "sample_prediction": {
+      "sync_drift_score": 78.5,
+      "cascade_probability": 0.9906,
+      "severity": "CRITICAL",
+      "predicted_root_cause_node": "boundary-gateway",
+      "estimated_lead_time_seconds": 98.5,
+      "conformal_bounds_90": {
+        "confidence_level": 0.9,
+        "lower": 0.8871,
+        "upper": 1.0
+      },
+      "inference_latency_ms": 1.78
+    }
+  },
+  "mocked_aws_integration_test": {
+    "status": "PASS",
+    "subtests": {
+      "live_invocation_contract": "PASS",
+      "exponential_backoff_retry": "PASS",
+      "request_validation_rejection": "PASS (Correctly rejected drift=150.0)",
+      "response_validation_rejection": "PASS (Correctly rejected probability=1.5)",
+      "timeout_graceful_fallback": "PASS (Fell back to local model)"
+    }
+  },
+  "architecture_flow": "Frontend -> Backend REST API -> SageMaker Adapter -> Trained PyTorch BACCP Model -> Prediction -> Backend Alert Dispatch"
+}

@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-09-22T17:08:50.280537+00:00",
+  "checkpoint": "circuit_breaker_ppo.pt",
+  "test_episodes": 50,
+  "policies": {
+    "no_mitigation": {
+      "policy": "No Mitigation (Always CLOSED)",
+      "total_episodes": 50,
+      "cascade_count": 35,
+      "cascade_rate": 0.7,
+      "avoided_cascades": 0,
+      "fault_episodes": 35,
+      "avoided_cascade_rate": 0.0,
+      "false_positive_mitigation_rate": 0.0,
+      "throughput_retained_pct": 100.0,
+      "average_throttle_rate_pct": 0.0,
+      "average_gateway_latency_ms": 71.46,
+      "reservation_service_impact_pct": 100.0,
+      "crew_service_impact_pct": 100.0,
+      "baggage_service_impact_pct": 100.0,
+      "mean_reward": 55.21,
+      "mean_recovery_time_steps": 5.0
+    },
+    "rule_based_baseline": {
+      "policy": "Rule-Based Baseline (Static Threshold)",
+      "total_episodes": 50,
+      "cascade_count": 0,
+      "cascade_rate": 0.0,
+      "avoided_cascades": 35,
+      "fault_episodes": 35,
+      "avoided_cascade_rate": 1.0,
+      "false_positive_mitigation_rate": 0.0,
+      "throughput_retained_pct": 69.85,
+      "average_throttle_rate_pct": 30.15,
+      "average_gateway_latency_ms": 101.58,
+      "reservation_service_impact_pct": 81.2,
+      "crew_service_impact_pct": 58.5,
+      "baggage_service_impact_pct": 58.5,
+      "mean_reward": 78.83,
+      "mean_recovery_time_steps": 5.0
+    },
+    "ppo_policy": {
+      "policy": "BACCP Trained PPO Policy",
+      "total_episodes": 50,
+      "cascade_count": 0,
+      "cascade_rate": 0.0,
+      "avoided_cascades": 35,
+      "fault_episodes": 35,
+      "avoided_cascade_rate": 1.0,
+      "false_positive_mitigation_rate": 0.0,
+      "throughput_retained_pct": 70.04,
+      "average_throttle_rate_pct": 29.96,
+      "average_gateway_latency_ms": 104.75,
+      "reservation_service_impact_pct": 87.9,
+      "crew_service_impact_pct": 61.43,
+      "baggage_service_impact_pct": 38.31,
+      "mean_reward": 75.07,
+      "mean_recovery_time_steps": 5.0
+    }
+  }
+}

@@ -48,6 +48,15 @@ class AWSConfig:
     sagemaker_endpoint_name: str = field(default_factory=lambda: (
         os.getenv("AWS_SAGEMAKER_ENDPOINT", os.getenv("SAGEMAKER_ENDPOINT_NAME", "baccp-cascade-predictor"))
     ))
+    sagemaker_timeout_seconds: float = field(default_factory=lambda: (
+        float(os.getenv("SAGEMAKER_TIMEOUT_SECONDS", "5.0"))
+    ))
+    sagemaker_max_retries: int = field(default_factory=lambda: (
+        int(os.getenv("SAGEMAKER_MAX_RETRIES", "3"))
+    ))
+    sagemaker_fallback_to_local: bool = field(default_factory=lambda: (
+        os.getenv("SAGEMAKER_FALLBACK_TO_LOCAL", "true").lower() in ("true", "1", "yes")
+    ))
 
     # 6. AWS Lambda Circuit Breaker
     lambda_breaker_function: str = field(default_factory=lambda: (

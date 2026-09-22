@@ -13,8 +13,14 @@ Covers:
 
 import json
 import os
+from pathlib import Path
+import sys
 import unittest
 from unittest.mock import MagicMock, patch
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from backend.cloud.cloudwatch import CloudWatchPublisher
 from backend.cloud.config import AWSConfig, BackendConfig
@@ -169,6 +175,7 @@ class TestSageMakerCascadePredictor(unittest.TestCase):
             sync_drift_score=15.0,
             telemetry_features={"reservations": {"latency_ms": 15.0}},
             boundary_features={"sync_drift_score": 15.0},
+            use_trained_model=False,
         )
         self.assertIn("cascade_probability", res)
         self.assertIn("predicted_failure_location", res)
@@ -192,11 +199,118 @@ class TestSageMakerCascadePredictor(unittest.TestCase):
             sync_drift_score=88.0,
             active_fault="connection-drop",
             fault_level="high",
+            use_trained_model=False,
         )
         self.assertGreater(res["cascade_probability"], 0.80)
         self.assertIn(res["severity"], ("HIGH", "CRITICAL"))
         self.assertLess(res["lead_time"], 60.0)
         self.assertEqual(res["predicted_failure_location"], "boundary-gateway")
+
+    def test_trained_pytorch_model_inference(self):
+        """Test direct inference using trained PyTorch model weights."""
+        self.assertTrue(self.predictor.has_trained_model, "Trained PyTorch model should be loaded")
+        res = self.predictor.predict_with_trained_model(
+            sync_drift_score=68.0,
+            active_fault="network-delay",
+            fault_level="high",
+        )
+        self.assertIn("cascade_probability", res)
+        self.assertIn("estimated_lead_time_seconds", res)
+        self.assertIn("predicted_root_cause_node", res)
+        self.assertIn("severity", res)
+        self.assertEqual(res["model_metadata"]["mode"], "local-trained-pytorch")
+        self.assertEqual(res["model_metadata"]["checkpoint"], "cascade_predictor_tier1a.pt")
+        self.assertEqual(res["conformal_bounds"]["confidence_level"], 0.90)
+        self.assertIn("inference_latency_ms", res)
+        self.assertGreater(res["inference_latency_ms"], 0.0)
+
+    def test_default_mode1_runs_trained_model(self):
+        """Test default predict_cascade in Mode 1 executes trained PyTorch model."""
+        res = self.predictor.predict_cascade(sync_drift_score=75.0)
+        self.assertEqual(res["model_metadata"]["mode"], "local-trained-pytorch")
+        self.assertIn("inference_latency_ms", res)
+        self.assertGreater(res["inference_latency_ms"], 0.0)
+
+    def test_request_validation(self):
+        """Verify request schema validation detects invalid inputs."""
+        from backend.cloud.sagemaker import SageMakerValidationError
+        # Out of bounds drift
+        with self.assertRaises(SageMakerValidationError):
+            self.predictor.validate_request_payload({"sync_drift_score": -1.0})
+        with self.assertRaises(SageMakerValidationError):
+            self.predictor.validate_request_payload({"sync_drift_score": 105.0})
+        # Invalid fault level
+        with self.assertRaises(SageMakerValidationError):
+            self.predictor.validate_request_payload({"fault_level": "catastrophic"})
+        # Valid request passes
+        self.predictor.validate_request_payload({"sync_drift_score": 45.0, "fault_level": "medium"})
+
+    def test_response_validation(self):
+        """Verify response schema validation enforces BACCP contract."""
+        from backend.cloud.sagemaker import SageMakerResponseError
+        # Invalid probability
+        with self.assertRaises(SageMakerResponseError):
+            self.predictor.validate_response_payload({"cascade_probability": 1.5})
+        # Missing root cause
+        with self.assertRaises(SageMakerResponseError):
+            self.predictor.validate_response_payload({
+                "cascade_probability": 0.8,
+                "severity": "CRITICAL",
+                "estimated_lead_time_seconds": 30.0,
+            })
+        # Invalid conformal bounds
+        with self.assertRaises(SageMakerResponseError):
+            self.predictor.validate_response_payload({
+                "cascade_probability": 0.8,
+                "predicted_root_cause_node": "gateway",
+                "severity": "CRITICAL",
+                "estimated_lead_time_seconds": 30.0,
+                "conformal_bounds": {"lower": 0.9, "upper": 0.2},
+            })
+
+    def test_retry_and_timeout_live_handling(self):
+        """Verify retry with backoff and graceful timeout fallback in simulated live mode."""
+        from io import BytesIO
+        from unittest.mock import MagicMock
+        from backend.cloud.config import AWSConfig
+        from backend.cloud.sagemaker import SageMakerCascadePredictor
+
+        mock_cfg = AWSConfig(
+            cloud_mode="aws",
+            access_key_id="test_key",
+            secret_access_key="test_secret",
+            sagemaker_endpoint_name="test-endpoint",
+            sagemaker_timeout_seconds=1.0,
+            sagemaker_max_retries=2,
+            sagemaker_fallback_to_local=True,
+        )
+        live_pred = SageMakerCascadePredictor(aws_config=mock_cfg)
+
+        mock_client = MagicMock()
+        mock_body = {
+            "cascade_probability": 0.92,
+            "predicted_root_cause_node": "boundary-gateway",
+            "severity": "CRITICAL",
+            "estimated_lead_time_seconds": 12.0,
+            "conformal_bounds": {"lower": 0.85, "upper": 0.98},
+        }
+        mock_resp = {"Body": BytesIO(json.dumps(mock_body).encode("utf-8"))}
+
+        # Case 1: Transient 503 error then success
+        mock_client.invoke_endpoint.side_effect = [
+            Exception("503 ServiceUnavailable"),
+            mock_resp,
+        ]
+        live_pred._client = mock_client
+        res = live_pred.predict_cascade(sync_drift_score=85.0)
+        self.assertEqual(res["cascade_probability"], 0.92)
+        self.assertEqual(mock_client.invoke_endpoint.call_count, 2)
+
+        # Case 2: Read timeout falls back to local model
+        mock_client.reset_mock()
+        mock_client.invoke_endpoint.side_effect = Exception("ReadTimeoutError: timed out")
+        res_fallback = live_pred.predict_cascade(sync_drift_score=85.0)
+        self.assertIn(res_fallback["model_metadata"]["mode"], ("local-trained-pytorch", "local-analytical"))
 
 
 class TestLambdaCircuitBreaker(unittest.TestCase):
@@ -240,6 +354,111 @@ class TestLambdaCircuitBreaker(unittest.TestCase):
         # Check history recorded
         history = self.client.get_invocation_history()
         self.assertGreater(len(history), 0)
+
+    def test_nominal_state_mitigation(self):
+        """Verify nominal inputs yield CLOSED circuit breaker state with 0% throttle."""
+        res = lambda_handler({
+            "event_type": "cascade_mitigation",
+            "cascade_probability": 0.04,
+            "boundary_sync_drift": 10.0,
+            "severity": "NOMINAL",
+        })
+        self.assertEqual(res["statusCode"], 200)
+        self.assertEqual(res["action"], "CLOSED")
+        self.assertEqual(res["throttle_rate"], 0.0)
+        self.assertIn("timestamp", res)
+
+    def test_high_risk_state_mitigation(self):
+        """Verify elevated risk inputs yield THROTTLED state with continuous rate."""
+        res = lambda_handler({
+            "event_type": "cascade_mitigation",
+            "cascade_probability": 0.65,
+            "boundary_sync_drift": 55.0,
+            "severity": "HIGH",
+        })
+        self.assertEqual(res["statusCode"], 200)
+        self.assertEqual(res["action"], "THROTTLED")
+        self.assertGreaterEqual(res["throttle_rate"], 0.10)
+        self.assertLessEqual(res["throttle_rate"], 0.90)
+
+    def test_critical_cascade_mitigation(self):
+        """Verify critical cascade risk inputs yield OPEN boundary isolation."""
+        res = lambda_handler({
+            "event_type": "cascade_mitigation",
+            "cascade_probability": 0.99,
+            "boundary_sync_drift": 95.0,
+            "gateway_latency": 480.0,
+            "queue_saturation": 0.95,
+            "severity": "CRITICAL",
+        })
+        self.assertEqual(res["statusCode"], 200)
+        self.assertEqual(res["action"], "OPEN")
+        self.assertEqual(res["throttle_rate"], 1.0)
+
+    def test_malformed_event_handling(self):
+        """Verify malformed events return HTTP 400 with structured validation error."""
+        res = lambda_handler({
+            "event_type": "cascade_mitigation",
+            "cascade_probability": 3.5,  # Out of range
+        })
+        self.assertEqual(res["statusCode"], 400)
+        self.assertEqual(res["error"], "ValidationError")
+        self.assertIn("safe_default_state", res)
+
+    def test_missing_fields_handling(self):
+        """Verify empty or sparse event is handled safely with defaults."""
+        res = lambda_handler({})
+        self.assertEqual(res["statusCode"], 200)
+        self.assertIn(res["action"], ("CLOSED", "THROTTLED", "OPEN"))
+        self.assertIn("timestamp", res)
+
+    def test_idempotent_repeated_mitigation(self):
+        """Verify duplicate mitigation calls within window are flagged as idempotent."""
+        event = {
+            "event_type": "cascade_mitigation",
+            "cascade_probability": 0.70,
+            "boundary_sync_drift": 60.0,
+            "severity": "HIGH",
+        }
+        res1 = lambda_handler(event)
+        res2 = lambda_handler(event)
+        self.assertTrue(res2["idempotent_noop"])
+        self.assertGreaterEqual(res2["repeat_count"], 1)
+
+    def test_model_unavailable_fallback(self):
+        """Verify safe rule fallback is engaged when PPO agent is unavailable."""
+        from backend.cloud.lambda_handler import ppo_inference
+        orig_agent = ppo_inference.agent
+        try:
+            ppo_inference.agent = None
+            res = lambda_handler({
+                "cascade_probability": 0.85,
+                "boundary_sync_drift": 75.0,
+            })
+            self.assertEqual(res["statusCode"], 200)
+            self.assertEqual(res["action"], "OPEN")
+            self.assertEqual(res["engine_mode"], "safe-rule-fallback")
+        finally:
+            ppo_inference.agent = orig_agent
+
+    def test_invalid_ppo_output_safety(self):
+        """Verify NaN action output from PPO model safely triggers rule fallback."""
+        from unittest.mock import MagicMock
+        from backend.cloud.lambda_handler import ppo_inference
+        orig_agent = ppo_inference.agent
+        mock_agent = MagicMock()
+        mock_agent.act.return_value = (float("nan"), "OPEN", 1.0)
+        try:
+            ppo_inference.agent = mock_agent
+            res = lambda_handler({
+                "cascade_probability": 0.85,
+                "boundary_sync_drift": 75.0,
+            })
+            self.assertEqual(res["statusCode"], 200)
+            self.assertEqual(res["action"], "OPEN")
+            self.assertEqual(res["engine_mode"], "safe-rule-fallback")
+        finally:
+            ppo_inference.agent = orig_agent
 
 
 class TestSNSPublisher(unittest.TestCase):

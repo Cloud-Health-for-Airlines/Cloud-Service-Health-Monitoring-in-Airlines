@@ -1,0 +1,188 @@
+{
+  "timestamp": "2026-09-22T17:45:04.067401+00:00",
+  "overall_status": "PASSED",
+  "test_counts": {
+    "total_tests_executed": 76,
+    "passed_tests": 76,
+    "failed_tests": 0
+  },
+  "model_checkpoints": {
+    "cascade_predictor": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/weights/cascade_predictor_tier1a.pt",
+    "cascade_predictor_bytes": 362133,
+    "circuit_breaker_ppo": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/weights/circuit_breaker_ppo.pt",
+    "circuit_breaker_ppo_bytes": 42720,
+    "baseline_flat_graph": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/weights/baseline_flat_graph.pt",
+    "baseline_domain_typed": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/weights/baseline_domain_typed.pt"
+  },
+  "evaluation_dataset": {
+    "path": "/Users/bhiwanshusharma/Documents/Cloud_Project/ai-models/data/dataset.json",
+    "sample_count": 1200,
+    "test_sample_count": 180,
+    "holdout_seed": 42
+  },
+  "scenarios_verified": {
+    "normal_scenario": {
+      "status": "success",
+      "scenario": "NORMAL_SCENARIO",
+      "timestamp": "2026-09-22T17:44:51.541186+00:00",
+      "active_fault": null,
+      "fault_level": null,
+      "boundary_health": {
+        "sync_drift_score": 11.5,
+        "status": "HEALTHY",
+        "threshold": 45.0
+      },
+      "prediction": {
+        "cascade_probability": 0.0191,
+        "severity": "NOMINAL",
+        "estimated_lead_time_seconds": 587.3,
+        "predicted_root_cause_node": "boundary-gateway",
+        "confidence": 0.9,
+        "conformal_bounds": {
+          "confidence_level": 0.9,
+          "lower": 0.0146,
+          "upper": 0.0236
+        },
+        "model_engine": "HeteroRGCN-GRU-MultiTask",
+        "inference_mode": "local-trained-pytorch",
+        "inference_latency_ms": 2.4
+      },
+      "circuit_breaker": {
+        "state": "CLOSED",
+        "throttle_rate": 0.0,
+        "reason": "Explicit reset to nominal closed state.",
+        "engine_mode": "explicit-override",
+        "idempotent_noop": true,
+        "latency_ms": 0.18
+      },
+      "alerts": {
+        "sns_dispatched": false,
+        "alert_severity": "NONE"
+      },
+      "cloud_observability": {
+        "cloudwatch_metrics_emitted": 3,
+        "xray_trace_id": "1-6ab2be93-24112fd09b748630a512d0f7"
+      },
+      "total_pipeline_latency_ms": 6.78
+    },
+    "cascade_scenario": {
+      "status": "success",
+      "scenario": "CASCADE_SCENARIO",
+      "timestamp": "2026-09-22T17:44:51.602803+00:00",
+      "active_fault": "network-delay",
+      "fault_level": "high",
+      "boundary_health": {
+        "sync_drift_score": 88.5,
+        "status": "CRITICAL",
+        "threshold": 45.0
+      },
+      "prediction": {
+        "cascade_probability": 0.9906,
+        "severity": "CRITICAL",
+        "estimated_lead_time_seconds": 99.1,
+        "predicted_root_cause_node": "boundary-gateway",
+        "confidence": 0.9,
+        "conformal_bounds": {
+          "confidence_level": 0.9,
+          "lower": 0.8871,
+          "upper": 1.0
+        },
+        "model_engine": "HeteroRGCN-GRU-MultiTask",
+        "inference_mode": "local-trained-pytorch",
+        "inference_latency_ms": 2.15
+      },
+      "circuit_breaker": {
+        "state": "OPEN",
+        "throttle_rate": 1.0,
+        "reason": "Explicit isolation requested: Critical cascade risk (P=0.99, drift=88.5%).",
+        "engine_mode": "explicit-override",
+        "idempotent_noop": false,
+        "latency_ms": 0.21
+      },
+      "alerts": {
+        "sns_dispatched": true,
+        "alert_severity": "CRITICAL"
+      },
+      "cloud_observability": {
+        "cloudwatch_metrics_emitted": 3,
+        "xray_trace_id": "1-6ab2be93-a0923fec1d80f2bc6d9f092a"
+      },
+      "total_pipeline_latency_ms": 6.44
+    }
+  },
+  "test_suites": [
+    {
+      "suite_name": "AI Models Test Suite",
+      "command": "/opt/anaconda3/bin/python3 -m unittest discover -s ai-models/tests -p test_*.py",
+      "exit_code": 0,
+      "status": "PASS",
+      "test_count": 18,
+      "elapsed_seconds": 1.84,
+      "output_snippet": [
+        "Ran 18 tests in 0.786s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "suite_name": "Backend & Cloud Adapters Test Suite",
+      "command": "/opt/anaconda3/bin/python3 backend/tests/test_backend.py",
+      "exit_code": 0,
+      "status": "PASS",
+      "test_count": 35,
+      "elapsed_seconds": 2.67,
+      "output_snippet": [
+        "Ran 35 tests in 1.124s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "suite_name": "SageMaker Integration Smoke Test",
+      "command": "/opt/anaconda3/bin/python3 backend/cloud/sagemaker_smoke_test.py",
+      "exit_code": 0,
+      "status": "PASS",
+      "test_count": 8,
+      "elapsed_seconds": 2.59,
+      "output_snippet": [
+        "2026-09-22 23:14:58,388 [INFO] =================================================================",
+        "2026-09-22 23:14:58,388 [INFO] SageMaker Smoke Test Completed: LOCAL_VERIFIED (LIVE AWS PENDING CREDENTIALS)",
+        "2026-09-22 23:14:58,388 [INFO] ================================================================="
+      ]
+    },
+    {
+      "suite_name": "Lambda Mitigation Smoke Test",
+      "command": "/opt/anaconda3/bin/python3 backend/cloud/lambda_smoke_test.py",
+      "exit_code": 0,
+      "status": "PASS",
+      "test_count": 8,
+      "elapsed_seconds": 1.77,
+      "output_snippet": [
+        "2026-09-22 23:15:00,155 [INFO] =================================================================",
+        "2026-09-22 23:15:00,155 [INFO] Lambda Smoke Test Completed: LOCAL_VERIFIED (LIVE AWS PENDING CREDENTIALS)",
+        "2026-09-22 23:15:00,155 [INFO] ================================================================="
+      ]
+    },
+    {
+      "suite_name": "Master Evaluation Pipeline",
+      "command": "/opt/anaconda3/bin/python3 ai-models/evaluation/run_full_evaluation.py",
+      "exit_code": 0,
+      "status": "PASS",
+      "test_count": 7,
+      "elapsed_seconds": 3.59,
+      "output_snippet": [
+        "2026-09-22 23:15:03,729 [INFO] =================================================================",
+        "2026-09-22 23:15:03,729 [INFO] BACCP Full Evaluation Pipeline Completed Successfully (Exit Code 0)",
+        "2026-09-22 23:15:03,729 [INFO] ================================================================="
+      ]
+    }
+  ],
+  "cloud_mode": "local",
+  "aws_region": "us-east-1",
+  "aws_verification_status": {
+    "local_status": "LOCAL_VERIFIED",
+    "live_aws_status": "PENDING_CREDENTIALS",
+    "notes": "All local PyTorch and PPO models, adapters, and handlers genuinely verified. Live AWS deployment pending production credentials."
+  },
+  "failures": []
+}
