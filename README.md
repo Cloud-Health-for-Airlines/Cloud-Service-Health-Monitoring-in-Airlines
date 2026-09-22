@@ -196,14 +196,9 @@ All master technical reports, implementation guides, and architectural designs a
 ---
 
 ## Team & Workstream Ownership
-
-| Member | Workstream Ownership | Key Contributions |
-|---|---|---|
-| **Varad Patil** | **AI/ML Engineering & Production Architecture** | • RGCN Heterogeneous GNN with generation typing<br>• Neural Hawkes Process lead-time countdown estimator<br>• Split conformal uncertainty calibration (90% coverage)<br>• PPO & MAPPO adaptive reinforcement learning circuit breakers<br>• Integrated Gradients explainability engine<br>• Interactive standalone CLI runner (`run_demo.py`)<br>• Antigravity.google visual overhaul and design tokens |
-| **Ragghav** | **Data & Dependency Graph Engineering** | • Zero-instrumentation eBPF socket tracing<br>• Generation-typed graph builder and schema definition<br>• PostgreSQL graph persistence layer<br>• Chaos fault injection testbed (NetEm/IPTables) |
-| **Bhiwanshu** | **Cloud Integration & Backend Services** | • Dual-mode AWS cloud stack (CloudWatch, X-Ray, SageMaker, Lambda, SNS)<br>• REST API gateway & telemetry ingestion endpoints<br>• Service health matrix and operational documentation |
-
----
+Ragghav:
+Varad:
+Bieanshu:
 
 ## License
 
