@@ -1,0 +1,42 @@
+{
+  "manifest_version": "baccp-lock-manifest-v1.0.0",
+  "timestamp_utc": "2026-10-14 06:53:09",
+  "contract_version": "baccp-degradation-contract-v1.2.0",
+  "feature_schema_version": "baccp-degradation-features-v1.1.0",
+  "file_sha256_hashes": {
+    "data_contract_py": "ff1adba3dd45dff2cb2495b82bc01c96ae824b74e972954eaacfa1f4b4d9ce86",
+    "features_py": "0ca4b3b8af55ce8c7ebdb5dbfc369109790e07edf4e06ac52eca9ebe4a9b387d",
+    "models_py": "9dda4e336afc7f77aec308624e3951390a9efbd8a5441ed39ad8faf76f5caa72",
+    "train_py": "c0c734ed56ac8b51e86e44bfe7e53c60a1ffe80061fef39739a983e6798b0ddc",
+    "inference_py": "eada85ba7ef8fa365c3d49e6a82e1fde29f50af6a2cdddfa8c84cfd64e53a18b",
+    "evaluate_py": "ee0da7c43844d6b2f16e196fe8e9933e0b4619ae6f173164b8432a4607ac3678",
+    "degradation_models_bundle_pkl": "b804079b73e8a913f2ce23c5c76b995b71828010a7323b0b9e81d2b42f9b722c",
+    "degradation_dataset_json": "b19ef70240364d34120fee019c6aa23c292643f8a5dff622ca1d4ba537f7768d",
+    "untouched_final_test_json": "61e1507472df93a05273bbd5d11c2fd2130af92e997c0cc5eac946d456f91eb7",
+    "workload_models_bundle_pkl": "20c632c399997c7644f6e493e8a51d176ad3b3dc54272ed9df75b319624fa9f5"
+  },
+  "tuned_alert_thresholds": {
+    "1": {
+      "model_a_threshold": 0.24,
+      "model_b_threshold": 0.18,
+      "model_c_threshold": 0.43
+    },
+    "5": {
+      "model_a_threshold": 0.24,
+      "model_b_threshold": 0.27,
+      "model_c_threshold": 0.17
+    },
+    "15": {
+      "model_a_threshold": 0.38,
+      "model_b_threshold": 0.37,
+      "model_c_threshold": 0.35
+    }
+  },
+  "priority_weights": {
+    "reservations": 1.5,
+    "crew": 1.0,
+    "baggage": 0.5
+  },
+  "cooldown_policy_seconds": 100.0,
+  "sustained_degradation_definition": ">= 3 consecutive SLO breaches"
+}

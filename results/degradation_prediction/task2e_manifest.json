@@ -1,0 +1,140 @@
+{
+  "task": "TASK 2E ONLY: Fix two reproduced integration defects (Workload adapter contract & Causal timestamp alignment)",
+  "contract_version": "baccp-degradation-contract-v1.4.0",
+  "feature_schema_version": "baccp-degradation-features-v1.3.0",
+  "staleness_limit_seconds": 60.0,
+  "files": {
+    "ai-models/degradation_prediction/data_contract.py": {
+      "size_bytes": 25653,
+      "sha256": "6c1a3221433c286e04e6898752c7fea112750136ddefd7b5b98c35efa649798c"
+    },
+    "ai-models/degradation_prediction/features.py": {
+      "size_bytes": 25580,
+      "sha256": "38b9bfb3d017b58ad8ce4ba0a6c78d16f01edf3456cf800fcb03596a0860fa34"
+    },
+    "ai-models/degradation_prediction/models.py": {
+      "size_bytes": 25324,
+      "sha256": "9dda4e336afc7f77aec308624e3951390a9efbd8a5441ed39ad8faf76f5caa72"
+    },
+    "ai-models/degradation_prediction/inference.py": {
+      "size_bytes": 41654,
+      "sha256": "cf42c62eefe8c10085e1f82f52adec2471fba1b4aa8956213c67514edf8851d2"
+    },
+    "ai-models/degradation_prediction/train.py": {
+      "size_bytes": 21716,
+      "sha256": "21979bdbb5bd00dcd504fe15b6c41fdcef00410449932204a1af4a21ca936bc9"
+    },
+    "ai-models/degradation_prediction/evaluate.py": {
+      "size_bytes": 44730,
+      "sha256": "019757873097e0170168b618612461da5029dc4b1718e245cbb3c1499ad39b51"
+    },
+    "ai-models/degradation_prediction/generate_data.py": {
+      "size_bytes": 19539,
+      "sha256": "c7173238f111b1031097e0559c8f7e6faeab097d8ac2d9c8d519628a8429a055"
+    },
+    "ai-models/degradation_prediction/generate_untouched_test.py": {
+      "size_bytes": 4000,
+      "sha256": "c79cff839afdf778557138d3aa99c47bd0f2aac534ee8963128633bebd8148a3"
+    },
+    "ai-models/degradation_prediction/lock_and_evaluate_untouched.py": {
+      "size_bytes": 14760,
+      "sha256": "4c4c8dc9df5a6a88b71ea531f821ee8964c5d5dbbe604b366b6bae617c4a4ab2"
+    },
+    "ai-models/degradation_prediction/README.md": {
+      "size_bytes": 4167,
+      "sha256": "d44fe6abbae518cd39958c17bc60afe5cda90229028be48a4c9972354328b06d"
+    },
+    "ai-models/workload_forecasting/data_contract.py": {
+      "size_bytes": 6626,
+      "sha256": "376f27aef4a37ca42253568c900808f68f16571a206707999c47c47522d1d2e8"
+    },
+    "ai-models/workload_forecasting/features.py": {
+      "size_bytes": 7434,
+      "sha256": "c10cd8ea7c7379081bcc483e27fc6e1696feb5df973a3836745e19ffd809e93a"
+    },
+    "ai-models/workload_forecasting/models.py": {
+      "size_bytes": 8294,
+      "sha256": "dde8e067b3ea0f61197f4d99e75f7347ef31d477398bf1f60826b0e92b0a78ed"
+    },
+    "ai-models/workload_forecasting/inference.py": {
+      "size_bytes": 12037,
+      "sha256": "9e35123af644b77faa168ce88ba46a752aa119a115f932b05bb75d218fd605ca"
+    },
+    "ai-models/workload_forecasting/train.py": {
+      "size_bytes": 9662,
+      "sha256": "82fc358b497d4a22639c440416360917f7221df22aa56ba05e2a1e8c0231a0e9"
+    },
+    "ai-models/workload_forecasting/evaluate.py": {
+      "size_bytes": 25288,
+      "sha256": "75fb1398f0d428b0226b5b484e791e240bd6422366be52aac3fa575a7cc7079b"
+    },
+    "ai-models/workload_forecasting/generate_workload_data.py": {
+      "size_bytes": 17406,
+      "sha256": "d20f0d22f4ce996b72caf3580a13b100cec44aca80dfc34e19836adc7d2ffc44"
+    },
+    "ai-models/workload_forecasting/README.md": {
+      "size_bytes": 6673,
+      "sha256": "28e629d66d4aec1c9a1830d8b1dbd4c7649ea14538f04aa6436da5f725e962f2"
+    },
+    "ai-models/workload_forecasting/model_card.md": {
+      "size_bytes": 7506,
+      "sha256": "082a0142e8af20ca4065597738494189b2448918172a7dcbf7a381f0a65a40c1"
+    },
+    "ai_models/degradation_prediction.py": {
+      "size_bytes": 2468,
+      "sha256": "7413f50bb724334006c32be3d011022226ab7a3e5bfb964c85a184878e660820"
+    },
+    "ai_models/workload_forecasting.py": {
+      "size_bytes": 2202,
+      "sha256": "9eef695a72507920cda769df10db9d970bcd40b85fa37101770ca27df73efbc7"
+    },
+    "ai-models/tests/test_degradation_prediction.py": {
+      "size_bytes": 67331,
+      "sha256": "190eea6d6d16641c3edf3508546158603aaaadea0026a2e5ff3b726146534eaa"
+    },
+    "ai-models/tests/test_workload_forecasting.py": {
+      "size_bytes": 19603,
+      "sha256": "37a82b6a9e607dc471da27c2f2fddeaae099c6ae55bf525a75bd3e3ed77487f8"
+    },
+    "ai-models/requirements.txt": {
+      "size_bytes": 231,
+      "sha256": "1fb3fb7c90d931a19ba98419959c0e6f64b9bc0d14b5801f49ca5a1f1d9ecf4c"
+    },
+    "ai-models/data/degradation_prediction/fixture_test_incidents.json": {
+      "size_bytes": 338837,
+      "sha256": "d99a4b1996e797a43e025bbc4b74cca610092f4253a92e555ae7217b2acf9df5"
+    },
+    "results/degradation_prediction/metrics_summary.json": {
+      "size_bytes": 393575,
+      "sha256": "e2b2d25c51911aa294a60911ae4abf6d86c70bd73058781667f45ed0097ffa5d"
+    },
+    "results/degradation_prediction/evaluation_report.md": {
+      "size_bytes": 4868,
+      "sha256": "4836d637b70323665d524689c9c21a896e5582dd85582469ec959c3ca9309f4e"
+    },
+    "results/degradation_prediction/untouched_test_metrics.json": {
+      "size_bytes": 26324,
+      "sha256": "3b05b45b8320c810dbc84bcfc9a20504a653e50ca22e9fa7bc4fbb3896b02ba8"
+    },
+    "results/degradation_prediction/lock_manifest.json": {
+      "size_bytes": 1761,
+      "sha256": "63bb0f095bb0a6f7e29cb34e728c74c27b657e8ca8d00fbd277a95573034932b"
+    },
+    "results/degradation_prediction/task2e_diff.patch": {
+      "size_bytes": 50154,
+      "sha256": "573f6d5f395366fb9da6103178a2e1e4d75ab714c0480b261704e7a376a84966"
+    },
+    "results/degradation_prediction/diagnostic/superseded_task2d_metrics_summary.json": {
+      "size_bytes": 393415,
+      "sha256": "c5a75739945ae6fa611f5a1b403ae2a2afda7a0ab847171d016f99d46a0107a1"
+    },
+    "results/degradation_prediction/diagnostic/superseded_task2d_evaluation_report.md": {
+      "size_bytes": 4858,
+      "sha256": "c154f235fc2792bbac8857b0b2790cd72c49cfc47911392d0e4dd2e50b2bf392"
+    },
+    "results/degradation_prediction/task2e_manifest.json": {
+      "size_bytes": 5890,
+      "sha256": "1f61d8204d37582d1a5bf41397859af970037727c73273256e6196b8460924f8"
+    }
+  }
+}

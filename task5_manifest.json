@@ -1,0 +1,123 @@
+{
+  "task": "TASK 5A: Fix confirmed backend correctness issues and finalize",
+  "project": "Cloud Airlines Service Health \u2014 BACCP",
+  "version": "baccp-production-v1.5.1",
+  "generated_at": "2026-10-15T19:20:00+00:00",
+  "status": "COMPLETE_AND_VERIFIED",
+  "frozen_model_bundle_references": {
+    "workload_models_bundle": {
+      "path": "ai-models/weights/workload_forecasting/workload_models_bundle.pkl",
+      "sha256": "20c632c399997c7644f6e493e8a51d176ad3b3dc54272ed9df75b319624fa9f5",
+      "description": "Frozen bundle containing GBDT, Ridge, and Conformal Calibrators for H=1, 5, 15 across all 5 services"
+    },
+    "degradation_models_bundle": {
+      "path": "ai-models/weights/degradation_prediction/degradation_models_bundle.pkl",
+      "sha256": "3587d73ef55a06cb618b4277ab2ea030c2ad3c4b9b8dc0aabeb8c858776da885",
+      "description": "Frozen bundle containing Models A, B, C, continuous regressors, and isotonic calibrators"
+    },
+    "degradation_dataset": {
+      "path": "ai-models/data/degradation_prediction/degradation_dataset.json",
+      "sha256": "b19ef70240364d34120fee019c6aa23c292643f8a5dff622ca1d4ba537f7768d",
+      "description": "275-incident physics-informed synthetic degradation dataset"
+    },
+    "workload_dataset": {
+      "path": "ai-models/data/workload_forecasting/workload_dataset.json",
+      "sha256": "4eae4b853aede1635d714f0e46237f3ab2de6f13fd17f9fad219f93434278133",
+      "description": "Workload time-series dataset"
+    },
+    "cascade_predictor_tier1a": {
+      "path": "ai-models/weights/cascade_predictor_tier1a.pt",
+      "sha256": "09f8d287fa468e535ed96502d259dc615647d83ec174214426aa2c0e0c5753e6",
+      "description": "PyTorch tier-1a cascade predictor"
+    },
+    "circuit_breaker_ppo": {
+      "path": "ai-models/weights/circuit_breaker_ppo.pt",
+      "sha256": "d00593818e2efbc3031f53acf6fbcf47e3e19592eaaeca00df49c53fe91a693b",
+      "description": "Reinforcement learning circuit breaker policy"
+    }
+  },
+  "alert_policy": {
+    "thresholds": {
+      "H1": 0.28,
+      "H5": 0.3,
+      "H15": 0.32
+    },
+    "shared_modules": [
+      "backend/ml/alert_policy.py",
+      "ai-models/degradation_prediction/alert_policy.py",
+      "backend/ml/inference_service.py",
+      "ai-models/degradation_prediction/inference.py",
+      "backend/ml/metrics.py"
+    ],
+    "provenance_disclosure": "Operational early-warning policy predeclared in Task 4; not tuned on test data or validation grid search."
+  },
+  "package_files": [
+    "backend/ml/__init__.py",
+    "backend/ml/alert_policy.py",
+    "backend/ml/telemetry_adapter.py",
+    "backend/ml/inference_service.py",
+    "backend/ml/metrics.py",
+    "backend/api/app.py",
+    "backend/cloud/sagemaker.py",
+    "backend/tests/test_ml_integration.py",
+    "backend/API_DOCUMENTATION.md",
+    "backend/README.md",
+    "ai-models/degradation_prediction/alert_policy.py",
+    "ai-models/degradation_prediction/inference.py",
+    "ai-models/degradation_prediction/evaluate_task4.py",
+    ".env.example",
+    "FINAL_PROJECT_SUMMARY.md",
+    "task5_manifest.json",
+    "results/task5_test_output.txt",
+    "results/task5_example_responses.json",
+    "results/degradation_prediction/task4_evaluation_metrics.json",
+    "results/degradation_prediction/reconciled_evaluation_tables.md",
+    "results/degradation_prediction/limitations.md"
+  ],
+  "file_hashes": {
+    "backend/ml/__init__.py": "012773823f49de3c61e5334232afb76317695d0d7e131b49e141222275bc3d57",
+    "backend/ml/alert_policy.py": "258d10bea3b5144799ba1bebc0a2f9a1bf49f5fa2a95a198d6e88865e63651e1",
+    "backend/ml/telemetry_adapter.py": "38db245891629bd5a0221ef53706b561a7b6710abaffe08d275bb1d0f6532770",
+    "backend/ml/inference_service.py": "cf6f120d9d3503f7ece1dc4e4fe3321cf0b7f887114983f2131f8f071d0a8acd",
+    "backend/ml/metrics.py": "d80a45ed55bf0b9b1cd758f583fcd42c676b54ef7a3211e388a80a995f1dc25d",
+    "backend/api/app.py": "843588a3386fbade1d618f3ae611346b22767a1ec650e4e1519d76dc014b2b7f",
+    "backend/cloud/sagemaker.py": "4b94936870911331282957f8cf548f23d7a29b45f69247c3d546122900ee572d",
+    "backend/tests/test_ml_integration.py": "bd33e0e690d27a2a018e0c5aa38db497219b8a79a77504780b8785af1ba6b8ed",
+    "backend/API_DOCUMENTATION.md": "98f1e00d80d2ba62b75f415434ef2fcead9b31dbcf59757ea8db5e30e1344d71",
+    "backend/README.md": "fd53964b1347d4b989dcd1cddd7b3698778d2415574714cc0b2b6dc55c291e39",
+    "ai-models/degradation_prediction/alert_policy.py": "258d10bea3b5144799ba1bebc0a2f9a1bf49f5fa2a95a198d6e88865e63651e1",
+    "ai-models/degradation_prediction/inference.py": "84438f8fd0f2ebec5e7f57d3c6c93a7effb0ddef23c0e155a87d918420e5afb5",
+    "ai-models/degradation_prediction/explanation.py": "3b3f1c9724e2dd606fe3c1876eb880a49978801e45e91ed941f52d9336d0dea6",
+    "ai-models/degradation_prediction/evaluate_task4.py": "f49f639f593ce558332c337ab0a94d35d53b6e6e7a82e87b45d4c75c37bfda9b",
+    ".env.example": "349c6f112b03495ca0bf4e1879386d172641810236ba1c99a308c7ffc542ec0a",
+    "FINAL_PROJECT_SUMMARY.md": "c5b08e222dd908a4e5102aa13aa43b3d39887c00a19a5a46dddedcbc11703e26",
+    "results/task5_test_output.txt": "b26dcf2bde30f345bdf8a3993dd32ff50c97eeac7d1f901387eaee13ff32e69d",
+    "results/task5_example_responses.json": "9a106e1ac106bf81e44e5e1946f5f2716c1375c6d0a582714a77fe9924a58bc4",
+    "results/degradation_prediction/task4_evaluation_metrics.json": "f219aa6bc9f07a1a62ddd14570fdb6aa8a3991d1cedfabbb89d3a6470c2de58f",
+    "results/degradation_prediction/reconciled_evaluation_tables.md": "324b52df9a62bfbb6e7e0c29f23dc4bafd2dace0fe4a521b082d6025b3cde889",
+    "results/degradation_prediction/limitations.md": "93652c88941ec60eaced06c737f2752483d1a52039af6d67bde02258684f7726"
+  },
+  "verification": {
+    "backend_integration_tests": {
+      "command": "python3 -m unittest -v backend/tests/test_ml_integration.py",
+      "tests_run": 23,
+      "passed": 23,
+      "failed": 0,
+      "execution_time_seconds": 6.574
+    },
+    "dropped_telemetry_reproduction": {
+      "command": "python3 ai-models/degradation_prediction/evaluate_task4.py --rerun-dropped-telemetry",
+      "model_b_f1": 0.5844,
+      "model_b_pr_auc": 0.7868,
+      "zscore_baseline_f1": 0.0,
+      "carry_forward_rate": 0.9964,
+      "long_gap_rejection_rate": 1.0
+    },
+    "ml_unit_tests": {
+      "command": "python3 -m unittest discover -s ai-models/tests -p 'test_*.py'",
+      "tests_run": 85,
+      "passed": 85,
+      "failed": 0
+    }
+  }
+}

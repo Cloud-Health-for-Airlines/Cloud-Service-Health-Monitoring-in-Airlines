@@ -1,0 +1,427 @@
+{
+  "metadata": {
+    "training_timestamp": "2026-10-13T16:32:54.868698+00:00",
+    "dataset_sha256": "5f2c200e70f6284bf378a61744fed2e14d52d98a3d3638f61274e230ccd36147",
+    "contract_version": "baccp-workload-contract-v1.1.0",
+    "feature_schema": {
+      "version": "baccp-workload-features-v1.1.0",
+      "feature_names": [
+        "lag_0",
+        "lag_1",
+        "lag_2",
+        "lag_3",
+        "lag_4",
+        "lag_5",
+        "lag_9",
+        "lag_14",
+        "mean_3",
+        "mean_5",
+        "mean_15",
+        "std_5",
+        "std_15",
+        "min_15",
+        "max_15",
+        "diff_1",
+        "diff_5",
+        "ratio_to_mean15",
+        "sin_phase",
+        "cos_phase"
+      ],
+      "feature_count": 20
+    },
+    "services": [
+      "reservations",
+      "crew",
+      "baggage",
+      "boundary-gateway",
+      "legacy-core"
+    ],
+    "horizons": [
+      1,
+      5,
+      15
+    ],
+    "capacities": {
+      "reservations": 100.0,
+      "crew": 60.0,
+      "baggage": 75.0,
+      "boundary-gateway": 220.0,
+      "legacy-core": null
+    },
+    "training_domain_bounds": {
+      "reservations": {
+        "min_rps": 25.479,
+        "max_rps": 155.303,
+        "surge_threshold_rps": 155.303
+      },
+      "crew": {
+        "min_rps": 12.839,
+        "max_rps": 87.198,
+        "surge_threshold_rps": 87.198
+      },
+      "baggage": {
+        "min_rps": 18.982,
+        "max_rps": 122.876,
+        "surge_threshold_rps": 122.876
+      },
+      "boundary-gateway": {
+        "min_rps": 55.976,
+        "max_rps": 308.686,
+        "surge_threshold_rps": 308.686
+      },
+      "legacy-core": {
+        "min_rps": 54.587,
+        "max_rps": 303.756,
+        "surge_threshold_rps": 303.756
+      }
+    },
+    "fallback_policy": {
+      "trigger_rule": "input_workload_rps > surge_threshold_rps",
+      "default_model": "gradient_boosting",
+      "fallback_model": "autoregressive_ridge",
+      "rationale": "HistGradientBoostingRegressor saturates at leaf maximums during extreme surges; Ridge AR extrapolates linearly."
+    }
+  },
+  "validation_metrics": {
+    "reservations": {
+      "1": {
+        "persistence": {
+          "mae": 3.0665,
+          "rmse": 4.1921,
+          "wape_pct": 5.3
+        },
+        "seasonal_naive": {
+          "mae": 5.7696,
+          "rmse": 10.2265,
+          "wape_pct": 9.98
+        },
+        "autoregressive_ridge": {
+          "mae": 2.7977,
+          "rmse": 3.7182,
+          "wape_pct": 4.84
+        },
+        "gradient_boosting": {
+          "mae": 2.318,
+          "rmse": 3.1097,
+          "wape_pct": 4.01
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 5.9374,
+          "rmse": 10.2449,
+          "wape_pct": 10.2
+        },
+        "seasonal_naive": {
+          "mae": 5.8998,
+          "rmse": 10.2309,
+          "wape_pct": 10.13
+        },
+        "autoregressive_ridge": {
+          "mae": 4.3352,
+          "rmse": 7.1839,
+          "wape_pct": 7.45
+        },
+        "gradient_boosting": {
+          "mae": 3.7895,
+          "rmse": 6.618,
+          "wape_pct": 6.51
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 5.602,
+          "rmse": 10.1397,
+          "wape_pct": 9.48
+        },
+        "seasonal_naive": {
+          "mae": 5.602,
+          "rmse": 10.1397,
+          "wape_pct": 9.48
+        },
+        "autoregressive_ridge": {
+          "mae": 4.9215,
+          "rmse": 7.6077,
+          "wape_pct": 8.33
+        },
+        "gradient_boosting": {
+          "mae": 4.4296,
+          "rmse": 7.4504,
+          "wape_pct": 7.5
+        }
+      }
+    },
+    "crew": {
+      "1": {
+        "persistence": {
+          "mae": 1.9752,
+          "rmse": 2.6695,
+          "wape_pct": 6.16
+        },
+        "seasonal_naive": {
+          "mae": 3.3941,
+          "rmse": 5.849,
+          "wape_pct": 10.58
+        },
+        "autoregressive_ridge": {
+          "mae": 1.8244,
+          "rmse": 2.3969,
+          "wape_pct": 5.69
+        },
+        "gradient_boosting": {
+          "mae": 1.5345,
+          "rmse": 2.0305,
+          "wape_pct": 4.78
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 3.5393,
+          "rmse": 5.8749,
+          "wape_pct": 10.95
+        },
+        "seasonal_naive": {
+          "mae": 3.4263,
+          "rmse": 5.8272,
+          "wape_pct": 10.6
+        },
+        "autoregressive_ridge": {
+          "mae": 2.4862,
+          "rmse": 4.1066,
+          "wape_pct": 7.69
+        },
+        "gradient_boosting": {
+          "mae": 2.1598,
+          "rmse": 3.7998,
+          "wape_pct": 6.68
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 3.2806,
+          "rmse": 5.7909,
+          "wape_pct": 10.01
+        },
+        "seasonal_naive": {
+          "mae": 3.2806,
+          "rmse": 5.7909,
+          "wape_pct": 10.01
+        },
+        "autoregressive_ridge": {
+          "mae": 2.7336,
+          "rmse": 4.268,
+          "wape_pct": 8.34
+        },
+        "gradient_boosting": {
+          "mae": 2.4728,
+          "rmse": 4.089,
+          "wape_pct": 7.54
+        }
+      }
+    },
+    "baggage": {
+      "1": {
+        "persistence": {
+          "mae": 2.5244,
+          "rmse": 3.4479,
+          "wape_pct": 5.61
+        },
+        "seasonal_naive": {
+          "mae": 4.5424,
+          "rmse": 8.0573,
+          "wape_pct": 10.09
+        },
+        "autoregressive_ridge": {
+          "mae": 2.298,
+          "rmse": 3.0594,
+          "wape_pct": 5.11
+        },
+        "gradient_boosting": {
+          "mae": 1.9414,
+          "rmse": 2.597,
+          "wape_pct": 4.31
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 4.7557,
+          "rmse": 7.9906,
+          "wape_pct": 10.5
+        },
+        "seasonal_naive": {
+          "mae": 4.6332,
+          "rmse": 8.0378,
+          "wape_pct": 10.23
+        },
+        "autoregressive_ridge": {
+          "mae": 3.4193,
+          "rmse": 5.6716,
+          "wape_pct": 7.55
+        },
+        "gradient_boosting": {
+          "mae": 2.9177,
+          "rmse": 5.2071,
+          "wape_pct": 6.44
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 4.4533,
+          "rmse": 8.0039,
+          "wape_pct": 9.69
+        },
+        "seasonal_naive": {
+          "mae": 4.4533,
+          "rmse": 8.0039,
+          "wape_pct": 9.69
+        },
+        "autoregressive_ridge": {
+          "mae": 3.9084,
+          "rmse": 6.0273,
+          "wape_pct": 8.5
+        },
+        "gradient_boosting": {
+          "mae": 3.4183,
+          "rmse": 5.5563,
+          "wape_pct": 7.44
+        }
+      }
+    },
+    "boundary-gateway": {
+      "1": {
+        "persistence": {
+          "mae": 6.2582,
+          "rmse": 8.5608,
+          "wape_pct": 5.23
+        },
+        "seasonal_naive": {
+          "mae": 11.402,
+          "rmse": 20.3669,
+          "wape_pct": 9.52
+        },
+        "autoregressive_ridge": {
+          "mae": 5.6768,
+          "rmse": 7.6178,
+          "wape_pct": 4.74
+        },
+        "gradient_boosting": {
+          "mae": 4.6871,
+          "rmse": 6.404,
+          "wape_pct": 3.91
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 11.8733,
+          "rmse": 20.2424,
+          "wape_pct": 9.86
+        },
+        "seasonal_naive": {
+          "mae": 11.663,
+          "rmse": 20.3595,
+          "wape_pct": 9.68
+        },
+        "autoregressive_ridge": {
+          "mae": 8.4964,
+          "rmse": 14.1909,
+          "wape_pct": 7.05
+        },
+        "gradient_boosting": {
+          "mae": 7.4501,
+          "rmse": 13.237,
+          "wape_pct": 6.18
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 11.0767,
+          "rmse": 20.2018,
+          "wape_pct": 9.06
+        },
+        "seasonal_naive": {
+          "mae": 11.0767,
+          "rmse": 20.2018,
+          "wape_pct": 9.06
+        },
+        "autoregressive_ridge": {
+          "mae": 9.4647,
+          "rmse": 14.9573,
+          "wape_pct": 7.74
+        },
+        "gradient_boosting": {
+          "mae": 8.8207,
+          "rmse": 14.8783,
+          "wape_pct": 7.22
+        }
+      }
+    },
+    "legacy-core": {
+      "1": {
+        "persistence": {
+          "mae": 6.3851,
+          "rmse": 8.6476,
+          "wape_pct": 5.44
+        },
+        "seasonal_naive": {
+          "mae": 11.3182,
+          "rmse": 20.0314,
+          "wape_pct": 9.65
+        },
+        "autoregressive_ridge": {
+          "mae": 5.7874,
+          "rmse": 7.7348,
+          "wape_pct": 4.93
+        },
+        "gradient_boosting": {
+          "mae": 4.8092,
+          "rmse": 6.4702,
+          "wape_pct": 4.1
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 11.7414,
+          "rmse": 19.9151,
+          "wape_pct": 9.95
+        },
+        "seasonal_naive": {
+          "mae": 11.5138,
+          "rmse": 20.0146,
+          "wape_pct": 9.75
+        },
+        "autoregressive_ridge": {
+          "mae": 8.3596,
+          "rmse": 13.9488,
+          "wape_pct": 7.08
+        },
+        "gradient_boosting": {
+          "mae": 7.1515,
+          "rmse": 13.0025,
+          "wape_pct": 6.06
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 11.0351,
+          "rmse": 19.8919,
+          "wape_pct": 9.22
+        },
+        "seasonal_naive": {
+          "mae": 11.0351,
+          "rmse": 19.8919,
+          "wape_pct": 9.22
+        },
+        "autoregressive_ridge": {
+          "mae": 9.3381,
+          "rmse": 14.7048,
+          "wape_pct": 7.8
+        },
+        "gradient_boosting": {
+          "mae": 8.774,
+          "rmse": 14.9155,
+          "wape_pct": 7.33
+        }
+      }
+    }
+  }
+}

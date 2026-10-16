@@ -1,0 +1,133 @@
+{
+  "manifest_version": "baccp-task3b-manifest-v1.0.0",
+  "description": "Task 3B Explanation Consistency & Evaluation Review Bundle (manifest strictly excluded from files list)",
+  "file_count": 28,
+  "files": {
+    "ai-models/degradation_prediction/data_contract.py": {
+      "size_bytes": 25715,
+      "sha256": "dc88fa114636967a5b6a7916c7f9536ddfa9f7d90467cbec3d7eef4123a72774"
+    },
+    "ai-models/degradation_prediction/features.py": {
+      "size_bytes": 25973,
+      "sha256": "896893c725db3cd03f1eb14adb5768f60a50cb6236b74b0d257f7f86224e26de"
+    },
+    "ai-models/degradation_prediction/models.py": {
+      "size_bytes": 25324,
+      "sha256": "9dda4e336afc7f77aec308624e3951390a9efbd8a5441ed39ad8faf76f5caa72"
+    },
+    "ai-models/degradation_prediction/inference.py": {
+      "size_bytes": 47537,
+      "sha256": "2b0fd49714971834c2b75d845547ee41e7e3713250721e2975382119bb4c4a10"
+    },
+    "ai-models/degradation_prediction/explanation.py": {
+      "size_bytes": 71417,
+      "sha256": "66763a6879abee4402555c901f4e707b9421ced3909a3ca470c2808b0e525c38"
+    },
+    "ai-models/degradation_prediction/evaluate_explanations.py": {
+      "size_bytes": 51276,
+      "sha256": "e3ff60837209999742ff4f29a3e511d96f36d8b9d7ab683144d53e0c75307701"
+    },
+    "ai-models/degradation_prediction/package_task3_bundle.py": {
+      "size_bytes": 8968,
+      "sha256": "ab93264bc5bae031e6ad77d42c4b2696e09d25c86ff4b7b7b892a8493d702257"
+    },
+    "ai-models/degradation_prediction/generate_diagnostic_fixture.py": {
+      "size_bytes": 7125,
+      "sha256": "ab624b74c4cba59b039c41a8ae425e30013025600752048e1cf01838fb11ae17"
+    },
+    "ai-models/degradation_prediction/__init__.py": {
+      "size_bytes": 1511,
+      "sha256": "90a9797c8dd259357438627daf3a76ce5c5d46052f7fbffeb1e34f163bd6167a"
+    },
+    "ai-models/workload_forecasting/__init__.py": {
+      "size_bytes": 1669,
+      "sha256": "2749d7e1f35dd64fe45c1b2479d4d2d04d0bdc94c27463dbf39b63010010e895"
+    },
+    "ai-models/workload_forecasting/data_contract.py": {
+      "size_bytes": 6626,
+      "sha256": "376f27aef4a37ca42253568c900808f68f16571a206707999c47c47522d1d2e8"
+    },
+    "ai-models/workload_forecasting/features.py": {
+      "size_bytes": 7434,
+      "sha256": "c10cd8ea7c7379081bcc483e27fc6e1696feb5df973a3836745e19ffd809e93a"
+    },
+    "ai-models/workload_forecasting/models.py": {
+      "size_bytes": 8294,
+      "sha256": "dde8e067b3ea0f61197f4d99e75f7347ef31d477398bf1f60826b0e92b0a78ed"
+    },
+    "ai-models/workload_forecasting/inference.py": {
+      "size_bytes": 12037,
+      "sha256": "9e35123af644b77faa168ce88ba46a752aa119a115f932b05bb75d218fd605ca"
+    },
+    "ai_models/degradation_prediction.py": {
+      "size_bytes": 2557,
+      "sha256": "4d41e3b85ac3c1ff456981dfc843485a2876a1771ab85c7cc417c37dc1d03280"
+    },
+    "ai_models/workload_forecasting.py": {
+      "size_bytes": 2202,
+      "sha256": "9eef695a72507920cda769df10db9d970bcd40b85fa37101770ca27df73efbc7"
+    },
+    "ai-models/requirements.txt": {
+      "size_bytes": 244,
+      "sha256": "7480090578509230aa14386cc19f8ae8f9e34431c0b2de7d7f59ea848a2f0695"
+    },
+    "ai-models/tests/test_degradation_prediction.py": {
+      "size_bytes": 73755,
+      "sha256": "9f567fd8586a03bb85ddccecef6b0299042e2990527a8e6f3b42abd847c1504a"
+    },
+    "ai-models/tests/test_degradation_explanations.py": {
+      "size_bytes": 43826,
+      "sha256": "c4076ba174387f12b0ea407ff86111676d6f7d6d91949d1cbbfdd24d0e37cb98"
+    },
+    "ai-models/data/degradation_prediction/saved_training_background.json": {
+      "size_bytes": 65657,
+      "sha256": "4f39bf8f2f1d32527c46f513f084429976fd72c727a0116c83a79a71dc375af9"
+    },
+    "ai-models/data/degradation_prediction/diagnostic_localization_fixture.json": {
+      "size_bytes": 555405,
+      "sha256": "5cff96b6dde3a9c2bc4f2ba72d1c1664fb3d460726c4ce4af46b482520f7f6a3"
+    },
+    "ai-models/data/degradation_prediction/fixture_test_incidents.json": {
+      "size_bytes": 338837,
+      "sha256": "d99a4b1996e797a43e025bbc4b74cca610092f4253a92e555ae7217b2acf9df5"
+    },
+    "ai-models/weights/degradation_prediction/degradation_models_bundle.pkl": {
+      "size_bytes": 14238713,
+      "sha256": "3587d73ef55a06cb618b4277ab2ea030c2ad3c4b9b8dc0aabeb8c858776da885"
+    },
+    "ai-models/weights/workload_forecasting/workload_models_bundle.pkl": {
+      "size_bytes": 5998045,
+      "sha256": "20c632c399997c7644f6e493e8a51d176ad3b3dc54272ed9df75b319624fa9f5"
+    },
+    "results/degradation_prediction/explanation_metrics.json": {
+      "size_bytes": 52438,
+      "sha256": "89eea71defc2f07811e6abdb5aff1651d0f1ea58fa7440488bbb4ba673ecb480"
+    },
+    "results/degradation_prediction/representative_incident_briefs.md": {
+      "size_bytes": 14907,
+      "sha256": "01e3011f773d4a00a159171d25ca608b4344986ad58ddd22fe9a74d600af0fef"
+    },
+    "results/degradation_prediction/plots/attribution_summary.png": {
+      "size_bytes": 82154,
+      "sha256": "7dd5757fe450bb8e64fec91758b1684a6841147046413d381e6d09e171f41932"
+    },
+    "results/degradation_prediction/task3_diff.patch": {
+      "size_bytes": 21638158,
+      "sha256": "06f5eb898170f5d22002bc17ca2385a285d2522551f39c5305e6be8a16b1d4c9"
+    }
+  },
+  "archive": {
+    "name": "baccp_task3_review_bundle.zip",
+    "sha256": "4af88a0b399bc90688c5b40470af21dbf1b95b50cab78526af06f2efc1aecfc4"
+  },
+  "reproducibility": {
+    "execution_command": "PYTHONPATH=ai-models python ai-models/degradation_prediction/evaluate_explanations.py",
+    "test_command": "PYTHONPATH=ai-models pytest ai-models/tests/test_degradation_prediction.py ai-models/tests/test_degradation_explanations.py",
+    "python_environment": "Python 3.9+, numpy>=1.24.0, scipy>=1.11.0, scikit-learn>=1.3.0, shap>=0.42.0, matplotlib>=3.7.0, pytest>=7.4.0",
+    "evaluation_input_dataset": {
+      "relative_path": "ai-models/data/degradation_prediction/degradation_dataset.json",
+      "sha256": "b19ef70240364d34120fee019c6aa23c292643f8a5dff622ca1d4ba537f7768d",
+      "reconstruction_note": "Production evaluation split (130 incidents) deterministically processed from degradation_dataset.json"
+    }
+  }
+}

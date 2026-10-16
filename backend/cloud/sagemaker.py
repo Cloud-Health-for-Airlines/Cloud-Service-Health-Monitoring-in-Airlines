@@ -18,6 +18,31 @@ from .config import AWSConfig, config
 logger = logging.getLogger("baccp.sagemaker")
 
 
+class SageMakerError(Exception):
+    """Base exception for SageMaker operations."""
+    pass
+
+
+class SageMakerValidationError(SageMakerError):
+    """Raised when input validation for SageMaker inference fails."""
+    pass
+
+
+class SageMakerEndpointError(SageMakerError):
+    """Raised when the SageMaker endpoint returns an error."""
+    pass
+
+
+class SageMakerResponseError(SageMakerError):
+    """Raised when parsing SageMaker response fails."""
+    pass
+
+
+class SageMakerTimeoutError(SageMakerError):
+    """Raised when a SageMaker request times out."""
+    pass
+
+
 class SageMakerCascadePredictor:
     """Client for invoking the BACCP Cascade Prediction model on Amazon SageMaker.
     

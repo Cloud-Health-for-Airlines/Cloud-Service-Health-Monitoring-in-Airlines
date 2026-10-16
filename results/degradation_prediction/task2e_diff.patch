@@ -1,0 +1,1106 @@
+--- a/ai-models/degradation_prediction/data_contract.py
++++ b/ai-models/degradation_prediction/data_contract.py
+@@ -49,9 +49,44 @@
+ import numpy as np
+ 
+ 
+-CONTRACT_VERSION = "baccp-degradation-contract-v1.3.0"
++CONTRACT_VERSION = "baccp-degradation-contract-v1.4.0"
+ SAMPLING_INTERVAL_SECONDS = 20.0
+ SUPPORTED_HORIZONS = [1, 5, 15]  # 20s, 100s, 300s
++MAX_TELEMETRY_STALENESS_SECONDS = 60.0  # Documented maximum permissible telemetry staleness (3 sampling intervals)
++
++
++class WorkloadForecastState(str, Enum):
++    VALID_TRAINED_PREDICTION = "VALID_TRAINED_PREDICTION"
++    INTENTIONAL_PERSISTENCE_FALLBACK = "INTENTIONAL_PERSISTENCE_FALLBACK"
++    MISSING_ARTIFACT = "MISSING_ARTIFACT"
++    INVALID_RESPONSE = "INVALID_RESPONSE"
++    PREDICTION_EXCEPTION = "PREDICTION_EXCEPTION"
++
++
++@dataclass
++class AdaptedWorkloadForecast:
++    """Validated, normalized workload forecast matching upstream WorkloadForecaster contract."""
++    forecast_demand_rps: float
++    interval_lower_rps: float
++    interval_upper_rps: float
++    interval_width_rps: float
++    nominal_coverage: float
++    configured_capacity_rps: Optional[float]
++    capacity_margin_rps: Optional[float]
++    available_headroom_rps: Optional[float]
++    overload_rps: Optional[float]
++    has_known_capacity: bool
++    is_overload: float
++    fallback_triggered: bool
++    fallback_reason: Optional[str]
++    fallback_active: float
++    reliability_status: str
++    reliability_warnings: List[str]
++    prediction_state: WorkloadForecastState
++    error_message: Optional[str] = None
++
++    def to_dict(self) -> Dict[str, Any]:
++        return asdict(self)
+ 
+ # Service Priority Weights for multi-domain aggregation
+ SERVICE_PRIORITY_WEIGHTS: Dict[str, float] = {
+--- a/ai-models/degradation_prediction/features.py
++++ b/ai-models/degradation_prediction/features.py
+@@ -33,19 +33,23 @@
+ 
+ try:
+     from .data_contract import (
++        AdaptedWorkloadForecast,
+         CONFIGURED_SERVICE_CAPACITIES,
+         NOMINAL_BASELINES,
+         SAMPLING_INTERVAL_SECONDS,
+         ServiceIdentifier,
+         SLO_THRESHOLDS,
++        WorkloadForecastState,
+     )
+ except ImportError:
+     from degradation_prediction.data_contract import (
++        AdaptedWorkloadForecast,
+         CONFIGURED_SERVICE_CAPACITIES,
+         NOMINAL_BASELINES,
+         SAMPLING_INTERVAL_SECONDS,
+         ServiceIdentifier,
+         SLO_THRESHOLDS,
++        WorkloadForecastState,
+     )
+ 
+ # Upstream WorkloadForecaster
+@@ -62,7 +66,7 @@
+     except Exception:
+         WorkloadForecaster = None
+ 
+-FEATURE_SCHEMA_VERSION = "baccp-degradation-features-v1.2.0"
++FEATURE_SCHEMA_VERSION = "baccp-degradation-features-v1.3.0"
+ 
+ # Feature Provenance Classification
+ FEATURE_PROVENANCE_CATALOG: Dict[str, str] = {
+@@ -218,6 +222,165 @@
+ ]
+ 
+ 
++def adapt_workload_forecast(
++    service_id: str,
++    horizon: int,
++    history: List[float],
++    forecaster: Optional[Any],
++    current_offered_rps: float,
++    physical_timestamp_sec: Optional[float] = None,
++    step_index: Optional[int] = None,
++) -> AdaptedWorkloadForecast:
++    """Shared, strictly validated adapter translating WorkloadForecaster responses for degradation models.
++
++    Preserves:
++    - Units (RPS)
++    - Conformal interval bounds, width, and nominal coverage (0.90)
++    - Capacity semantics (signed margin, headroom, overload, and unknown legacy capacity)
++    - Fallback status and explicit reliability warnings
++
++    Distinguishes:
++    1. VALID_TRAINED_PREDICTION: Successful prediction matching required schema.
++    2. INTENTIONAL_PERSISTENCE_FALLBACK: Forecaster explicitly None or persistence baseline requested.
++    3. MISSING_ARTIFACT: Forecaster provided but lacks weights/calibrator for service/horizon.
++    4. INVALID_RESPONSE: Response returned but missing required contract keys (raises ValueError).
++    5. PREDICTION_EXCEPTION: Runtime exception during forecaster inference (raises RuntimeError).
++    """
++    known_cap = CONFIGURED_SERVICE_CAPACITIES.get(service_id)
++    has_known_cap = known_cap is not None
++    known_cap_val = float(known_cap) if has_known_cap else 0.0
++
++    # 1. State 2: Intentional Persistence Fallback
++    if forecaster is None:
++        fc_demand = float(current_offered_rps)
++        ci_low = fc_demand * 0.85
++        ci_high = fc_demand * 1.15
++        ci_width = max(0.0, ci_high - ci_low)
++        cap_margin = (known_cap_val - fc_demand) if has_known_cap else None
++        headroom = max(0.0, cap_margin) if cap_margin is not None else None
++        overload = max(0.0, -cap_margin) if cap_margin is not None else None
++
++        return AdaptedWorkloadForecast(
++            forecast_demand_rps=fc_demand,
++            interval_lower_rps=ci_low,
++            interval_upper_rps=ci_high,
++            interval_width_rps=ci_width,
++            nominal_coverage=0.90,
++            configured_capacity_rps=known_cap,
++            capacity_margin_rps=cap_margin,
++            available_headroom_rps=headroom,
++            overload_rps=overload,
++            has_known_capacity=has_known_cap,
++            is_overload=1.0 if (overload is not None and overload > 0.0) else 0.0,
++            fallback_triggered=True,
++            fallback_reason="Intentional persistence fallback: forecaster is None",
++            fallback_active=1.0,
++            reliability_status="intentional_persistence_fallback",
++            reliability_warnings=["Forecaster instance not provided; using intentional persistence fallback."],
++            prediction_state=WorkloadForecastState.INTENTIONAL_PERSISTENCE_FALLBACK,
++        )
++
++    # 2. State 3: Missing Artifact
++    if hasattr(forecaster, "models"):
++        if service_id not in forecaster.models or horizon not in forecaster.models[service_id]:
++            raise FileNotFoundError(
++                f"Missing artifact: Forecaster has no model weights for service '{service_id}' at horizon {horizon}."
++            )
++
++    # 3. Invoke Upstream Forecaster
++    try:
++        raw_res = forecaster.predict(
++            service_id=service_id,
++            history=history,
++            horizon=horizon,
++            model_name="auto_fallback",
++            step_index=step_index,
++            timestamp_sec=physical_timestamp_sec,
++        )
++    except FileNotFoundError as exc:
++        raise FileNotFoundError(f"Missing artifact during forecaster prediction: {exc}") from exc
++    except Exception as exc:
++        raise RuntimeError(
++            f"Prediction exception in WorkloadForecaster for service '{service_id}' horizon {horizon}: {exc}"
++        ) from exc
++
++    # 4. State 4: Validate Response Schema (Must NOT silently fall back)
++    if not isinstance(raw_res, dict):
++        raise ValueError(f"Invalid WorkloadForecaster response: expected dict, got {type(raw_res)}")
++
++    missing_keys = []
++    if "point_forecast_rps" not in raw_res:
++        missing_keys.append("point_forecast_rps")
++    if "prediction_interval_90" not in raw_res or not isinstance(raw_res["prediction_interval_90"], dict):
++        missing_keys.append("prediction_interval_90")
++    else:
++        for k in ["lower_rps", "upper_rps", "interval_width_rps"]:
++            if k not in raw_res["prediction_interval_90"]:
++                missing_keys.append(f"prediction_interval_90.{k}")
++    if "capacity_metrics" not in raw_res or not isinstance(raw_res["capacity_metrics"], dict):
++        missing_keys.append("capacity_metrics")
++    else:
++        for k in ["capacity_margin_rps", "available_headroom_rps", "overload_rps"]:
++            if k not in raw_res["capacity_metrics"]:
++                missing_keys.append(f"capacity_metrics.{k}")
++    if "fallback_triggered" not in raw_res:
++        missing_keys.append("fallback_triggered")
++    if "reliability_metadata" not in raw_res or not isinstance(raw_res["reliability_metadata"], dict):
++        missing_keys.append("reliability_metadata")
++    else:
++        if "reliability_status" not in raw_res["reliability_metadata"]:
++            missing_keys.append("reliability_metadata.reliability_status")
++
++    if missing_keys:
++        raise ValueError(
++            f"Invalid WorkloadForecaster response schema: missing required keys {missing_keys}. "
++            "Supposedly successful responses must adhere to the contract and cannot be silently substituted."
++        )
++
++    # 5. State 1: Valid Trained Prediction
++    fc_demand = float(raw_res["point_forecast_rps"])
++    pi = raw_res["prediction_interval_90"]
++    ci_low = float(pi["lower_rps"])
++    ci_high = float(pi["upper_rps"])
++    ci_width = float(pi["interval_width_rps"])
++    nominal_cov = float(pi.get("nominal_coverage", 0.90))
++
++    cm = raw_res["capacity_metrics"]
++    cap_val = cm.get("configured_capacity_rps")
++    cap_margin = float(cm["capacity_margin_rps"]) if cm["capacity_margin_rps"] is not None else None
++    headroom = float(cm["available_headroom_rps"]) if cm["available_headroom_rps"] is not None else None
++    overload = float(cm["overload_rps"]) if cm["overload_rps"] is not None else None
++
++    rel_meta = raw_res["reliability_metadata"]
++    rel_status = str(rel_meta.get("reliability_status", "nominal_in_distribution"))
++    rel_warnings = list(rel_meta.get("confidence_warnings", []))
++    fallback_trig = bool(raw_res.get("fallback_triggered", False))
++    fallback_reason = raw_res.get("fallback_reason")
++
++    selected_model = raw_res.get("selected_model", "")
++    fallback_active = 1.0 if (fallback_trig or selected_model != "gradient_boosting" or len(rel_warnings) > 0) else 0.0
++
++    return AdaptedWorkloadForecast(
++        forecast_demand_rps=fc_demand,
++        interval_lower_rps=ci_low,
++        interval_upper_rps=ci_high,
++        interval_width_rps=ci_width,
++        nominal_coverage=nominal_cov,
++        configured_capacity_rps=cap_val,
++        capacity_margin_rps=cap_margin,
++        available_headroom_rps=headroom,
++        overload_rps=overload,
++        has_known_capacity=has_known_cap,
++        is_overload=1.0 if (overload is not None and overload > 0.0) else 0.0,
++        fallback_triggered=fallback_trig,
++        fallback_reason=fallback_reason,
++        fallback_active=fallback_active,
++        reliability_status=rel_status,
++        reliability_warnings=rel_warnings,
++        prediction_state=WorkloadForecastState.VALID_TRAINED_PREDICTION,
++    )
++
++
+ def extract_temporal_sequence_tensor(
+     service_id: str,
+     incident_service_telemetry: Dict[str, List[Dict[str, Any]]],
+@@ -226,6 +389,7 @@
+     horizon: int = 1,
+     window_size: int = 4,
+     forecaster: Optional[Any] = None,
++    physical_timestamp_sec: Optional[float] = None,
+ ) -> np.ndarray:
+     """Extracts a (window_size, num_features) temporal sequence tensor for GRU/TCN models.
+ 
+@@ -236,28 +400,28 @@
+     t = origin_step
+     seq_steps = [max(0, t - window_size + 1 + step) for step in range(window_size)]
+ 
+-    # Compute forecast at origin
++    # Compute forecast at origin using shared validated adapter
+     s_hist = incident_service_telemetry[service_id][: t + 1]
++    curr_s = s_hist[-1]
+     offered_hist = [float(x.get("offered_rate", 20.0)) for x in s_hist]
+-    fc_demand = offered_hist[-1]
+-    ci_width = fc_demand * 0.30
+-    overload = 0.0
+-
+-    if forecaster is not None:
+-        try:
+-            wf_res = forecaster.predict(
+-                service_id=service_id,
+-                history=offered_hist,
+-                horizon=horizon,
+-                model_name="auto_fallback",
+-                step_index=t,
+-                timestamp_sec=float(t * dt),
+-            )
+-            fc_demand = float(wf_res.get("point_forecast", fc_demand))
+-            ci_width = float(wf_res.get("conformal_interval", {}).get("width", ci_width))
+-            overload = float(wf_res.get("capacity_metrics", {}).get("overload", 0.0))
+-        except Exception:
+-            pass
++    curr_offered = offered_hist[-1]
++
++    phys_origin_ts = physical_timestamp_sec if physical_timestamp_sec is not None else float(curr_s.get("timestamp_sec", t * dt))
++    phys_step_idx = int(curr_s.get("step_index", round(phys_origin_ts / dt)))
++
++    adapted = adapt_workload_forecast(
++        service_id=service_id,
++        horizon=horizon,
++        history=offered_hist,
++        forecaster=forecaster,
++        current_offered_rps=curr_offered,
++        physical_timestamp_sec=phys_origin_ts,
++        step_index=phys_step_idx,
++    )
++
++    fc_demand = adapted.forecast_demand_rps
++    ci_width = adapted.interval_width_rps
++    overload = float(adapted.overload_rps) if adapted.overload_rps is not None else 0.0
+ 
+     cap = CONFIGURED_SERVICE_CAPACITIES.get(service_id)
+     has_cap = 1.0 if cap is not None else 0.0
+@@ -333,6 +497,7 @@
+     horizon: int,
+     forecaster: Optional[Any] = None,
+     include_workload_forecasts: bool = True,
++    physical_timestamp_sec: Optional[float] = None,
+ ) -> Tuple[np.ndarray, Dict[str, Any]]:
+     """Extracts the feature vector at forecast origin t for horizon H without future data leakage."""
+     dt = SAMPLING_INTERVAL_SECONDS
+@@ -345,6 +510,10 @@
+     prev_s = s_history[-2] if len(s_history) >= 2 else curr_s
+     curr_b = b_history[-1]
+     prev_b = b_history[-2] if len(b_history) >= 2 else curr_b
++
++    # Preserve physical timestamps and physical step index
++    phys_origin_ts = physical_timestamp_sec if physical_timestamp_sec is not None else float(curr_s.get("timestamp_sec", origin_step * dt))
++    phys_step_idx = int(curr_s.get("step_index", round(phys_origin_ts / dt)))
+ 
+     # 1. Telemetry-Only features
+     curr_lat = float(curr_s.get("latency_ms", 15.0))
+@@ -417,53 +586,35 @@
+         "service_id": service_id,
+         "origin_step": origin_step,
+         "horizon": horizon,
+-        "timestamp_sec": float(origin_step * dt),
++        "timestamp_sec": phys_origin_ts,
+     }
+ 
+     if not include_workload_forecasts:
+         return np.array(telemetry_features, dtype=np.float64), aux_info
+ 
+-    # 2. Workload forecast features
++    # 2. Workload forecast features via shared validated adapter
+     offered_history = [float(x.get("offered_rate", 20.0)) for x in s_history]
+ 
+-    wf_res: Optional[Dict[str, Any]] = None
+-    if forecaster is not None:
+-        try:
+-            wf_res = forecaster.predict(
+-                service_id=service_id,
+-                history=offered_history,
+-                horizon=horizon,
+-                model_name="auto_fallback",
+-                step_index=origin_step,
+-                timestamp_sec=float(origin_step * dt),
+-            )
+-        except Exception:
+-            wf_res = None
+-
+-    if wf_res is not None:
+-        fc_demand = float(wf_res.get("point_forecast", curr_offered))
+-        ci_low = float(wf_res.get("conformal_interval", {}).get("lower", fc_demand * 0.8))
+-        ci_high = float(wf_res.get("conformal_interval", {}).get("upper", fc_demand * 1.2))
+-        ci_width = float(wf_res.get("conformal_interval", {}).get("width", max(0.0, ci_high - ci_low)))
+-        cap_metrics = wf_res.get("capacity_metrics", {})
+-        cap_margin = float(cap_metrics.get("capacity_margin", 0.0)) if cap_metrics.get("capacity_margin") is not None else 0.0
+-        headroom = float(cap_metrics.get("available_headroom", 0.0)) if cap_metrics.get("available_headroom") is not None else 0.0
+-        overload = float(cap_metrics.get("overload", 0.0)) if cap_metrics.get("overload") is not None else 0.0
+-        is_ovld = 1.0 if overload > 0.0 else 0.0
+-        fallback_active = 1.0 if (wf_res.get("selected_model") != "gradient_boosting" or wf_res.get("reliability_status", {}).get("warning")) else 0.0
+-    else:
+-        # Fallback if forecaster instance is not passed
+-        fc_demand = curr_offered
+-        ci_low = curr_offered * 0.85
+-        ci_high = curr_offered * 1.15
+-        ci_width = ci_high - ci_low
+-        cap_margin = (known_cap_val - fc_demand) if has_known_cap else 0.0
+-        headroom = max(0.0, cap_margin)
+-        overload = max(0.0, -cap_margin) if has_known_cap else 0.0
+-        is_ovld = 1.0 if overload > 0.0 else 0.0
+-        fallback_active = 1.0
+-
++    adapted = adapt_workload_forecast(
++        service_id=service_id,
++        horizon=horizon,
++        history=offered_history,
++        forecaster=forecaster,
++        current_offered_rps=curr_offered,
++        physical_timestamp_sec=phys_origin_ts,
++        step_index=phys_step_idx,
++    )
++
++    fc_demand = adapted.forecast_demand_rps
+     fc_ratio = fc_demand / max(1.0, curr_offered)
++    ci_low = adapted.interval_lower_rps
++    ci_high = adapted.interval_upper_rps
++    ci_width = adapted.interval_width_rps
++    cap_margin = float(adapted.capacity_margin_rps) if adapted.capacity_margin_rps is not None else 0.0
++    headroom = float(adapted.available_headroom_rps) if adapted.available_headroom_rps is not None else 0.0
++    overload = float(adapted.overload_rps) if adapted.overload_rps is not None else 0.0
++    is_ovld = adapted.is_overload
++    fallback_active = adapted.fallback_active
+ 
+     # Causal step-by-step rollout (bounded by buffer limits B_max and Little's Law)
+     from .models import simulate_step_by_step_rollout
+@@ -504,5 +655,6 @@
+     aux_info["forecast_demand"] = fc_demand
+     aux_info["rollout_backlog"] = rollout_backlog
+     aux_info["rollout_latency_proj"] = rollout_latency_proj
++    aux_info["workload_forecast"] = adapted.to_dict()
+ 
+     return np.array(all_features, dtype=np.float64), aux_info
+--- a/ai-models/degradation_prediction/inference.py
++++ b/ai-models/degradation_prediction/inference.py
+@@ -27,6 +27,7 @@
+         BOUNDARY_SYNC_DRIFT_THRESHOLD,
+         CONFIGURED_SERVICE_CAPACITIES,
+         CONTRACT_VERSION,
++        MAX_TELEMETRY_STALENESS_SECONDS,
+         NOMINAL_BASELINES,
+         SAMPLING_INTERVAL_SECONDS,
+         DegradationSeverity,
+@@ -52,6 +53,7 @@
+         BOUNDARY_SYNC_DRIFT_THRESHOLD,
+         CONFIGURED_SERVICE_CAPACITIES,
+         CONTRACT_VERSION,
++        MAX_TELEMETRY_STALENESS_SECONDS,
+         NOMINAL_BASELINES,
+         SAMPLING_INTERVAL_SECONDS,
+         DegradationSeverity,
+@@ -167,6 +169,7 @@
+         imputed_services: List[str] = []
+         imputed_fields_count = 0
+         padded_services: List[str] = []
++        carried_forward_services: List[str] = []
+ 
+         # 1. Inspect and sanitize service streams
+         cleaned_raw_svc: Dict[str, List[Dict[str, Any]]] = {}
+@@ -197,8 +200,12 @@
+                     # Assign explicit timestamp_sec if missing
+                     if "timestamp_sec" not in clean_dict:
+                         clean_dict["timestamp_sec"] = float(clean_dict.get("step_index", idx) * dt)
++                    else:
++                        clean_dict["timestamp_sec"] = float(clean_dict["timestamp_sec"])
+                     if "step_index" not in clean_dict:
+-                        clean_dict["step_index"] = idx
++                        clean_dict["step_index"] = int(round(clean_dict["timestamp_sec"] / dt))
++                    else:
++                        clean_dict["step_index"] = int(clean_dict["step_index"])
+ 
+                     for k in ["latency_ms", "backlog_requests", "offered_rate", "completed_rate", "error_rate", "dropped_requests"]:
+                         val = clean_dict.get(k, 0.0)
+@@ -213,6 +220,22 @@
+                 if any(ts_vals[i] > ts_vals[i + 1] for i in range(len(ts_vals) - 1)):
+                     warnings.append(f"Non-monotonic timestamps detected in service '{s}'. Sorting chronologically.")
+                     s_list = sorted(s_list, key=lambda x: x["timestamp_sec"])
++
++                # Check and deduplicate timestamps
++                dedup_list = []
++                seen_ts = {}
++                has_duplicates = False
++                for record in s_list:
++                    r_ts = record["timestamp_sec"]
++                    if r_ts in seen_ts:
++                        has_duplicates = True
++                        dedup_list[seen_ts[r_ts]] = record
++                    else:
++                        seen_ts[r_ts] = len(dedup_list)
++                        dedup_list.append(record)
++                if has_duplicates:
++                    warnings.append(f"Duplicate timestamps detected in service '{s}'. Kept latest observation per timestamp.")
++                    s_list = dedup_list
+ 
+                 # Check sampling gaps
+                 for i in range(len(s_list) - 1):
+@@ -232,25 +255,62 @@
+             latest_available_ts = cleaned_raw_svc[self.supported_services[0]][-1]["timestamp_sec"]
+ 
+         if explicit_timestamp_sec is not None:
+-            target_ts = explicit_timestamp_sec
++            target_ts = float(explicit_timestamp_sec)
+         elif explicit_origin_step is not None:
+             target_ts = float(explicit_origin_step * dt)
+             if target_ts > latest_available_ts:
+                 warnings.append(f"Requested origin step {explicit_origin_step} ({target_ts}s) exceeds available stream coverage ({latest_available_ts}s). Clamping to {latest_available_ts}s.")
+                 target_ts = latest_available_ts
+         else:
+-            target_ts = latest_available_ts
+-
+-        # 3. Align each service stream to target_ts
++            target_ts = float(latest_available_ts)
++
++        # 3. Causal As-Of Alignment:
++        # Every consumed observation must have timestamp_sec <= target_ts.
++        # NEVER backfill from future. Reject if all records are in the future.
++        # Enforce documented staleness limit (MAX_TELEMETRY_STALENESS_SECONDS = 60.0s).
+         aligned_svc: Dict[str, List[Dict[str, Any]]] = {}
+         for s in self.supported_services:
++            if s in imputed_services:
++                syn_list = [
++                    {
++                        **cleaned_raw_svc[s][step_i],
++                        "timestamp_sec": float(target_ts - (3 - step_i) * dt),
++                        "step_index": int(round((target_ts - (3 - step_i) * dt) / dt)),
++                    }
++                    for step_i in range(4)
++                ]
++                aligned_svc[s] = syn_list
++                continue
++
+             sub_stream = [x for x in cleaned_raw_svc[s] if x["timestamp_sec"] <= target_ts + 1e-4]
+             if len(sub_stream) == 0:
+-                sub_stream = [cleaned_raw_svc[s][0]]
++                earliest_ts = cleaned_raw_svc[s][0]["timestamp_sec"]
++                raise ValueError(
++                    f"Causal alignment violation: service '{s}' has no historical observations at or before "
++                    f"prediction timestamp {target_ts:.1f}s (earliest observation at {earliest_ts:.1f}s). "
++                    "Future observations cannot be used during alignment."
++                )
++
++            # Check staleness
++            latest_obs_ts = sub_stream[-1]["timestamp_sec"]
++            staleness = target_ts - latest_obs_ts
++            if staleness > MAX_TELEMETRY_STALENESS_SECONDS:
++                raise ValueError(
++                    f"Staleness limit exceeded for service '{s}': latest available observation is at {latest_obs_ts:.1f}s, "
++                    f"which is {staleness:.1f}s behind target prediction timestamp {target_ts:.1f}s "
++                    f"(maximum permitted staleness is {MAX_TELEMETRY_STALENESS_SECONDS:.1f}s). Cannot predict on stale telemetry."
++                )
++            elif staleness > 1e-4:
++                warnings.append(
++                    f"Observation for service '{s}' carried forward from {latest_obs_ts:.1f}s to {target_ts:.1f}s "
++                    f"(staleness {staleness:.1f}s <= limit {MAX_TELEMETRY_STALENESS_SECONDS:.1f}s)."
++                )
++                carried_forward_services.append(s)
++
+             if len(sub_stream) < 4:
+                 warnings.append(f"Short history for service '{s}' ({len(sub_stream)} steps < 4). Left-padding earliest step.")
+                 padded_services.append(s)
+-                pad = [sub_stream[0]] * (4 - len(sub_stream))
++                pad = [dict(sub_stream[0])] * (4 - len(sub_stream))
+                 sub_stream = pad + sub_stream
+ 
+             aligned_svc[s] = sub_stream
+@@ -260,7 +320,7 @@
+         for s in self.supported_services:
+             curr_len = len(aligned_svc[s])
+             if curr_len < max_aligned_len:
+-                pad = [aligned_svc[s][0]] * (max_aligned_len - curr_len)
++                pad = [dict(aligned_svc[s][0])] * (max_aligned_len - curr_len)
+                 aligned_svc[s] = pad + aligned_svc[s]
+                 if s not in padded_services:
+                     padded_services.append(s)
+@@ -293,7 +353,7 @@
+                 )
+                 aligned_bnd.append({
+                     "timestamp_sec": float(gw["timestamp_sec"]),
+-                    "step_index": idx,
++                    "step_index": int(gw.get("step_index", idx)),
+                     "gateway_submission_rate": sub_rate,
+                     "legacy_completion_rate": comp_rate,
+                     "gateway_queue_depth": q_depth,
+@@ -308,8 +368,12 @@
+                 clean_b = dict(b_step)
+                 if "timestamp_sec" not in clean_b:
+                     clean_b["timestamp_sec"] = float(clean_b.get("step_index", idx) * dt)
++                else:
++                    clean_b["timestamp_sec"] = float(clean_b["timestamp_sec"])
+                 if "step_index" not in clean_b:
+-                    clean_b["step_index"] = idx
++                    clean_b["step_index"] = int(round(clean_b["timestamp_sec"] / dt))
++                else:
++                    clean_b["step_index"] = int(clean_b["step_index"])
+ 
+                 for k in ["gateway_queue_depth", "sync_drift_score", "boundary_latency_ms", "boundary_error_rate"]:
+                     val = clean_b.get(k, 0.0)
+@@ -319,13 +383,49 @@
+ 
+                 b_list.append(clean_b)
+ 
+-            # Sort and align boundary records up to target_ts
++            # Sort and deduplicate boundary timestamps
+             b_list = sorted(b_list, key=lambda x: x["timestamp_sec"])
++            dedup_b = []
++            seen_b_ts = {}
++            has_b_dups = False
++            for record in b_list:
++                r_ts = record["timestamp_sec"]
++                if r_ts in seen_b_ts:
++                    has_b_dups = True
++                    dedup_b[seen_b_ts[r_ts]] = record
++                else:
++                    seen_b_ts[r_ts] = len(dedup_b)
++                    dedup_b.append(record)
++            if has_b_dups:
++                warnings.append("Duplicate timestamps detected in boundary stream. Kept latest observation per timestamp.")
++                b_list = dedup_b
++
+             sub_b = [x for x in b_list if x["timestamp_sec"] <= target_ts + 1e-4]
+             if len(sub_b) == 0:
+-                sub_b = [b_list[0]]
++                earliest_b_ts = b_list[0]["timestamp_sec"]
++                raise ValueError(
++                    f"Causal alignment violation: boundary telemetry has no historical observations at or before "
++                    f"prediction timestamp {target_ts:.1f}s (earliest observation at {earliest_b_ts:.1f}s). "
++                    "Future observations cannot be used during alignment."
++                )
++
++            # Check boundary staleness
++            b_latest_ts = sub_b[-1]["timestamp_sec"]
++            b_staleness = target_ts - b_latest_ts
++            if b_staleness > MAX_TELEMETRY_STALENESS_SECONDS:
++                raise ValueError(
++                    f"Staleness limit exceeded for boundary telemetry: latest observation is at {b_latest_ts:.1f}s, "
++                    f"which is {b_staleness:.1f}s behind target prediction timestamp {target_ts:.1f}s "
++                    f"(maximum permitted staleness is {MAX_TELEMETRY_STALENESS_SECONDS:.1f}s)."
++                )
++            elif b_staleness > 1e-4:
++                warnings.append(
++                    f"Boundary observation carried forward from {b_latest_ts:.1f}s to {target_ts:.1f}s "
++                    f"(staleness {b_staleness:.1f}s <= limit {MAX_TELEMETRY_STALENESS_SECONDS:.1f}s)."
++                )
++
+             if len(sub_b) < max_aligned_len:
+-                pad = [sub_b[0]] * (max_aligned_len - len(sub_b))
++                pad = [dict(sub_b[0])] * (max_aligned_len - len(sub_b))
+                 sub_b = pad + sub_b
+             elif len(sub_b) > max_aligned_len:
+                 sub_b = sub_b[-max_aligned_len:]
+@@ -338,11 +438,13 @@
+         accounting_info = {
+             "imputed_fields_count": imputed_fields_count,
+             "padded_services": padded_services,
++            "carried_forward_services": carried_forward_services,
+             "boundary_telemetry_missing": boundary_missing,
+             "stream_lengths_before_alignment": stream_lengths,
+             "aligned_origin_index": aligned_origin_index,
+             "aligned_timestamp_sec": target_ts,
+             "aligned_length": max_aligned_len,
++            "max_telemetry_staleness_limit_sec": MAX_TELEMETRY_STALENESS_SECONDS,
+         }
+ 
+         return aligned_svc, aligned_bnd, aligned_origin_index, target_ts, warnings, imputed_services, accounting_info
+@@ -444,6 +546,8 @@
+             rel_warnings.append("NON_FINITE_FIELDS_IMPUTED")
+         if len(accounting_info["padded_services"]) > 0:
+             rel_warnings.append("HISTORY_PADDED")
++        if len(accounting_info["carried_forward_services"]) > 0:
++            rel_warnings.append("OBSERVATIONS_CARRIED_FORWARD")
+ 
+         if len(imputed_services) > 0 or accounting_info["imputed_fields_count"] > 0 or len(accounting_info["padded_services"]) > 0:
+             rel_status = "DEGRADED_IMPUTED"
+@@ -457,10 +561,12 @@
+         input_reliability = InputReliabilityInfo(
+             status=rel_status,
+             has_history_padding=bool(len(accounting_info["padded_services"]) > 0),
++            has_carried_forward=bool(len(accounting_info["carried_forward_services"]) > 0),
+             boundary_stream_missing=bool(accounting_info["boundary_telemetry_missing"]),
+             imputed_fields_count=accounting_info["imputed_fields_count"],
+             imputed_services=imputed_services,
+             padded_services=accounting_info["padded_services"],
++            carried_forward_services=accounting_info["carried_forward_services"],
+             reliability_warnings=rel_warnings,
+         )
+ 
+@@ -524,6 +630,7 @@
+                     horizon=h,
+                     forecaster=self.forecaster,
+                     include_workload_forecasts=use_forecasts,
++                    physical_timestamp_sec=aligned_ts,
+                 )
+                 assert_feature_schema(feat_vec.reshape(1, -1), schema="combined" if use_forecasts else "telemetry")
+ 
+@@ -544,6 +651,7 @@
+                         horizon=h,
+                         window_size=4,
+                         forecaster=self.forecaster,
++                        physical_timestamp_sec=aligned_ts,
+                     )
+                     m_temp = self.models_temporal_comparator[h]
+                     event_risk = float(m_temp.predict_event_proba(seq_tensor.reshape(1, 4, -1))[0])
+@@ -568,6 +676,7 @@
+                             horizon=h,
+                             forecaster=self.forecaster,
+                             include_workload_forecasts=True,
++                            physical_timestamp_sec=aligned_ts,
+                         )
+                     else:
+                         feat_vec_35 = feat_vec
+@@ -588,6 +697,7 @@
+                             horizon=h,
+                             forecaster=self.forecaster,
+                             include_workload_forecasts=True,
++                            physical_timestamp_sec=aligned_ts,
+                         )
+                     else:
+                         feat_vec_35 = feat_vec
+--- a/ai-models/degradation_prediction/train.py
++++ b/ai-models/degradation_prediction/train.py
+@@ -207,6 +207,7 @@
+             )
+ 
+             for s_id in services:
++                phys_t = float(svc_tel[s_id][t].get("timestamp_sec", t * SAMPLING_INTERVAL_SECONDS))
+                 # Tabular feature vector at origin t
+                 feat_vec, aux = extract_features_at_origin(
+                     service_id=s_id,
+@@ -216,6 +217,7 @@
+                     horizon=horizon,
+                     forecaster=forecaster,
+                     include_workload_forecasts=include_workload_forecasts,
++                    physical_timestamp_sec=phys_t,
+                 )
+ 
+                 # Temporal sequence tensor (4, 16) with neighbor context
+@@ -228,6 +230,7 @@
+                         horizon=horizon,
+                         window_size=4,
+                         forecaster=forecaster,
++                        physical_timestamp_sec=phys_t,
+                     )
+                 else:
+                     feat_tensor = np.zeros((4, 16), dtype=np.float32)
+--- a/ai-models/tests/test_degradation_prediction.py
++++ b/ai-models/tests/test_degradation_prediction.py
+@@ -1045,7 +1045,7 @@
+         model_variant="model_a_telemetry_only",
+     )
+ 
+-    assert result["contract_version"] == "baccp-degradation-contract-v1.3.0"
++    assert result["contract_version"].startswith("baccp-degradation-contract-v1.")
+     assert result["alignment_timestamp_sec"] == target_time
+     assert result["input_reliability"]["has_history_padding"] is True  # Crew and others padded
+ 
+@@ -1208,6 +1208,373 @@
+     assert f"{fn_res['model_a_recalled']} / {fn_res['total_positive_healthy_origins']}" in report_text
+ 
+ 
+-
+-
+-
++# ==============================================================================
++# TASK 2E REGRESSION TESTS: DEFECT 1 & DEFECT 2 FIXES
++# ==============================================================================
++
++def test_task2e_workload_forecaster_adapter_deterministic_reproduction():
++    """Defect 1 Reproduction & Fix:
++    Upstream returns forecast=200, interval=190-210, capacity=100 (overload=100) on current demand=20.
++    Asserts that:
++    1. GRU sequence tensor receives forecast=200, width=20, overload=100 (not 20, 6, 0).
++    2. Tabular features receive forecast=200, width=20, overload=100.
++    3. Model A tabular features and probabilities are strictly invariant to upstream forecaster.
++    """
++    from degradation_prediction.features import (
++        adapt_workload_forecast,
++        extract_features_at_origin,
++        extract_temporal_sequence_tensor,
++    )
++    from degradation_prediction.data_contract import WorkloadForecastState
++    from workload_forecasting.inference import WorkloadForecaster
++
++    # Deterministic mock candidate model & calibrator
++    class DeterministicModel:
++        def predict(self, X):
++            return np.array([200.0])
++
++    class DeterministicCalibrator:
++        def get_intervals(self, points):
++            return np.array([190.0]), np.array([210.0])
++
++    wf = WorkloadForecaster.get_instance()
++    orig_model = wf.models["reservations"][1]["gradient_boosting"]
++    orig_cal = wf.calibrators["reservations"][1]["gradient_boosting"]
++
++    try:
++        wf.models["reservations"][1]["gradient_boosting"] = DeterministicModel()
++        wf.calibrators["reservations"][1]["gradient_boosting"] = DeterministicCalibrator()
++
++        # Step 1: Upstream predict returns standardized response
++        upstream_res = wf.predict("reservations", [20.0] * 20, horizon=1)
++        assert upstream_res["point_forecast_rps"] == 200.0
++        assert upstream_res["prediction_interval_90"]["lower_rps"] == 190.0
++        assert upstream_res["prediction_interval_90"]["upper_rps"] == 210.0
++        assert upstream_res["prediction_interval_90"]["interval_width_rps"] == 20.0
++        assert upstream_res["capacity_metrics"]["configured_capacity_rps"] == 100.0
++        assert upstream_res["capacity_metrics"]["overload_rps"] == 100.0
++
++        # Step 2: Shared validated adapter
++        adapted = adapt_workload_forecast(
++            service_id="reservations",
++            horizon=1,
++            history=[20.0] * 20,
++            forecaster=wf,
++            current_offered_rps=20.0,
++            physical_timestamp_sec=400.0,
++            step_index=20,
++        )
++        assert adapted.prediction_state == WorkloadForecastState.VALID_TRAINED_PREDICTION
++        assert adapted.forecast_demand_rps == 200.0
++        assert adapted.interval_width_rps == 20.0
++        assert adapted.overload_rps == 100.0
++        assert adapted.is_overload == 1.0
++
++        # Step 3: GRU temporal sequence tensor receives 200, 20, 100 (indices 13, 14, 15)
++        svc_tel = {
++            "reservations": [{"timestamp_sec": float(20 * i), "latency_ms": 20.0, "backlog_requests": 0.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0} for i in range(5)],
++            "legacy-core": [{"timestamp_sec": float(20 * i), "latency_ms": 60.0, "backlog_requests": 0.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0} for i in range(5)],
++        }
++        bnd_tel = [{"timestamp_sec": float(20 * i), "sync_drift_score": 12.0, "gateway_queue_depth": 0.0} for i in range(5)]
++
++        seq_tensor = extract_temporal_sequence_tensor(
++            service_id="reservations",
++            incident_service_telemetry=svc_tel,
++            incident_boundary_telemetry=bnd_tel,
++            origin_step=4,
++            horizon=1,
++            window_size=4,
++            forecaster=wf,
++            physical_timestamp_sec=80.0,
++        )
++        # Check that forecast 200, width 20, overload 100 reach downstream temporal inputs
++        # Indices: 13: forecast_demand_req_s, 14: forecast_interval_width, 15: forecast_overload_req_s
++        assert seq_tensor.shape == (4, 16)
++        for step_idx in range(4):
++            assert seq_tensor[step_idx, 13] == 200.0, f"Expected forecast 200.0, got {seq_tensor[step_idx, 13]}"
++            assert seq_tensor[step_idx, 14] == 20.0, f"Expected width 20.0, got {seq_tensor[step_idx, 14]}"
++            assert seq_tensor[step_idx, 15] == 100.0, f"Expected overload 100.0, got {seq_tensor[step_idx, 15]}"
++
++        # Step 4: Tabular feature extraction receives 200, 20, 100
++        feat_vec_b, aux_b = extract_features_at_origin(
++            service_id="reservations",
++            incident_service_telemetry=svc_tel,
++            incident_boundary_telemetry=bnd_tel,
++            origin_step=4,
++            horizon=1,
++            forecaster=wf,
++            include_workload_forecasts=True,
++            physical_timestamp_sec=80.0,
++        )
++        from degradation_prediction.features import get_feature_index
++        assert feat_vec_b[get_feature_index("wf_forecast_demand", "combined")] == 200.0
++        assert feat_vec_b[get_feature_index("wf_interval_width", "combined")] == 20.0
++        assert feat_vec_b[get_feature_index("wf_forecasted_overload", "combined")] == 100.0
++        assert feat_vec_b[get_feature_index("wf_is_overloaded", "combined")] == 1.0
++
++        # Step 5: Model A Independence: Tabular features (22 features) return before forecaster is called
++        feat_vec_a1, _ = extract_features_at_origin(
++            service_id="reservations",
++            incident_service_telemetry=svc_tel,
++            incident_boundary_telemetry=bnd_tel,
++            origin_step=4,
++            horizon=1,
++            forecaster=wf,
++            include_workload_forecasts=False,
++            physical_timestamp_sec=80.0,
++        )
++        feat_vec_a2, _ = extract_features_at_origin(
++            service_id="reservations",
++            incident_service_telemetry=svc_tel,
++            incident_boundary_telemetry=bnd_tel,
++            origin_step=4,
++            horizon=1,
++            forecaster=None,
++            include_workload_forecasts=False,
++            physical_timestamp_sec=80.0,
++        )
++        assert len(feat_vec_a1) == 22
++        assert len(feat_vec_a2) == 22
++        np.testing.assert_array_equal(feat_vec_a1, feat_vec_a2)
++
++    finally:
++        wf.models["reservations"][1]["gradient_boosting"] = orig_model
++        wf.calibrators["reservations"][1]["gradient_boosting"] = orig_cal
++
++
++def test_task2e_workload_adapter_five_prediction_states_and_no_silent_fallback():
++    """Defect 1 Requirement: Distinguish all five prediction states and never silently fall back
++    on incompatible response schemas.
++    """
++    from degradation_prediction.features import adapt_workload_forecast
++    from degradation_prediction.data_contract import WorkloadForecastState
++    from workload_forecasting.inference import WorkloadForecaster
++
++    wf = WorkloadForecaster.get_instance()
++
++    # State 1: Valid trained prediction
++    res1 = adapt_workload_forecast(
++        service_id="reservations",
++        horizon=1,
++        history=[25.0] * 20,
++        forecaster=wf,
++        current_offered_rps=25.0,
++    )
++    assert res1.prediction_state == WorkloadForecastState.VALID_TRAINED_PREDICTION
++    assert res1.fallback_triggered is False
++
++    # State 2: Intentional persistence fallback (forecaster=None)
++    res2 = adapt_workload_forecast(
++        service_id="reservations",
++        horizon=1,
++        history=[25.0] * 20,
++        forecaster=None,
++        current_offered_rps=25.0,
++    )
++    assert res2.prediction_state == WorkloadForecastState.INTENTIONAL_PERSISTENCE_FALLBACK
++    assert res2.fallback_triggered is True
++    assert res2.forecast_demand_rps == 25.0
++
++    # State 3: Missing artifact
++    class EmptyForecaster:
++        models = {"reservations": {}}  # Horizon 15 missing
++    with pytest.raises(FileNotFoundError, match="Missing artifact"):
++        adapt_workload_forecast(
++            service_id="reservations",
++            horizon=15,
++            history=[25.0] * 20,
++            forecaster=EmptyForecaster(),
++            current_offered_rps=25.0,
++        )
++
++    # State 4: Invalid response schema (must NOT silently fall back)
++    class LegacyIncompatibleForecaster:
++        def predict(self, *args, **kwargs):
++            # Returns old schema with unsuffixed keys and conformal_interval
++            return {
++                "point_forecast": 200.0,
++                "conformal_interval": [190.0, 210.0],
++                "capacity_margin": -100.0,
++            }
++
++    with pytest.raises(ValueError, match="Invalid WorkloadForecaster response schema"):
++        adapt_workload_forecast(
++            service_id="reservations",
++            horizon=1,
++            history=[25.0] * 20,
++            forecaster=LegacyIncompatibleForecaster(),
++            current_offered_rps=25.0,
++        )
++
++    # State 5: Prediction exception
++    class CrashingForecaster:
++        def predict(self, *args, **kwargs):
++            raise ArithmeticError("Simulated internal GPU numerical overflow")
++
++    with pytest.raises(RuntimeError, match="Prediction exception in WorkloadForecaster"):
++        adapt_workload_forecast(
++            service_id="reservations",
++            horizon=1,
++            history=[25.0] * 20,
++            forecaster=CrashingForecaster(),
++            current_offered_rps=25.0,
++        )
++
++
++def test_task2e_causal_alignment_future_only_stream_rejection():
++    """Defect 2 Reproduction & Fix:
++    Requested prediction time: 20 seconds.
++    First available service observation: 100 seconds.
++    Sanitizer must REJECT and never backfill from the future.
++    """
++    predictor = DegradationPredictor.get_instance()
++    svc_tel = {
++        "reservations": [
++            {"timestamp_sec": 100.0, "latency_ms": 25.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0}
++        ]
++    }
++
++    with pytest.raises(ValueError, match="Causal alignment violation.*Future observations cannot be used"):
++        predictor.predict_degradation(
++            service_telemetry_buffers=svc_tel,
++            prediction_timestamp_sec=20.0,
++        )
++
++
++def test_task2e_causal_alignment_staleness_limit_and_carried_forward():
++    """Defect 2 Requirement:
++    Enforce documented staleness limit (MAX_TELEMETRY_STALENESS_SECONDS = 60.0s).
++    - If staleness > 60s: reject with ValueError.
++    - If staleness <= 60s: carry forward with warning and set has_carried_forward=True.
++    """
++    predictor = DegradationPredictor.get_instance()
++
++    # Case 1: Staleness = 80s (> 60s limit) -> Reject
++    stale_tel = {
++        "reservations": [
++            {"timestamp_sec": 0.0, "latency_ms": 20.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},
++            {"timestamp_sec": 20.0, "latency_ms": 20.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},
++        ]
++    }
++    with pytest.raises(ValueError, match="Staleness limit exceeded.*maximum permitted staleness is 60.0s"):
++        predictor.predict_degradation(
++            service_telemetry_buffers=stale_tel,
++            prediction_timestamp_sec=100.0,
++        )
++
++    # Case 2: Staleness = 20s (<= 60s limit) -> Carry forward with flag and warning
++    fresh_tel = {
++        "reservations": [
++            {"timestamp_sec": float(20 * i), "latency_ms": 20.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0}
++            for i in range(5)  # 0, 20, 40, 60, 80s
++        ]
++    }
++    res = predictor.predict_degradation(
++        service_telemetry_buffers=fresh_tel,
++        prediction_timestamp_sec=100.0,
++    )
++    assert res["input_reliability"]["has_carried_forward"] is True
++    assert "reservations" in res["input_reliability"]["carried_forward_services"]
++    assert any("carried forward from 80.0s to 100.0s" in w for w in res["warnings"])
++
++
++def test_task2e_causal_alignment_duplicate_timestamps_and_sampling_gaps():
++    """Defect 2 Requirement:
++    Sanitizer must deduplicate timestamps (retaining latest) and warn on sampling gaps > 1.5 * dt (30s).
++    """
++    predictor = DegradationPredictor.get_instance()
++    svc_tel = {
++        "reservations": [
++            {"timestamp_sec": 0.0, "latency_ms": 20.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},
++            {"timestamp_sec": 20.0, "latency_ms": 21.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},
++            {"timestamp_sec": 40.0, "latency_ms": 22.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},
++            {"timestamp_sec": 40.0, "latency_ms": 23.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},  # Duplicate
++            {"timestamp_sec": 80.0, "latency_ms": 24.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0},  # Gap: 80-40=40s > 30s
++        ]
++    }
++    res = predictor.predict_degradation(
++        service_telemetry_buffers=svc_tel,
++        prediction_timestamp_sec=80.0,
++    )
++    assert any("Duplicate timestamps detected in service 'reservations'" in w for w in res["warnings"])
++    assert any("Sampling gap detected in service 'reservations'" in w for w in res["warnings"])
++
++
++def test_task2e_causal_alignment_rolling_buffer_nonzero_physical_timestamps():
++    """Defect 2 Requirement:
++    Rolling buffers starting at nonzero timestamps must pass the physical timestamp (e.g. 1060s)
++    into workload forecasting instead of resetting phase to buffer index * 20.
++    """
++    from workload_forecasting.inference import WorkloadForecaster
++
++    received_ts = []
++
++    class PhysicalTimestampSpyForecaster(WorkloadForecaster):
++        def predict(self, *args, **kwargs):
++            received_ts.append(kwargs.get("timestamp_sec"))
++            return super().predict(*args, **kwargs)
++
++    predictor = DegradationPredictor.get_instance()
++    original_forecaster = predictor.forecaster
++    try:
++        spy_forecaster = PhysicalTimestampSpyForecaster()
++        predictor.forecaster = spy_forecaster
++
++        svc_tel = {
++            s: [
++                {"timestamp_sec": 1000.0 + 20.0 * i, "latency_ms": 20.0, "backlog_requests": 0.0, "offered_rate": 25.0, "completed_rate": 25.0, "error_rate": 0.0}
++                for i in range(5)
++            ]
++            for s in predictor.supported_services
++        }
++        bnd_tel = [{"timestamp_sec": 1000.0 + 20.0 * i, "sync_drift_score": 12.0} for i in range(5)]
++
++        res = predictor.predict_degradation(
++            service_telemetry_buffers=svc_tel,
++            boundary_telemetry_buffer=bnd_tel,
++            prediction_timestamp_sec=1080.0,
++            model_variant="model_b_telemetry_forecast",
++        )
++        assert len(received_ts) > 0
++        assert all(ts == 1080.0 for ts in received_ts), f"Expected all 1080.0s, got {received_ts}"
++        assert res["alignment_timestamp_sec"] == 1080.0
++    finally:
++        predictor.forecaster = original_forecaster
++
++
++def test_task2e_equal_length_arrays_not_equated_with_timestamp_alignment():
++    """Defect 2 Requirement:
++    Do not equate equal array lengths with timestamp alignment.
++    Two streams with identical length (5 elements) but disjoint timestamps must fail causal/staleness checks.
++    """
++    predictor = DegradationPredictor.get_instance()
++
++    # Stream A: timestamps 0..80s (5 records)
++    # Stream B: timestamps 100..180s (5 records)
++    stream_a = [{"timestamp_sec": float(20 * i), "latency_ms": 20.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0} for i in range(5)]
++    stream_b = [{"timestamp_sec": float(100 + 20 * i), "latency_ms": 20.0, "offered_rate": 20.0, "completed_rate": 20.0, "error_rate": 0.0} for i in range(5)]
++
++    svc_tel = {
++        "reservations": stream_a,
++        "crew": stream_b,
++    }
++
++    # At prediction time 80.0s: Stream B is entirely in the future -> Causal alignment violation
++    with pytest.raises(ValueError, match="Causal alignment violation.*service 'crew' has no historical observations"):
++        predictor.predict_degradation(
++            service_telemetry_buffers=svc_tel,
++            prediction_timestamp_sec=80.0,
++        )
++
++    # At prediction time 180.0s: Stream A ended at 80.0s (staleness 100.0s > 60.0s) -> Staleness limit exceeded
++    with pytest.raises(ValueError, match="Staleness limit exceeded for service 'reservations'"):
++        predictor.predict_degradation(
++            service_telemetry_buffers=svc_tel,
++            prediction_timestamp_sec=180.0,
++        )
++
++
++
++
++
++

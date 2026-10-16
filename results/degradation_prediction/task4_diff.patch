@@ -1,0 +1,10 @@
+diff --git a/ai-models/requirements.txt b/ai-models/requirements.txt
+index fb15fe0..fe278bf 100644
+--- a/ai-models/requirements.txt
++++ b/ai-models/requirements.txt
+@@ -8,3 +8,5 @@ scikit-learn>=1.3.0
+ scipy>=1.11.0
+ networkx>=3.0.0
+ pytest>=7.4.0
++matplotlib>=3.7.0
++shap>=0.42.0

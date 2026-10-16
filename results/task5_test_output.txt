@@ -1,0 +1,53 @@
+2026-10-16 09:36:06,979 [INFO] baccp.telemetry_adapter: Loaded replay dataset: 275 incidents (default: inc_standard_test_0175)
+2026-10-16 09:36:09,286 [INFO] baccp.ml.service: Successfully loaded frozen ML model bundles (WorkloadForecaster, DegradationPredictor, DegradationExplainer).
+test_01_valid_workload_forecast (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify GET /forecast/workload returns valid point forecast, conformal bounds, and units. ... ok
+test_02_valid_degradation_prediction (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify GET /predict/degradation returns calibrated probability, current state vs future risk, and advisory decision. ... ok
+test_03_valid_explanation (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify GET /explain/{service} returns TreeSHAP attributions, top drivers, and graph localization. ... ok
+test_04_prediction_and_explanation_snapshot_consistency (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify predictions and explanations for the same request refer to the identical snapshot and model. ... ok
+test_05_invalid_service_and_horizon_rejection (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify 400 Bad Request on invalid service or horizon parameters. ... ok
+test_06_live_mode_insufficient_telemetry_rejection (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify live mode returns structured 503 instead of silently imputing missing metrics. ... ok
+test_07_stale_telemetry_rejection (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify telemetry exceeding 60-second staleness limit is rejected with HTTP 422. ... ok
+test_07b_requested_service_stale_while_neighbours_fresh (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify a fresh neighbour does NOT mask stale requested-service data (HTTP 422). ... ok
+test_07c_boundary_stale_while_services_fresh (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify stale boundary stream is rejected with HTTP 422 even when all services are fresh. ... ok
+test_07d_replay_timestamp_unchanged_across_horizons (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify replay timestamp is not rewound or clamped based on forecast horizon. ... ok
+test_07e_invalid_and_nonfinite_replay_arguments (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify invalid or non-finite replay parameters return structured 400 Bad Request. ... ok
+test_08_missing_models_fallback_availability (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify missing ML model artifacts return structured 503 without crashing the backend. ... ok
+test_09_cache_reuse_and_alert_deduplication (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify cache hits return identical results and do not re-increment Prometheus alert episode counter. ... ok
+test_10_prometheus_metrics_exposition (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify /metrics exposes degradation probabilities, alert episodes, and forecast errors with bounded labels. ... ok
+test_11_forecast_error_delayed_arrival_and_resolution (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify workload forecast error is NOT recorded until the target arrives at subsequent snapshot. ... ok
+test_11b_no_cross_incident_matching_and_cache_deduplication (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify pending forecasts never match observations from a different incident, and cache hits deduplicate. ... ok
+test_12_existing_api_routes_compatibility (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify all existing API routes continue to work without contract regressions. ... ok
+test_13_unified_alert_thresholds_boundary_decisions_and_consistency (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify unified alert policy boundary decisions immediately below and at each threshold. ... ok
+test_14_concurrent_metrics_responsiveness_during_slow_explanation (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify /metrics responds immediately while an explanation request is processing in parallel. ... ok
+test_15_graph_localization_tie_and_candidate_rankings (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify graph localization tie maps to abstain_ambiguous_tie (not localized) and returns candidate rankings. ... ok
+test_16_telemetry_availability_uninitialized_and_stale_update (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify telemetry_available starts at 0 (unverified) and marks unavailable on stale data. ... ok
+test_17_injected_predictor_near_threshold_regression (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Regression: Verify core alert decision is preserved when probability = threshold - 0.00004 across all horizons, and at threshold. ... ok
+test_18_explanation_capacity_held_until_work_finishes (backend.tests.test_ml_integration.TestMLBackendIntegration)
+Verify explanation semaphore holds capacity across timeouts until work actually finishes. ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 6.574s
+
+OK

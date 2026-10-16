@@ -58,7 +58,13 @@ CloudWatch Publisher        AWS X-Ray Tracing
 | `POST` | `/api/circuit-breaker/action` | Structured circuit breaker actuation via `LambdaMitigationClient`. |
 | `POST` | `/api/pipeline/run` | Triggers the complete cloud orchestrator pipeline cycle. |
 | `POST` | `/api/simulate/chaos` | Simulate testbed chaos injection (`network-delay`, `connection-drop`, `batch-job-stall`, `clear`). |
+| `GET` | `/forecast/workload` | Workload point forecast and 90% conformal intervals for target service and horizon (`H=1,5,15`). |
+| `GET` | `/predict/degradation` | Degradation event probability, alert threshold, observed current state vs future risk, and type/severity. |
+| `GET` | `/explain/{service}` | TreeSHAP feature attributions, top risk drivers, and counterfactual graph localization for service. |
+| `GET` | `/metrics` | Standard Prometheus metrics exposition (including degradation probabilities, alert episodes, forecast errors). |
 | `GET` | `/api/cloud/status` | Operational status of CloudWatch, X-Ray, SageMaker, Lambda, and SNS adapters. |
+
+For detailed parameters, response payloads, and cURL examples, see [API_DOCUMENTATION.md](file:///Users/raghavnaidu/Cloud%20Airlines%20Service%20Health/repo/backend/API_DOCUMENTATION.md).
 
 ## Environment Variables
 
@@ -89,5 +95,9 @@ python3 backend/api/app.py --host 127.0.0.1 --port 8000
 ## Running Tests
 
 ```bash
-python3 -m unittest backend/tests/test_backend.py
+# Run Task 5 ML integration test suite (12 tests)
+python3 -m unittest backend/tests/test_ml_integration.py
+
+# Or run with pytest
+pytest backend/tests/test_ml_integration.py
 ```

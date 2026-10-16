@@ -1,0 +1,2095 @@
+{
+  "metadata": {
+    "contract_version": "baccp-degradation-contract-v1.0.0",
+    "evaluation_timestamp": "2026-10-13T17:26:43Z",
+    "dataset_sha256": "4940aff3e1f2f0b4d0940c5a3da2851b658605ff57eadf37ddf1cf1e46c2d5eb",
+    "horizons": [
+      1,
+      5,
+      15
+    ],
+    "test_splits": [
+      "standard_test",
+      "capacity_loss_test",
+      "boundary_slowdown_test",
+      "surge_test"
+    ],
+    "services": [
+      "reservations",
+      "crew",
+      "baggage",
+      "boundary-gateway",
+      "legacy-core"
+    ]
+  },
+  "continuous_evaluation": {
+    "standard_test": {
+      "1": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 74.2688,
+            "rmse": 270.093
+          },
+          "causal_rollout": {
+            "mae": 1311.4937,
+            "rmse": 2013.498
+          },
+          "model_a_telemetry_only": {
+            "mae": 40.997,
+            "rmse": 101.3537
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 44.7742,
+            "rmse": 107.1344,
+            "ci95": {
+              "mae_ci95": [
+                39.311,
+                51.6483
+              ],
+              "rmse_ci95": [
+                91.439,
+                123.495
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 4.6072,
+            "rmse": 27.2421
+          },
+          "causal_rollout": {
+            "mae": 50.1586,
+            "rmse": 146.2045
+          },
+          "model_a_telemetry_only": {
+            "mae": 4.5879,
+            "rmse": 15.0359
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 4.5783,
+            "rmse": 15.0978,
+            "ci95": {
+              "mae_ci95": [
+                3.7683,
+                5.754
+              ],
+              "rmse_ci95": [
+                11.9621,
+                18.8497
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 2.576,
+            "rmse": 7.0963
+          },
+          "causal_rollout": {
+            "mae": 2.576,
+            "rmse": 7.0963
+          },
+          "model_a_telemetry_only": {
+            "mae": 2.8923,
+            "rmse": 5.2387
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 3.0739,
+            "rmse": 5.6201,
+            "ci95": {
+              "mae_ci95": [
+                2.7973,
+                3.383
+              ],
+              "rmse_ci95": [
+                4.9283,
+                6.3522
+              ]
+            }
+          }
+        }
+      },
+      "5": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 400.8897,
+            "rmse": 1243.6302
+          },
+          "causal_rollout": {
+            "mae": 4373.546,
+            "rmse": 4675.5965
+          },
+          "model_a_telemetry_only": {
+            "mae": 359.1806,
+            "rmse": 704.6491
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 356.1139,
+            "rmse": 765.9685,
+            "ci95": {
+              "mae_ci95": [
+                319.127,
+                391.6464
+              ],
+              "rmse_ci95": [
+                686.0822,
+                835.0325
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 27.0909,
+            "rmse": 96.9107
+          },
+          "causal_rollout": {
+            "mae": 55.642,
+            "rmse": 153.1146
+          },
+          "model_a_telemetry_only": {
+            "mae": 21.8834,
+            "rmse": 43.2573
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 22.0867,
+            "rmse": 43.7325,
+            "ci95": {
+              "mae_ci95": [
+                19.702,
+                24.4845
+              ],
+              "rmse_ci95": [
+                38.1472,
+                49.0621
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 10.4077,
+            "rmse": 20.0666
+          },
+          "causal_rollout": {
+            "mae": 10.4077,
+            "rmse": 20.0666
+          },
+          "model_a_telemetry_only": {
+            "mae": 12.4441,
+            "rmse": 16.6269
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 12.4644,
+            "rmse": 16.6782,
+            "ci95": {
+              "mae_ci95": [
+                11.0496,
+                13.7606
+              ],
+              "rmse_ci95": [
+                15.0304,
+                18.1635
+              ]
+            }
+          }
+        }
+      },
+      "15": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 1198.029,
+            "rmse": 2822.2864
+          },
+          "causal_rollout": {
+            "mae": 13252.2464,
+            "rmse": 13979.538
+          },
+          "model_a_telemetry_only": {
+            "mae": 943.4305,
+            "rmse": 2056.7724
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 927.6989,
+            "rmse": 2082.1211,
+            "ci95": {
+              "mae_ci95": [
+                805.3775,
+                1060.4674
+              ],
+              "rmse_ci95": [
+                1760.1096,
+                2389.7359
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 80.6417,
+            "rmse": 179.7123
+          },
+          "causal_rollout": {
+            "mae": 75.876,
+            "rmse": 175.4214
+          },
+          "model_a_telemetry_only": {
+            "mae": 41.4785,
+            "rmse": 84.1141
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 41.5447,
+            "rmse": 84.4378,
+            "ci95": {
+              "mae_ci95": [
+                37.2513,
+                46.1108
+              ],
+              "rmse_ci95": [
+                77.3496,
+                92.7168
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 30.8184,
+            "rmse": 45.9887
+          },
+          "causal_rollout": {
+            "mae": 30.8184,
+            "rmse": 45.9887
+          },
+          "model_a_telemetry_only": {
+            "mae": 25.0379,
+            "rmse": 31.2652
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 24.7084,
+            "rmse": 30.9411,
+            "ci95": {
+              "mae_ci95": [
+                21.7697,
+                27.3841
+              ],
+              "rmse_ci95": [
+                28.1079,
+                33.5375
+              ]
+            }
+          }
+        }
+      }
+    },
+    "capacity_loss_test": {
+      "1": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 305.5504,
+            "rmse": 680.3451
+          },
+          "causal_rollout": {
+            "mae": 1873.0173,
+            "rmse": 3193.745
+          },
+          "model_a_telemetry_only": {
+            "mae": 133.1154,
+            "rmse": 353.122
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 140.161,
+            "rmse": 356.5852,
+            "ci95": {
+              "mae_ci95": [
+                131.8404,
+                148.6469
+              ],
+              "rmse_ci95": [
+                344.163,
+                368.3866
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 13.987,
+            "rmse": 51.8916
+          },
+          "causal_rollout": {
+            "mae": 67.2047,
+            "rmse": 164.8292
+          },
+          "model_a_telemetry_only": {
+            "mae": 13.6073,
+            "rmse": 42.1303
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 13.3681,
+            "rmse": 40.7701,
+            "ci95": {
+              "mae_ci95": [
+                12.6817,
+                14.1654
+              ],
+              "rmse_ci95": [
+                39.1197,
+                42.5855
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 6.446,
+            "rmse": 12.1527
+          },
+          "causal_rollout": {
+            "mae": 6.446,
+            "rmse": 12.1527
+          },
+          "model_a_telemetry_only": {
+            "mae": 5.1416,
+            "rmse": 9.5814
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 5.173,
+            "rmse": 9.7763,
+            "ci95": {
+              "mae_ci95": [
+                4.8824,
+                5.4556
+              ],
+              "rmse_ci95": [
+                8.9144,
+                10.6373
+              ]
+            }
+          }
+        }
+      },
+      "5": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 1576.335,
+            "rmse": 3018.5242
+          },
+          "causal_rollout": {
+            "mae": 3604.3696,
+            "rmse": 3809.8126
+          },
+          "model_a_telemetry_only": {
+            "mae": 738.5579,
+            "rmse": 1617.9855
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 744.2513,
+            "rmse": 1656.8433,
+            "ci95": {
+              "mae_ci95": [
+                708.6341,
+                785.2984
+              ],
+              "rmse_ci95": [
+                1588.2681,
+                1730.5067
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 79.2629,
+            "rmse": 168.8835
+          },
+          "causal_rollout": {
+            "mae": 79.4238,
+            "rmse": 179.1883
+          },
+          "model_a_telemetry_only": {
+            "mae": 46.2817,
+            "rmse": 108.3945
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 46.6266,
+            "rmse": 107.6192,
+            "ci95": {
+              "mae_ci95": [
+                44.7312,
+                48.7485
+              ],
+              "rmse_ci95": [
+                103.9975,
+                111.7581
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 16.8155,
+            "rmse": 25.8244
+          },
+          "causal_rollout": {
+            "mae": 16.8155,
+            "rmse": 25.8244
+          },
+          "model_a_telemetry_only": {
+            "mae": 12.7763,
+            "rmse": 18.7755
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 12.6685,
+            "rmse": 18.5253,
+            "ci95": {
+              "mae_ci95": [
+                12.0325,
+                13.2767
+              ],
+              "rmse_ci95": [
+                17.737,
+                19.236
+              ]
+            }
+          }
+        }
+      },
+      "15": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 2331.454,
+            "rmse": 4336.0277
+          },
+          "causal_rollout": {
+            "mae": 10077.7369,
+            "rmse": 10609.8574
+          },
+          "model_a_telemetry_only": {
+            "mae": 1581.523,
+            "rmse": 3048.0408
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 1566.5261,
+            "rmse": 3044.293,
+            "ci95": {
+              "mae_ci95": [
+                1421.1118,
+                1710.8184
+              ],
+              "rmse_ci95": [
+                2833.0354,
+                3248.8949
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 102.4196,
+            "rmse": 200.8287
+          },
+          "causal_rollout": {
+            "mae": 61.3193,
+            "rmse": 160.6104
+          },
+          "model_a_telemetry_only": {
+            "mae": 63.3354,
+            "rmse": 132.6245
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 63.4073,
+            "rmse": 132.9691,
+            "ci95": {
+              "mae_ci95": [
+                55.3857,
+                71.5443
+              ],
+              "rmse_ci95": [
+                120.2703,
+                144.7161
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 37.0583,
+            "rmse": 43.4321
+          },
+          "causal_rollout": {
+            "mae": 37.0583,
+            "rmse": 43.4321
+          },
+          "model_a_telemetry_only": {
+            "mae": 17.9529,
+            "rmse": 21.9605
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 18.1226,
+            "rmse": 21.9705,
+            "ci95": {
+              "mae_ci95": [
+                16.8183,
+                19.3809
+              ],
+              "rmse_ci95": [
+                20.6457,
+                23.2371
+              ]
+            }
+          }
+        }
+      }
+    },
+    "boundary_slowdown_test": {
+      "1": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 657.9361,
+            "rmse": 2222.2311
+          },
+          "causal_rollout": {
+            "mae": 4018.8669,
+            "rmse": 10283.7753
+          },
+          "model_a_telemetry_only": {
+            "mae": 359.5018,
+            "rmse": 1521.3681
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 361.8466,
+            "rmse": 1521.6552,
+            "ci95": {
+              "mae_ci95": [
+                344.7424,
+                379.0301
+              ],
+              "rmse_ci95": [
+                1454.4693,
+                1583.8877
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 7.6923,
+            "rmse": 49.529
+          },
+          "causal_rollout": {
+            "mae": 43.8871,
+            "rmse": 144.2793
+          },
+          "model_a_telemetry_only": {
+            "mae": 7.8516,
+            "rmse": 44.8984
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 7.6812,
+            "rmse": 44.8406,
+            "ci95": {
+              "mae_ci95": [
+                7.4955,
+                7.8649
+              ],
+              "rmse_ci95": [
+                44.5371,
+                45.1269
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 5.8391,
+            "rmse": 18.474
+          },
+          "causal_rollout": {
+            "mae": 5.8391,
+            "rmse": 18.474
+          },
+          "model_a_telemetry_only": {
+            "mae": 5.5082,
+            "rmse": 17.7314
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 5.5544,
+            "rmse": 17.7247,
+            "ci95": {
+              "mae_ci95": [
+                5.3536,
+                5.7112
+              ],
+              "rmse_ci95": [
+                17.529,
+                17.8947
+              ]
+            }
+          }
+        }
+      },
+      "5": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 3447.4906,
+            "rmse": 9206.8368
+          },
+          "causal_rollout": {
+            "mae": 6990.1701,
+            "rmse": 10614.7229
+          },
+          "model_a_telemetry_only": {
+            "mae": 1956.0297,
+            "rmse": 6386.7524
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 1895.786,
+            "rmse": 6265.3136,
+            "ci95": {
+              "mae_ci95": [
+                1812.495,
+                1983.2039
+              ],
+              "rmse_ci95": [
+                6088.2974,
+                6441.4865
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 44.6705,
+            "rmse": 140.9
+          },
+          "causal_rollout": {
+            "mae": 51.8666,
+            "rmse": 156.8481
+          },
+          "model_a_telemetry_only": {
+            "mae": 34.1689,
+            "rmse": 100.4348
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 34.0819,
+            "rmse": 98.7373,
+            "ci95": {
+              "mae_ci95": [
+                32.5974,
+                35.5726
+              ],
+              "rmse_ci95": [
+                96.3544,
+                100.8782
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 29.4188,
+            "rmse": 45.754
+          },
+          "causal_rollout": {
+            "mae": 29.4188,
+            "rmse": 45.754
+          },
+          "model_a_telemetry_only": {
+            "mae": 22.5483,
+            "rmse": 37.1455
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 22.6856,
+            "rmse": 37.4325,
+            "ci95": {
+              "mae_ci95": [
+                22.0764,
+                23.3649
+              ],
+              "rmse_ci95": [
+                36.5948,
+                38.1292
+              ]
+            }
+          }
+        }
+      },
+      "15": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 5001.0686,
+            "rmse": 12592.4375
+          },
+          "causal_rollout": {
+            "mae": 13354.4209,
+            "rmse": 14218.5969
+          },
+          "model_a_telemetry_only": {
+            "mae": 2804.4106,
+            "rmse": 8677.6984
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 2801.1987,
+            "rmse": 8671.5212,
+            "ci95": {
+              "mae_ci95": [
+                2280.0833,
+                3345.1727
+              ],
+              "rmse_ci95": [
+                7474.8033,
+                9783.0878
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 70.6709,
+            "rmse": 182.2551
+          },
+          "causal_rollout": {
+            "mae": 29.9976,
+            "rmse": 113.4913
+          },
+          "model_a_telemetry_only": {
+            "mae": 32.0035,
+            "rmse": 86.4775
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 32.1536,
+            "rmse": 86.2701,
+            "ci95": {
+              "mae_ci95": [
+                27.5558,
+                36.9234
+              ],
+              "rmse_ci95": [
+                75.6,
+                95.7867
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 61.6668,
+            "rmse": 65.339
+          },
+          "causal_rollout": {
+            "mae": 61.6668,
+            "rmse": 65.339
+          },
+          "model_a_telemetry_only": {
+            "mae": 29.4035,
+            "rmse": 38.6469
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 29.5367,
+            "rmse": 38.6958,
+            "ci95": {
+              "mae_ci95": [
+                25.8733,
+                33.0563
+              ],
+              "rmse_ci95": [
+                34.7172,
+                42.2084
+              ]
+            }
+          }
+        }
+      }
+    },
+    "surge_test": {
+      "1": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 209.0207,
+            "rmse": 488.6898
+          },
+          "causal_rollout": {
+            "mae": 1462.8275,
+            "rmse": 2250.2952
+          },
+          "model_a_telemetry_only": {
+            "mae": 118.8182,
+            "rmse": 313.9792
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 121.3441,
+            "rmse": 310.6634,
+            "ci95": {
+              "mae_ci95": [
+                111.9852,
+                129.9249
+              ],
+              "rmse_ci95": [
+                299.2199,
+                320.9544
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 22.3265,
+            "rmse": 68.3015
+          },
+          "causal_rollout": {
+            "mae": 61.4583,
+            "rmse": 159.0031
+          },
+          "model_a_telemetry_only": {
+            "mae": 23.5592,
+            "rmse": 63.9452
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 23.3116,
+            "rmse": 63.3399,
+            "ci95": {
+              "mae_ci95": [
+                21.0762,
+                25.473
+              ],
+              "rmse_ci95": [
+                59.9175,
+                66.386
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 8.3884,
+            "rmse": 17.8893
+          },
+          "causal_rollout": {
+            "mae": 8.3884,
+            "rmse": 17.8893
+          },
+          "model_a_telemetry_only": {
+            "mae": 7.3904,
+            "rmse": 16.8051
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 7.3515,
+            "rmse": 16.6979,
+            "ci95": {
+              "mae_ci95": [
+                7.0622,
+                7.7351
+              ],
+              "rmse_ci95": [
+                16.2362,
+                17.1259
+              ]
+            }
+          }
+        }
+      },
+      "5": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 990.5929,
+            "rmse": 2056.0515
+          },
+          "causal_rollout": {
+            "mae": 4903.1961,
+            "rmse": 5459.0926
+          },
+          "model_a_telemetry_only": {
+            "mae": 661.7355,
+            "rmse": 1309.7833
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 662.2423,
+            "rmse": 1326.1838,
+            "ci95": {
+              "mae_ci95": [
+                624.9932,
+                701.1726
+              ],
+              "rmse_ci95": [
+                1272.6628,
+                1373.7475
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 75.218,
+            "rmse": 162.3372
+          },
+          "causal_rollout": {
+            "mae": 72.6325,
+            "rmse": 172.8546
+          },
+          "model_a_telemetry_only": {
+            "mae": 63.959,
+            "rmse": 125.6815
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 64.0545,
+            "rmse": 125.0471,
+            "ci95": {
+              "mae_ci95": [
+                59.3482,
+                68.8146
+              ],
+              "rmse_ci95": [
+                120.0373,
+                130.0787
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 28.4133,
+            "rmse": 41.2781
+          },
+          "causal_rollout": {
+            "mae": 28.4133,
+            "rmse": 41.2781
+          },
+          "model_a_telemetry_only": {
+            "mae": 22.9939,
+            "rmse": 34.1678
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 22.9976,
+            "rmse": 34.043,
+            "ci95": {
+              "mae_ci95": [
+                22.1256,
+                23.8153
+              ],
+              "rmse_ci95": [
+                32.986,
+                34.9732
+              ]
+            }
+          }
+        }
+      },
+      "15": {
+        "latency_ms": {
+          "persistence": {
+            "mae": 1516.9,
+            "rmse": 3067.7147
+          },
+          "causal_rollout": {
+            "mae": 15306.1266,
+            "rmse": 16980.6801
+          },
+          "model_a_telemetry_only": {
+            "mae": 855.4813,
+            "rmse": 1719.5884
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 856.5491,
+            "rmse": 1753.3549,
+            "ci95": {
+              "mae_ci95": [
+                743.0628,
+                978.4056
+              ],
+              "rmse_ci95": [
+                1584.9132,
+                1919.7901
+              ]
+            }
+          }
+        },
+        "backlog_requests": {
+          "persistence": {
+            "mae": 97.7115,
+            "rmse": 199.2143
+          },
+          "causal_rollout": {
+            "mae": 50.095,
+            "rmse": 137.661
+          },
+          "model_a_telemetry_only": {
+            "mae": 51.7372,
+            "rmse": 110.2484
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 51.7874,
+            "rmse": 111.4027,
+            "ci95": {
+              "mae_ci95": [
+                42.6981,
+                61.6392
+              ],
+              "rmse_ci95": [
+                96.1154,
+                125.8676
+              ]
+            }
+          }
+        },
+        "boundary_sync_drift_pct": {
+          "persistence": {
+            "mae": 53.2,
+            "rmse": 56.5802
+          },
+          "causal_rollout": {
+            "mae": 53.2,
+            "rmse": 56.5802
+          },
+          "model_a_telemetry_only": {
+            "mae": 22.8695,
+            "rmse": 30.1461
+          },
+          "model_b_telemetry_forecast": {
+            "mae": 23.2856,
+            "rmse": 30.5188,
+            "ci95": {
+              "mae_ci95": [
+                20.8675,
+                25.7908
+              ],
+              "rmse_ci95": [
+                27.7202,
+                33.2223
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "event_evaluation": {
+    "standard_test": {
+      "1": {
+        "persistence": {
+          "prevalence_pct": 22.46,
+          "precision_pct": 98.57,
+          "recall_pct": 94.52,
+          "f1_pct": 96.5,
+          "pr_auc_pct": 94.4,
+          "roc_auc": 0.9706,
+          "brier_score": 0.0154,
+          "true_positives": 690,
+          "false_alarms": 10,
+          "misses": 40,
+          "true_negatives": 2510,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 22.46,
+          "precision_pct": 22.46,
+          "recall_pct": 100.0,
+          "f1_pct": 36.68,
+          "pr_auc_pct": 27.0,
+          "roc_auc": 0.6084,
+          "brier_score": 0.7754,
+          "true_positives": 730,
+          "false_alarms": 2520,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 22.46,
+          "precision_pct": 97.7,
+          "recall_pct": 99.04,
+          "f1_pct": 98.37,
+          "pr_auc_pct": 99.86,
+          "roc_auc": 0.9997,
+          "brier_score": 0.0068,
+          "true_positives": 723,
+          "false_alarms": 17,
+          "misses": 7,
+          "true_negatives": 2503,
+          "alert_threshold": 0.35
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 22.46,
+          "precision_pct": 99.86,
+          "recall_pct": 96.3,
+          "f1_pct": 98.05,
+          "pr_auc_pct": 99.8,
+          "roc_auc": 0.9996,
+          "brier_score": 0.0067,
+          "true_positives": 703,
+          "false_alarms": 1,
+          "misses": 27,
+          "true_negatives": 2519,
+          "alert_threshold": 0.33,
+          "ci95": {
+            "f1_ci95": [
+              97.41,
+              98.86
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "prevalence_pct": 26.55,
+          "precision_pct": 98.15,
+          "recall_pct": 72.6,
+          "f1_pct": 83.46,
+          "pr_auc_pct": 78.53,
+          "roc_auc": 0.8605,
+          "brier_score": 0.0764,
+          "true_positives": 530,
+          "false_alarms": 10,
+          "misses": 200,
+          "true_negatives": 2010,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 26.55,
+          "precision_pct": 26.55,
+          "recall_pct": 100.0,
+          "f1_pct": 41.95,
+          "pr_auc_pct": 26.55,
+          "roc_auc": 0.5,
+          "brier_score": 0.7345,
+          "true_positives": 730,
+          "false_alarms": 2020,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 26.55,
+          "precision_pct": 97.09,
+          "recall_pct": 91.51,
+          "f1_pct": 94.22,
+          "pr_auc_pct": 96.83,
+          "roc_auc": 0.987,
+          "brier_score": 0.0333,
+          "true_positives": 668,
+          "false_alarms": 20,
+          "misses": 62,
+          "true_negatives": 2000,
+          "alert_threshold": 0.36
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 26.55,
+          "precision_pct": 97.63,
+          "recall_pct": 90.14,
+          "f1_pct": 93.73,
+          "pr_auc_pct": 97.0,
+          "roc_auc": 0.9854,
+          "brier_score": 0.0343,
+          "true_positives": 658,
+          "false_alarms": 16,
+          "misses": 72,
+          "true_negatives": 2004,
+          "alert_threshold": 0.4,
+          "ci95": {
+            "f1_ci95": [
+              92.86,
+              94.99
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "prevalence_pct": 35.67,
+          "precision_pct": 100.0,
+          "recall_pct": 38.69,
+          "f1_pct": 55.8,
+          "pr_auc_pct": 60.56,
+          "roc_auc": 0.6935,
+          "brier_score": 0.2187,
+          "true_positives": 207,
+          "false_alarms": 0,
+          "misses": 328,
+          "true_negatives": 965,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 35.67,
+          "precision_pct": 35.67,
+          "recall_pct": 100.0,
+          "f1_pct": 52.58,
+          "pr_auc_pct": 35.67,
+          "roc_auc": 0.5,
+          "brier_score": 0.6433,
+          "true_positives": 535,
+          "false_alarms": 965,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 35.67,
+          "precision_pct": 51.51,
+          "recall_pct": 95.51,
+          "f1_pct": 66.93,
+          "pr_auc_pct": 89.82,
+          "roc_auc": 0.927,
+          "brier_score": 0.126,
+          "true_positives": 511,
+          "false_alarms": 481,
+          "misses": 24,
+          "true_negatives": 484,
+          "alert_threshold": 0.32
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 35.67,
+          "precision_pct": 51.2,
+          "recall_pct": 95.33,
+          "f1_pct": 66.62,
+          "pr_auc_pct": 89.95,
+          "roc_auc": 0.9258,
+          "brier_score": 0.1241,
+          "true_positives": 510,
+          "false_alarms": 486,
+          "misses": 25,
+          "true_negatives": 479,
+          "alert_threshold": 0.36,
+          "ci95": {
+            "f1_ci95": [
+              49.32,
+              81.49
+            ]
+          }
+        }
+      }
+    },
+    "capacity_loss_test": {
+      "1": {
+        "persistence": {
+          "prevalence_pct": 44.46,
+          "precision_pct": 99.78,
+          "recall_pct": 94.81,
+          "f1_pct": 97.23,
+          "pr_auc_pct": 96.91,
+          "roc_auc": 0.9732,
+          "brier_score": 0.024,
+          "true_positives": 1370,
+          "false_alarms": 3,
+          "misses": 75,
+          "true_negatives": 1802,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 44.46,
+          "precision_pct": 44.46,
+          "recall_pct": 100.0,
+          "f1_pct": 61.55,
+          "pr_auc_pct": 56.51,
+          "roc_auc": 0.692,
+          "brier_score": 0.5554,
+          "true_positives": 1445,
+          "false_alarms": 1805,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 44.46,
+          "precision_pct": 99.86,
+          "recall_pct": 95.57,
+          "f1_pct": 97.67,
+          "pr_auc_pct": 99.08,
+          "roc_auc": 0.992,
+          "brier_score": 0.0199,
+          "true_positives": 1381,
+          "false_alarms": 2,
+          "misses": 64,
+          "true_negatives": 1803,
+          "alert_threshold": 0.35
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 44.46,
+          "precision_pct": 99.93,
+          "recall_pct": 94.88,
+          "f1_pct": 97.34,
+          "pr_auc_pct": 98.96,
+          "roc_auc": 0.9907,
+          "brier_score": 0.0202,
+          "true_positives": 1371,
+          "false_alarms": 1,
+          "misses": 74,
+          "true_negatives": 1804,
+          "alert_threshold": 0.33,
+          "ci95": {
+            "f1_ci95": [
+              97.15,
+              97.49
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "prevalence_pct": 52.69,
+          "precision_pct": 100.0,
+          "recall_pct": 74.12,
+          "f1_pct": 85.14,
+          "pr_auc_pct": 87.76,
+          "roc_auc": 0.8706,
+          "brier_score": 0.1364,
+          "true_positives": 1074,
+          "false_alarms": 0,
+          "misses": 375,
+          "true_negatives": 1301,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 52.69,
+          "precision_pct": 52.69,
+          "recall_pct": 100.0,
+          "f1_pct": 69.02,
+          "pr_auc_pct": 52.69,
+          "roc_auc": 0.5,
+          "brier_score": 0.4731,
+          "true_positives": 1449,
+          "false_alarms": 1301,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 52.69,
+          "precision_pct": 100.0,
+          "recall_pct": 75.57,
+          "f1_pct": 86.08,
+          "pr_auc_pct": 97.64,
+          "roc_auc": 0.9785,
+          "brier_score": 0.0876,
+          "true_positives": 1095,
+          "false_alarms": 0,
+          "misses": 354,
+          "true_negatives": 1301,
+          "alert_threshold": 0.36
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 52.69,
+          "precision_pct": 100.0,
+          "recall_pct": 75.22,
+          "f1_pct": 85.86,
+          "pr_auc_pct": 97.85,
+          "roc_auc": 0.978,
+          "brier_score": 0.0882,
+          "true_positives": 1090,
+          "false_alarms": 0,
+          "misses": 359,
+          "true_negatives": 1301,
+          "alert_threshold": 0.4,
+          "ci95": {
+            "f1_ci95": [
+              85.23,
+              86.38
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "prevalence_pct": 60.0,
+          "precision_pct": 100.0,
+          "recall_pct": 36.0,
+          "f1_pct": 52.94,
+          "pr_auc_pct": 74.4,
+          "roc_auc": 0.68,
+          "brier_score": 0.384,
+          "true_positives": 324,
+          "false_alarms": 0,
+          "misses": 576,
+          "true_negatives": 600,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 60.0,
+          "precision_pct": 60.0,
+          "recall_pct": 100.0,
+          "f1_pct": 75.0,
+          "pr_auc_pct": 60.0,
+          "roc_auc": 0.5,
+          "brier_score": 0.4,
+          "true_positives": 900,
+          "false_alarms": 600,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 60.0,
+          "precision_pct": 88.94,
+          "recall_pct": 91.11,
+          "f1_pct": 90.01,
+          "pr_auc_pct": 94.86,
+          "roc_auc": 0.9406,
+          "brier_score": 0.1402,
+          "true_positives": 820,
+          "false_alarms": 102,
+          "misses": 80,
+          "true_negatives": 498,
+          "alert_threshold": 0.32
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 60.0,
+          "precision_pct": 89.58,
+          "recall_pct": 90.78,
+          "f1_pct": 90.18,
+          "pr_auc_pct": 95.45,
+          "roc_auc": 0.9474,
+          "brier_score": 0.1363,
+          "true_positives": 817,
+          "false_alarms": 95,
+          "misses": 83,
+          "true_negatives": 505,
+          "alert_threshold": 0.36,
+          "ci95": {
+            "f1_ci95": [
+              88.34,
+              91.87
+            ]
+          }
+        }
+      }
+    },
+    "boundary_slowdown_test": {
+      "1": {
+        "persistence": {
+          "prevalence_pct": 30.65,
+          "precision_pct": 99.79,
+          "recall_pct": 94.98,
+          "f1_pct": 97.33,
+          "pr_auc_pct": 96.32,
+          "roc_auc": 0.9745,
+          "brier_score": 0.016,
+          "true_positives": 946,
+          "false_alarms": 2,
+          "misses": 50,
+          "true_negatives": 2252,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 30.65,
+          "precision_pct": 30.65,
+          "recall_pct": 100.0,
+          "f1_pct": 46.91,
+          "pr_auc_pct": 35.81,
+          "roc_auc": 0.604,
+          "brier_score": 0.6935,
+          "true_positives": 996,
+          "false_alarms": 2254,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 30.65,
+          "precision_pct": 100.0,
+          "recall_pct": 94.98,
+          "f1_pct": 97.43,
+          "pr_auc_pct": 98.72,
+          "roc_auc": 0.9929,
+          "brier_score": 0.0149,
+          "true_positives": 946,
+          "false_alarms": 0,
+          "misses": 50,
+          "true_negatives": 2254,
+          "alert_threshold": 0.35
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 30.65,
+          "precision_pct": 100.0,
+          "recall_pct": 94.88,
+          "f1_pct": 97.37,
+          "pr_auc_pct": 98.46,
+          "roc_auc": 0.9914,
+          "brier_score": 0.0149,
+          "true_positives": 945,
+          "false_alarms": 0,
+          "misses": 51,
+          "true_negatives": 2254,
+          "alert_threshold": 0.33,
+          "ci95": {
+            "f1_ci95": [
+              97.26,
+              97.48
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "prevalence_pct": 36.29,
+          "precision_pct": 100.0,
+          "recall_pct": 74.95,
+          "f1_pct": 85.68,
+          "pr_auc_pct": 84.04,
+          "roc_auc": 0.8747,
+          "brier_score": 0.0909,
+          "true_positives": 748,
+          "false_alarms": 0,
+          "misses": 250,
+          "true_negatives": 1752,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 36.29,
+          "precision_pct": 36.29,
+          "recall_pct": 100.0,
+          "f1_pct": 53.26,
+          "pr_auc_pct": 36.29,
+          "roc_auc": 0.5,
+          "brier_score": 0.6371,
+          "true_positives": 998,
+          "false_alarms": 1752,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 36.29,
+          "precision_pct": 100.0,
+          "recall_pct": 75.25,
+          "f1_pct": 85.88,
+          "pr_auc_pct": 97.57,
+          "roc_auc": 0.9897,
+          "brier_score": 0.0572,
+          "true_positives": 751,
+          "false_alarms": 0,
+          "misses": 247,
+          "true_negatives": 1752,
+          "alert_threshold": 0.36
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 36.29,
+          "precision_pct": 99.87,
+          "recall_pct": 75.15,
+          "f1_pct": 85.76,
+          "pr_auc_pct": 98.13,
+          "roc_auc": 0.9909,
+          "brier_score": 0.056,
+          "true_positives": 750,
+          "false_alarms": 1,
+          "misses": 248,
+          "true_negatives": 1751,
+          "alert_threshold": 0.4,
+          "ci95": {
+            "f1_ci95": [
+              85.08,
+              86.27
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "prevalence_pct": 40.0,
+          "precision_pct": 100.0,
+          "recall_pct": 41.33,
+          "f1_pct": 58.49,
+          "pr_auc_pct": 64.8,
+          "roc_auc": 0.7067,
+          "brier_score": 0.2347,
+          "true_positives": 248,
+          "false_alarms": 0,
+          "misses": 352,
+          "true_negatives": 900,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 40.0,
+          "precision_pct": 40.0,
+          "recall_pct": 100.0,
+          "f1_pct": 57.14,
+          "pr_auc_pct": 40.0,
+          "roc_auc": 0.5,
+          "brier_score": 0.6,
+          "true_positives": 600,
+          "false_alarms": 900,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 40.0,
+          "precision_pct": 74.97,
+          "recall_pct": 95.83,
+          "f1_pct": 84.13,
+          "pr_auc_pct": 92.68,
+          "roc_auc": 0.9598,
+          "brier_score": 0.104,
+          "true_positives": 575,
+          "false_alarms": 192,
+          "misses": 25,
+          "true_negatives": 708,
+          "alert_threshold": 0.32
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 40.0,
+          "precision_pct": 75.23,
+          "recall_pct": 95.67,
+          "f1_pct": 84.23,
+          "pr_auc_pct": 92.8,
+          "roc_auc": 0.9625,
+          "brier_score": 0.0994,
+          "true_positives": 574,
+          "false_alarms": 189,
+          "misses": 26,
+          "true_negatives": 711,
+          "alert_threshold": 0.36,
+          "ci95": {
+            "f1_ci95": [
+              81.52,
+              86.59
+            ]
+          }
+        }
+      }
+    },
+    "surge_test": {
+      "1": {
+        "persistence": {
+          "prevalence_pct": 56.86,
+          "precision_pct": 95.85,
+          "recall_pct": 92.59,
+          "f1_pct": 94.19,
+          "pr_auc_pct": 92.96,
+          "roc_auc": 0.9365,
+          "brier_score": 0.0649,
+          "true_positives": 1711,
+          "false_alarms": 74,
+          "misses": 137,
+          "true_negatives": 1328,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 56.86,
+          "precision_pct": 56.86,
+          "recall_pct": 100.0,
+          "f1_pct": 72.5,
+          "pr_auc_pct": 62.06,
+          "roc_auc": 0.5955,
+          "brier_score": 0.4314,
+          "true_positives": 1848,
+          "false_alarms": 1402,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 56.86,
+          "precision_pct": 96.63,
+          "recall_pct": 93.24,
+          "f1_pct": 94.9,
+          "pr_auc_pct": 98.73,
+          "roc_auc": 0.9819,
+          "brier_score": 0.0398,
+          "true_positives": 1723,
+          "false_alarms": 60,
+          "misses": 125,
+          "true_negatives": 1342,
+          "alert_threshold": 0.35
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 56.86,
+          "precision_pct": 99.88,
+          "recall_pct": 91.61,
+          "f1_pct": 95.57,
+          "pr_auc_pct": 98.7,
+          "roc_auc": 0.9827,
+          "brier_score": 0.0394,
+          "true_positives": 1693,
+          "false_alarms": 2,
+          "misses": 155,
+          "true_negatives": 1400,
+          "alert_threshold": 0.33,
+          "ci95": {
+            "f1_ci95": [
+              95.07,
+              95.96
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "prevalence_pct": 75.35,
+          "precision_pct": 97.47,
+          "recall_pct": 68.82,
+          "f1_pct": 80.68,
+          "pr_auc_pct": 90.57,
+          "roc_auc": 0.8168,
+          "brier_score": 0.2484,
+          "true_positives": 1426,
+          "false_alarms": 37,
+          "misses": 646,
+          "true_negatives": 641,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 75.35,
+          "precision_pct": 75.35,
+          "recall_pct": 100.0,
+          "f1_pct": 85.94,
+          "pr_auc_pct": 75.35,
+          "roc_auc": 0.5,
+          "brier_score": 0.2465,
+          "true_positives": 2072,
+          "false_alarms": 678,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 75.35,
+          "precision_pct": 96.52,
+          "recall_pct": 77.7,
+          "f1_pct": 86.1,
+          "pr_auc_pct": 96.42,
+          "roc_auc": 0.9031,
+          "brier_score": 0.1434,
+          "true_positives": 1610,
+          "false_alarms": 58,
+          "misses": 462,
+          "true_negatives": 620,
+          "alert_threshold": 0.36
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 75.35,
+          "precision_pct": 96.5,
+          "recall_pct": 77.17,
+          "f1_pct": 85.76,
+          "pr_auc_pct": 96.34,
+          "roc_auc": 0.9026,
+          "brier_score": 0.1451,
+          "true_positives": 1599,
+          "false_alarms": 58,
+          "misses": 473,
+          "true_negatives": 620,
+          "alert_threshold": 0.4,
+          "ci95": {
+            "f1_ci95": [
+              84.16,
+              87.06
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "prevalence_pct": 98.07,
+          "precision_pct": 99.76,
+          "recall_pct": 28.08,
+          "f1_pct": 43.82,
+          "pr_auc_pct": 98.54,
+          "roc_auc": 0.6231,
+          "brier_score": 0.706,
+          "true_positives": 413,
+          "false_alarms": 1,
+          "misses": 1058,
+          "true_negatives": 28,
+          "alert_threshold": 0.5
+        },
+        "causal_rollout": {
+          "prevalence_pct": 98.07,
+          "precision_pct": 98.07,
+          "recall_pct": 100.0,
+          "f1_pct": 99.02,
+          "pr_auc_pct": 98.07,
+          "roc_auc": 0.5,
+          "brier_score": 0.0193,
+          "true_positives": 1471,
+          "false_alarms": 29,
+          "misses": 0,
+          "true_negatives": 0,
+          "alert_threshold": 0.5
+        },
+        "model_a_telemetry_only": {
+          "prevalence_pct": 98.07,
+          "precision_pct": 98.67,
+          "recall_pct": 75.93,
+          "f1_pct": 85.82,
+          "pr_auc_pct": 98.69,
+          "roc_auc": 0.653,
+          "brier_score": 0.2333,
+          "true_positives": 1117,
+          "false_alarms": 15,
+          "misses": 354,
+          "true_negatives": 14,
+          "alert_threshold": 0.32
+        },
+        "model_b_telemetry_forecast": {
+          "prevalence_pct": 98.07,
+          "precision_pct": 98.78,
+          "recall_pct": 76.82,
+          "f1_pct": 86.42,
+          "pr_auc_pct": 98.83,
+          "roc_auc": 0.6719,
+          "brier_score": 0.2357,
+          "true_positives": 1130,
+          "false_alarms": 14,
+          "misses": 341,
+          "true_negatives": 15,
+          "alert_threshold": 0.36,
+          "ci95": {
+            "f1_ci95": [
+              84.99,
+              87.76
+            ]
+          }
+        }
+      }
+    }
+  },
+  "early_warning_evaluation": {
+    "standard_test": {
+      "1": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 13,
+          "early_alerted_incidents": 7,
+          "early_warning_coverage_pct": 53.85,
+          "mean_lead_time_sec": 22.86,
+          "std_lead_time_sec": 7.0,
+          "detection_after_onset_count": 252,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 13,
+          "early_alerted_incidents": 4,
+          "early_warning_coverage_pct": 30.77,
+          "mean_lead_time_sec": 20.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 252,
+          "false_alert_incidents": 0
+        }
+      },
+      "5": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 13,
+          "early_alerted_incidents": 8,
+          "early_warning_coverage_pct": 61.54,
+          "mean_lead_time_sec": 52.5,
+          "std_lead_time_sec": 19.84,
+          "detection_after_onset_count": 220,
+          "false_alert_incidents": 4
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 13,
+          "early_alerted_incidents": 8,
+          "early_warning_coverage_pct": 61.54,
+          "mean_lead_time_sec": 52.5,
+          "std_lead_time_sec": 28.17,
+          "detection_after_onset_count": 220,
+          "false_alert_incidents": 1
+        }
+      },
+      "15": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 13,
+          "early_alerted_incidents": 8,
+          "early_warning_coverage_pct": 61.54,
+          "mean_lead_time_sec": 125.0,
+          "std_lead_time_sec": 8.66,
+          "detection_after_onset_count": 105,
+          "false_alert_incidents": 12
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 13,
+          "early_alerted_incidents": 8,
+          "early_warning_coverage_pct": 61.54,
+          "mean_lead_time_sec": 125.0,
+          "std_lead_time_sec": 8.66,
+          "detection_after_onset_count": 105,
+          "false_alert_incidents": 12
+        }
+      }
+    },
+    "capacity_loss_test": {
+      "1": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 1,
+          "early_warning_coverage_pct": 4.0,
+          "mean_lead_time_sec": 20.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 463,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 1,
+          "early_warning_coverage_pct": 4.0,
+          "mean_lead_time_sec": 20.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 463,
+          "false_alert_incidents": 0
+        }
+      },
+      "5": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 6,
+          "early_warning_coverage_pct": 24.0,
+          "mean_lead_time_sec": 76.67,
+          "std_lead_time_sec": 24.27,
+          "detection_after_onset_count": 363,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 2,
+          "early_warning_coverage_pct": 8.0,
+          "mean_lead_time_sec": 100.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 363,
+          "false_alert_incidents": 0
+        }
+      },
+      "15": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 25,
+          "early_warning_coverage_pct": 100.0,
+          "mean_lead_time_sec": 149.6,
+          "std_lead_time_sec": 34.47,
+          "detection_after_onset_count": 113,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 25,
+          "early_warning_coverage_pct": 100.0,
+          "mean_lead_time_sec": 148.8,
+          "std_lead_time_sec": 34.45,
+          "detection_after_onset_count": 113,
+          "false_alert_incidents": 0
+        }
+      }
+    },
+    "boundary_slowdown_test": {
+      "1": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 0,
+          "early_warning_coverage_pct": 0.0,
+          "mean_lead_time_sec": 0.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 474,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 0,
+          "early_warning_coverage_pct": 0.0,
+          "mean_lead_time_sec": 0.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 474,
+          "false_alert_incidents": 0
+        }
+      },
+      "5": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 3,
+          "early_warning_coverage_pct": 12.0,
+          "mean_lead_time_sec": 93.33,
+          "std_lead_time_sec": 9.43,
+          "detection_after_onset_count": 374,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 2,
+          "early_warning_coverage_pct": 8.0,
+          "mean_lead_time_sec": 140.0,
+          "std_lead_time_sec": 40.0,
+          "detection_after_onset_count": 374,
+          "false_alert_incidents": 0
+        }
+      },
+      "15": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 25,
+          "early_warning_coverage_pct": 100.0,
+          "mean_lead_time_sec": 139.2,
+          "std_lead_time_sec": 38.57,
+          "detection_after_onset_count": 124,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 25,
+          "early_warning_coverage_pct": 100.0,
+          "mean_lead_time_sec": 140.0,
+          "std_lead_time_sec": 38.78,
+          "detection_after_onset_count": 124,
+          "false_alert_incidents": 0
+        }
+      }
+    },
+    "surge_test": {
+      "1": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 0,
+          "early_warning_coverage_pct": 0.0,
+          "mean_lead_time_sec": 0.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 468,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 0,
+          "early_warning_coverage_pct": 0.0,
+          "mean_lead_time_sec": 0.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 468,
+          "false_alert_incidents": 0
+        }
+      },
+      "5": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 4,
+          "early_warning_coverage_pct": 16.0,
+          "mean_lead_time_sec": 140.0,
+          "std_lead_time_sec": 24.49,
+          "detection_after_onset_count": 369,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 1,
+          "early_warning_coverage_pct": 4.0,
+          "mean_lead_time_sec": 160.0,
+          "std_lead_time_sec": 0.0,
+          "detection_after_onset_count": 369,
+          "false_alert_incidents": 0
+        }
+      },
+      "15": {
+        "model_a_telemetry_only": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 25,
+          "early_warning_coverage_pct": 100.0,
+          "mean_lead_time_sec": 144.0,
+          "std_lead_time_sec": 32.5,
+          "detection_after_onset_count": 119,
+          "false_alert_incidents": 0
+        },
+        "model_b_telemetry_forecast": {
+          "total_degrading_incidents": 25,
+          "early_alerted_incidents": 25,
+          "early_warning_coverage_pct": 100.0,
+          "mean_lead_time_sec": 144.0,
+          "std_lead_time_sec": 32.5,
+          "detection_after_onset_count": 119,
+          "false_alert_incidents": 0
+        }
+      }
+    }
+  }
+}

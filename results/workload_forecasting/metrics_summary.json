@@ -1,0 +1,6458 @@
+{
+  "metadata": {
+    "evaluation_timestamp": "2026-10-13T16:33:15.997739+00:00",
+    "contract_version": "baccp-workload-contract-v1.1.0",
+    "dataset_sha256": "5f2c200e70f6284bf378a61744fed2e14d52d98a3d3638f61274e230ccd36147",
+    "counts": {
+      "standard_test": 25,
+      "diagnostic_surge_test": 25,
+      "locked_surge_test": 25
+    },
+    "horizons": [
+      1,
+      5,
+      15
+    ],
+    "services": [
+      "reservations",
+      "crew",
+      "baggage",
+      "boundary-gateway",
+      "legacy-core"
+    ],
+    "models": [
+      "persistence",
+      "seasonal_naive",
+      "autoregressive_ridge",
+      "gradient_boosting",
+      "auto_fallback"
+    ],
+    "zero_denominator_policy": "If sum(y_true)==0 and sum(|y-y_hat|)==0 then WAPE=0.0%; if sum(y_true)==0 and sum(|y-y_hat|)>0 then WAPE=null (undefined)"
+  },
+  "standard_test": {
+    "reservations": {
+      "1": {
+        "persistence": {
+          "mae": 3.1829,
+          "rmse": 4.4749,
+          "wape_pct": 5.42,
+          "wape_explanation": null,
+          "interval_coverage_pct": 88.39,
+          "interval_mean_width": 12.298,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.825,
+              3.344
+            ],
+            "rmse_ci95": [
+              3.83,
+              4.739
+            ],
+            "coverage_ci95": [
+              86.29,
+              92.0
+            ],
+            "wape_ci95": [
+              4.66,
+              5.94
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 6.8617,
+          "rmse": 12.3994,
+          "wape_pct": 11.68,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.52,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -115.58,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.669,
+              7.771
+            ],
+            "rmse_ci95": [
+              7.746,
+              14.404
+            ],
+            "coverage_ci95": [
+              89.2,
+              97.82
+            ],
+            "wape_ci95": [
+              8.59,
+              12.42
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 2.8978,
+          "rmse": 3.9131,
+          "wape_pct": 4.93,
+          "wape_explanation": null,
+          "interval_coverage_pct": 89.97,
+          "interval_mean_width": 11.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 8.96,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.68,
+              2.967
+            ],
+            "rmse_ci95": [
+              3.488,
+              4.073
+            ],
+            "coverage_ci95": [
+              89.55,
+              92.27
+            ],
+            "wape_ci95": [
+              4.44,
+              5.29
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 2.3209,
+          "rmse": 3.2454,
+          "wape_pct": 3.95,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.41,
+          "interval_mean_width": 9.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 27.08,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.16,
+              2.411
+            ],
+            "rmse_ci95": [
+              2.844,
+              3.415
+            ],
+            "coverage_ci95": [
+              90.32,
+              92.99
+            ],
+            "wape_ci95": [
+              3.52,
+              4.34
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 2.3209,
+          "rmse": 3.2454,
+          "wape_pct": 3.95,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.41,
+          "interval_mean_width": 9.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 27.08,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.16,
+              2.411
+            ],
+            "rmse_ci95": [
+              2.844,
+              3.415
+            ],
+            "coverage_ci95": [
+              90.32,
+              92.99
+            ],
+            "wape_ci95": [
+              3.52,
+              4.34
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 6.5501,
+          "rmse": 11.5648,
+          "wape_pct": 11.09,
+          "wape_explanation": null,
+          "interval_coverage_pct": 86.95,
+          "interval_mean_width": 27.112,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.832,
+              7.644
+            ],
+            "rmse_ci95": [
+              8.575,
+              13.122
+            ],
+            "coverage_ci95": [
+              81.77,
+              93.81
+            ],
+            "wape_ci95": [
+              8.21,
+              13.13
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 7.0085,
+          "rmse": 12.3796,
+          "wape_pct": 11.87,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.79,
+          "interval_mean_width": 31.504,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -7.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.941,
+              8.029
+            ],
+            "rmse_ci95": [
+              7.929,
+              14.683
+            ],
+            "coverage_ci95": [
+              89.09,
+              97.75
+            ],
+            "wape_ci95": [
+              9.0,
+              12.84
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 4.7619,
+          "rmse": 8.4177,
+          "wape_pct": 8.06,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.9,
+          "interval_mean_width": 19.08,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 27.3,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.773,
+              5.461
+            ],
+            "rmse_ci95": [
+              5.716,
+              9.882
+            ],
+            "coverage_ci95": [
+              91.83,
+              96.73
+            ],
+            "wape_ci95": [
+              6.66,
+              8.87
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 4.1208,
+          "rmse": 7.7185,
+          "wape_pct": 6.98,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.79,
+          "interval_mean_width": 18.127,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 37.09,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.304,
+              5.003
+            ],
+            "rmse_ci95": [
+              5.346,
+              9.302
+            ],
+            "coverage_ci95": [
+              88.25,
+              96.48
+            ],
+            "wape_ci95": [
+              5.91,
+              8.04
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 4.1208,
+          "rmse": 7.7185,
+          "wape_pct": 6.98,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.79,
+          "interval_mean_width": 18.127,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 37.09,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.304,
+              5.003
+            ],
+            "rmse_ci95": [
+              5.346,
+              9.302
+            ],
+            "coverage_ci95": [
+              88.25,
+              96.48
+            ],
+            "wape_ci95": [
+              5.91,
+              8.04
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 6.654,
+          "rmse": 12.3073,
+          "wape_pct": 11.14,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.52,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.895,
+              8.675
+            ],
+            "rmse_ci95": [
+              8.218,
+              15.781
+            ],
+            "coverage_ci95": [
+              86.72,
+              97.32
+            ],
+            "wape_ci95": [
+              8.71,
+              13.66
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 6.654,
+          "rmse": 12.3073,
+          "wape_pct": 11.14,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.52,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.895,
+              8.675
+            ],
+            "rmse_ci95": [
+              8.218,
+              15.781
+            ],
+            "coverage_ci95": [
+              86.72,
+              97.32
+            ],
+            "wape_ci95": [
+              8.71,
+              13.66
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 5.2162,
+          "rmse": 8.8224,
+          "wape_pct": 8.73,
+          "wape_explanation": null,
+          "interval_coverage_pct": 95.08,
+          "interval_mean_width": 23.234,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 21.61,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.225,
+              6.365
+            ],
+            "rmse_ci95": [
+              6.283,
+              11.049
+            ],
+            "coverage_ci95": [
+              91.96,
+              97.77
+            ],
+            "wape_ci95": [
+              7.34,
+              10.15
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 4.5163,
+          "rmse": 8.2495,
+          "wape_pct": 7.56,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.64,
+          "interval_mean_width": 23.516,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 32.13,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.571,
+              5.583
+            ],
+            "rmse_ci95": [
+              5.913,
+              10.426
+            ],
+            "coverage_ci95": [
+              90.0,
+              96.56
+            ],
+            "wape_ci95": [
+              6.4,
+              8.8
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 4.5163,
+          "rmse": 8.2495,
+          "wape_pct": 7.56,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.64,
+          "interval_mean_width": 23.516,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 32.13,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.571,
+              5.583
+            ],
+            "rmse_ci95": [
+              5.913,
+              10.426
+            ],
+            "coverage_ci95": [
+              90.0,
+              96.56
+            ],
+            "wape_ci95": [
+              6.4,
+              8.8
+            ]
+          }
+        }
+      }
+    },
+    "crew": {
+      "1": {
+        "persistence": {
+          "mae": 1.9453,
+          "rmse": 2.6474,
+          "wape_pct": 5.97,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.03,
+          "interval_mean_width": 7.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.813,
+              2.051
+            ],
+            "rmse_ci95": [
+              2.369,
+              2.805
+            ],
+            "coverage_ci95": [
+              88.05,
+              92.3
+            ],
+            "wape_ci95": [
+              5.35,
+              6.57
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 3.8728,
+          "rmse": 6.9411,
+          "wape_pct": 11.88,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -99.08,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.768,
+              4.383
+            ],
+            "rmse_ci95": [
+              4.412,
+              8.046
+            ],
+            "coverage_ci95": [
+              90.61,
+              97.89
+            ],
+            "wape_ci95": [
+              8.98,
+              12.61
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 1.7467,
+          "rmse": 2.3139,
+          "wape_pct": 5.36,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.21,
+          "interval_mean_width": 7.31,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 10.21,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.683,
+              1.825
+            ],
+            "rmse_ci95": [
+              2.136,
+              2.436
+            ],
+            "coverage_ci95": [
+              89.49,
+              92.99
+            ],
+            "wape_ci95": [
+              4.98,
+              5.86
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 1.423,
+          "rmse": 1.9056,
+          "wape_pct": 4.36,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.43,
+          "interval_mean_width": 5.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.85,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.373,
+              1.481
+            ],
+            "rmse_ci95": [
+              1.77,
+              1.988
+            ],
+            "coverage_ci95": [
+              88.16,
+              91.82
+            ],
+            "wape_ci95": [
+              3.97,
+              4.85
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 1.423,
+          "rmse": 1.9056,
+          "wape_pct": 4.36,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.43,
+          "interval_mean_width": 5.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.85,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.373,
+              1.481
+            ],
+            "rmse_ci95": [
+              1.77,
+              1.988
+            ],
+            "coverage_ci95": [
+              88.16,
+              91.82
+            ],
+            "wape_ci95": [
+              3.97,
+              4.85
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 3.7605,
+          "rmse": 6.4233,
+          "wape_pct": 11.46,
+          "wape_explanation": null,
+          "interval_coverage_pct": 87.08,
+          "interval_mean_width": 15.522,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.855,
+              4.266
+            ],
+            "rmse_ci95": [
+              4.821,
+              7.227
+            ],
+            "coverage_ci95": [
+              82.08,
+              93.95
+            ],
+            "wape_ci95": [
+              8.71,
+              13.34
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 3.9494,
+          "rmse": 6.9337,
+          "wape_pct": 12.04,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 17.91,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -5.02,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.948,
+              4.544
+            ],
+            "rmse_ci95": [
+              4.558,
+              8.201
+            ],
+            "coverage_ci95": [
+              90.05,
+              97.86
+            ],
+            "wape_ci95": [
+              9.58,
+              13.11
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 2.7078,
+          "rmse": 4.7734,
+          "wape_pct": 8.26,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.77,
+          "interval_mean_width": 10.831,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 27.99,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.189,
+              3.112
+            ],
+            "rmse_ci95": [
+              3.288,
+              5.611
+            ],
+            "coverage_ci95": [
+              91.41,
+              96.37
+            ],
+            "wape_ci95": [
+              6.87,
+              9.08
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 2.3496,
+          "rmse": 4.2325,
+          "wape_pct": 7.16,
+          "wape_explanation": null,
+          "interval_coverage_pct": 94.69,
+          "interval_mean_width": 11.043,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 37.52,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.96,
+              2.72
+            ],
+            "rmse_ci95": [
+              3.005,
+              5.02
+            ],
+            "coverage_ci95": [
+              91.74,
+              97.16
+            ],
+            "wape_ci95": [
+              6.31,
+              7.95
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 2.3496,
+          "rmse": 4.2325,
+          "wape_pct": 7.16,
+          "wape_explanation": null,
+          "interval_coverage_pct": 94.69,
+          "interval_mean_width": 11.043,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 37.52,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.96,
+              2.72
+            ],
+            "rmse_ci95": [
+              3.005,
+              5.02
+            ],
+            "coverage_ci95": [
+              91.74,
+              97.16
+            ],
+            "wape_ci95": [
+              6.31,
+              7.95
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 3.7909,
+          "rmse": 6.899,
+          "wape_pct": 11.42,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.852,
+              4.885
+            ],
+            "rmse_ci95": [
+              4.664,
+              8.811
+            ],
+            "coverage_ci95": [
+              88.46,
+              97.42
+            ],
+            "wape_ci95": [
+              9.09,
+              13.88
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 3.7909,
+          "rmse": 6.899,
+          "wape_pct": 11.42,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.852,
+              4.885
+            ],
+            "rmse_ci95": [
+              4.664,
+              8.811
+            ],
+            "coverage_ci95": [
+              88.46,
+              97.42
+            ],
+            "wape_ci95": [
+              9.09,
+              13.88
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 2.9277,
+          "rmse": 4.8998,
+          "wape_pct": 8.82,
+          "wape_explanation": null,
+          "interval_coverage_pct": 94.69,
+          "interval_mean_width": 13.221,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 22.77,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.393,
+              3.536
+            ],
+            "rmse_ci95": [
+              3.54,
+              6.128
+            ],
+            "coverage_ci95": [
+              91.61,
+              97.44
+            ],
+            "wape_ci95": [
+              7.58,
+              10.25
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 2.8307,
+          "rmse": 5.0248,
+          "wape_pct": 8.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.87,
+          "interval_mean_width": 13.392,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.33,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.24,
+              3.493
+            ],
+            "rmse_ci95": [
+              3.571,
+              6.249
+            ],
+            "coverage_ci95": [
+              87.67,
+              95.64
+            ],
+            "wape_ci95": [
+              7.13,
+              10.01
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 2.8307,
+          "rmse": 5.0248,
+          "wape_pct": 8.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.87,
+          "interval_mean_width": 13.392,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.33,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.24,
+              3.493
+            ],
+            "rmse_ci95": [
+              3.571,
+              6.249
+            ],
+            "coverage_ci95": [
+              87.67,
+              95.64
+            ],
+            "wape_ci95": [
+              7.13,
+              10.01
+            ]
+          }
+        }
+      }
+    },
+    "baggage": {
+      "1": {
+        "persistence": {
+          "mae": 2.537,
+          "rmse": 3.5506,
+          "wape_pct": 5.56,
+          "wape_explanation": null,
+          "interval_coverage_pct": 89.64,
+          "interval_mean_width": 10.06,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.271,
+              2.696
+            ],
+            "rmse_ci95": [
+              3.059,
+              3.788
+            ],
+            "coverage_ci95": [
+              87.25,
+              92.69
+            ],
+            "wape_ci95": [
+              4.85,
+              6.08
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 5.3677,
+          "rmse": 9.7733,
+          "wape_pct": 11.76,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.25,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -111.58,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.694,
+              6.12
+            ],
+            "rmse_ci95": [
+              6.084,
+              11.36
+            ],
+            "coverage_ci95": [
+              90.26,
+              98.03
+            ],
+            "wape_ci95": [
+              8.63,
+              12.6
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 2.3034,
+          "rmse": 3.0871,
+          "wape_pct": 5.05,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.16,
+          "interval_mean_width": 9.533,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 9.21,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.133,
+              2.404
+            ],
+            "rmse_ci95": [
+              2.763,
+              3.27
+            ],
+            "coverage_ci95": [
+              88.77,
+              92.48
+            ],
+            "wape_ci95": [
+              4.57,
+              5.41
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 1.9332,
+          "rmse": 2.7264,
+          "wape_pct": 4.23,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.49,
+          "interval_mean_width": 7.948,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 23.8,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.804,
+              1.994
+            ],
+            "rmse_ci95": [
+              2.392,
+              2.911
+            ],
+            "coverage_ci95": [
+              88.96,
+              92.32
+            ],
+            "wape_ci95": [
+              3.81,
+              4.55
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 1.9332,
+          "rmse": 2.7264,
+          "wape_pct": 4.23,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.49,
+          "interval_mean_width": 7.948,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 23.8,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              1.804,
+              1.994
+            ],
+            "rmse_ci95": [
+              2.392,
+              2.911
+            ],
+            "coverage_ci95": [
+              88.96,
+              92.32
+            ],
+            "wape_ci95": [
+              3.81,
+              4.55
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 5.1809,
+          "rmse": 9.1609,
+          "wape_pct": 11.29,
+          "wape_explanation": null,
+          "interval_coverage_pct": 86.49,
+          "interval_mean_width": 20.61,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.815,
+              6.068
+            ],
+            "rmse_ci95": [
+              6.766,
+              10.437
+            ],
+            "coverage_ci95": [
+              80.76,
+              94.03
+            ],
+            "wape_ci95": [
+              8.27,
+              13.42
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 5.4113,
+          "rmse": 9.7348,
+          "wape_pct": 11.79,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.05,
+          "interval_mean_width": 24.808,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -4.45,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.879,
+              6.291
+            ],
+            "rmse_ci95": [
+              6.263,
+              11.563
+            ],
+            "coverage_ci95": [
+              89.46,
+              97.81
+            ],
+            "wape_ci95": [
+              9.06,
+              12.94
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 3.7974,
+          "rmse": 6.7606,
+          "wape_pct": 8.27,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.93,
+          "interval_mean_width": 14.282,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.7,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.014,
+              4.372
+            ],
+            "rmse_ci95": [
+              4.561,
+              7.975
+            ],
+            "coverage_ci95": [
+              89.04,
+              95.64
+            ],
+            "wape_ci95": [
+              6.82,
+              9.17
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 3.2103,
+          "rmse": 6.3043,
+          "wape_pct": 6.99,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.0,
+          "interval_mean_width": 13.287,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 38.04,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.606,
+              3.982
+            ],
+            "rmse_ci95": [
+              4.347,
+              7.724
+            ],
+            "coverage_ci95": [
+              87.12,
+              95.27
+            ],
+            "wape_ci95": [
+              5.96,
+              8.25
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 3.2103,
+          "rmse": 6.3043,
+          "wape_pct": 6.99,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.0,
+          "interval_mean_width": 13.287,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 38.04,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.606,
+              3.982
+            ],
+            "rmse_ci95": [
+              4.347,
+              7.724
+            ],
+            "coverage_ci95": [
+              87.12,
+              95.27
+            ],
+            "wape_ci95": [
+              5.96,
+              8.25
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 5.2085,
+          "rmse": 9.7069,
+          "wape_pct": 11.21,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.25,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.797,
+              6.859
+            ],
+            "rmse_ci95": [
+              6.471,
+              12.476
+            ],
+            "coverage_ci95": [
+              88.03,
+              97.57
+            ],
+            "wape_ci95": [
+              8.7,
+              13.87
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 5.2085,
+          "rmse": 9.7069,
+          "wape_pct": 11.21,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.25,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.797,
+              6.859
+            ],
+            "rmse_ci95": [
+              6.471,
+              12.476
+            ],
+            "coverage_ci95": [
+              88.03,
+              97.57
+            ],
+            "wape_ci95": [
+              8.7,
+              13.87
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 4.2255,
+          "rmse": 7.0724,
+          "wape_pct": 9.09,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.51,
+          "interval_mean_width": 17.482,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 18.87,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              3.398,
+              5.187
+            ],
+            "rmse_ci95": [
+              5.096,
+              8.851
+            ],
+            "coverage_ci95": [
+              89.9,
+              96.69
+            ],
+            "wape_ci95": [
+              7.71,
+              10.65
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 3.7374,
+          "rmse": 6.8129,
+          "wape_pct": 8.04,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.34,
+          "interval_mean_width": 16.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 28.24,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.919,
+              4.636
+            ],
+            "rmse_ci95": [
+              4.712,
+              8.64
+            ],
+            "coverage_ci95": [
+              86.98,
+              95.58
+            ],
+            "wape_ci95": [
+              6.62,
+              9.42
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 3.7374,
+          "rmse": 6.8129,
+          "wape_pct": 8.04,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.34,
+          "interval_mean_width": 16.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 28.24,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              2.919,
+              4.636
+            ],
+            "rmse_ci95": [
+              4.712,
+              8.64
+            ],
+            "coverage_ci95": [
+              86.98,
+              95.58
+            ],
+            "wape_ci95": [
+              6.62,
+              9.42
+            ]
+          }
+        }
+      }
+    },
+    "boundary-gateway": {
+      "1": {
+        "persistence": {
+          "mae": 6.4437,
+          "rmse": 8.9664,
+          "wape_pct": 5.3,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.36,
+          "interval_mean_width": 25.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              5.899,
+              6.724
+            ],
+            "rmse_ci95": [
+              7.845,
+              9.441
+            ],
+            "coverage_ci95": [
+              88.53,
+              92.37
+            ],
+            "wape_ci95": [
+              4.64,
+              5.82
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 13.3083,
+          "rmse": 24.3629,
+          "wape_pct": 10.95,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.25,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -106.53,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.221,
+              15.108
+            ],
+            "rmse_ci95": [
+              15.067,
+              28.314
+            ],
+            "coverage_ci95": [
+              90.53,
+              97.95
+            ],
+            "wape_ci95": [
+              8.01,
+              11.67
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 5.8345,
+          "rmse": 7.8241,
+          "wape_pct": 4.8,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.43,
+          "interval_mean_width": 23.938,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 9.45,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              5.525,
+              5.959
+            ],
+            "rmse_ci95": [
+              7.137,
+              8.129
+            ],
+            "coverage_ci95": [
+              89.39,
+              92.27
+            ],
+            "wape_ci95": [
+              4.39,
+              5.18
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 4.8168,
+          "rmse": 6.5731,
+          "wape_pct": 3.97,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.48,
+          "interval_mean_width": 20.601,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.25,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.55,
+              4.964
+            ],
+            "rmse_ci95": [
+              5.961,
+              6.829
+            ],
+            "coverage_ci95": [
+              90.13,
+              93.2
+            ],
+            "wape_ci95": [
+              3.55,
+              4.34
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 4.8168,
+          "rmse": 6.5731,
+          "wape_pct": 3.97,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.48,
+          "interval_mean_width": 20.601,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.25,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.55,
+              4.964
+            ],
+            "rmse_ci95": [
+              5.961,
+              6.829
+            ],
+            "coverage_ci95": [
+              90.13,
+              93.2
+            ],
+            "wape_ci95": [
+              3.55,
+              4.34
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 12.8548,
+          "rmse": 22.7928,
+          "wape_pct": 10.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 87.48,
+          "interval_mean_width": 53.862,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.58,
+              14.946
+            ],
+            "rmse_ci95": [
+              16.792,
+              25.968
+            ],
+            "coverage_ci95": [
+              82.16,
+              94.28
+            ],
+            "wape_ci95": [
+              7.81,
+              12.37
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 13.6371,
+          "rmse": 24.3693,
+          "wape_pct": 11.16,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.44,
+          "interval_mean_width": 62.102,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -6.09,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.829,
+              15.661
+            ],
+            "rmse_ci95": [
+              15.55,
+              28.895
+            ],
+            "coverage_ci95": [
+              90.28,
+              97.89
+            ],
+            "wape_ci95": [
+              8.61,
+              12.19
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 9.4822,
+          "rmse": 16.76,
+          "wape_pct": 7.76,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.98,
+          "interval_mean_width": 37.792,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.24,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.591,
+              10.938
+            ],
+            "rmse_ci95": [
+              11.382,
+              19.71
+            ],
+            "coverage_ci95": [
+              90.99,
+              96.45
+            ],
+            "wape_ci95": [
+              6.45,
+              8.61
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 8.1576,
+          "rmse": 15.5027,
+          "wape_pct": 6.68,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.9,
+          "interval_mean_width": 35.454,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 36.54,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.703,
+              9.869
+            ],
+            "rmse_ci95": [
+              10.845,
+              18.779
+            ],
+            "coverage_ci95": [
+              90.39,
+              95.67
+            ],
+            "wape_ci95": [
+              5.79,
+              7.67
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 8.1576,
+          "rmse": 15.5027,
+          "wape_pct": 6.68,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.9,
+          "interval_mean_width": 35.454,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 36.54,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.703,
+              9.869
+            ],
+            "rmse_ci95": [
+              10.845,
+              18.779
+            ],
+            "coverage_ci95": [
+              90.39,
+              95.67
+            ],
+            "wape_ci95": [
+              5.79,
+              7.67
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 13.0075,
+          "rmse": 24.2247,
+          "wape_pct": 10.54,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.25,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.576,
+              16.931
+            ],
+            "rmse_ci95": [
+              16.057,
+              31.079
+            ],
+            "coverage_ci95": [
+              88.36,
+              97.48
+            ],
+            "wape_ci95": [
+              8.24,
+              12.96
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 13.0075,
+          "rmse": 24.2247,
+          "wape_pct": 10.54,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.25,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.576,
+              16.931
+            ],
+            "rmse_ci95": [
+              16.057,
+              31.079
+            ],
+            "coverage_ci95": [
+              88.36,
+              97.48
+            ],
+            "wape_ci95": [
+              8.24,
+              12.96
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 10.3329,
+          "rmse": 17.3926,
+          "wape_pct": 8.37,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.44,
+          "interval_mean_width": 42.998,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 20.56,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              8.279,
+              12.771
+            ],
+            "rmse_ci95": [
+              12.413,
+              21.732
+            ],
+            "coverage_ci95": [
+              89.8,
+              96.72
+            ],
+            "wape_ci95": [
+              7.0,
+              9.75
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 9.3219,
+          "rmse": 16.4274,
+          "wape_pct": 7.55,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.75,
+          "interval_mean_width": 43.017,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 28.33,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.401,
+              11.545
+            ],
+            "rmse_ci95": [
+              11.962,
+              20.677
+            ],
+            "coverage_ci95": [
+              86.39,
+              94.75
+            ],
+            "wape_ci95": [
+              6.41,
+              8.84
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 9.3219,
+          "rmse": 16.4274,
+          "wape_pct": 7.55,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.75,
+          "interval_mean_width": 43.017,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 28.33,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.401,
+              11.545
+            ],
+            "rmse_ci95": [
+              11.962,
+              20.677
+            ],
+            "coverage_ci95": [
+              86.39,
+              94.75
+            ],
+            "wape_ci95": [
+              6.41,
+              8.84
+            ]
+          }
+        }
+      }
+    },
+    "legacy-core": {
+      "1": {
+        "persistence": {
+          "mae": 6.4823,
+          "rmse": 9.0033,
+          "wape_pct": 5.44,
+          "wape_explanation": null,
+          "interval_coverage_pct": 90.16,
+          "interval_mean_width": 26.012,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              5.951,
+              6.784
+            ],
+            "rmse_ci95": [
+              7.967,
+              9.46
+            ],
+            "coverage_ci95": [
+              88.69,
+              92.21
+            ],
+            "wape_ci95": [
+              4.79,
+              5.98
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 13.1362,
+          "rmse": 23.9086,
+          "wape_pct": 11.03,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -102.65,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.161,
+              14.909
+            ],
+            "rmse_ci95": [
+              14.872,
+              27.757
+            ],
+            "coverage_ci95": [
+              90.64,
+              97.97
+            ],
+            "wape_ci95": [
+              8.15,
+              11.73
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 5.8983,
+          "rmse": 7.9016,
+          "wape_pct": 4.95,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.02,
+          "interval_mean_width": 24.411,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 9.01,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              5.551,
+              6.03
+            ],
+            "rmse_ci95": [
+              7.206,
+              8.191
+            ],
+            "coverage_ci95": [
+              90.24,
+              92.4
+            ],
+            "wape_ci95": [
+              4.5,
+              5.33
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 4.8389,
+          "rmse": 6.5356,
+          "wape_pct": 4.06,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.2,
+          "interval_mean_width": 20.905,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.35,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.573,
+              4.99
+            ],
+            "rmse_ci95": [
+              5.957,
+              6.777
+            ],
+            "coverage_ci95": [
+              90.93,
+              93.49
+            ],
+            "wape_ci95": [
+              3.66,
+              4.48
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 4.8389,
+          "rmse": 6.5356,
+          "wape_pct": 4.06,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.2,
+          "interval_mean_width": 20.905,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.35,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              4.573,
+              4.99
+            ],
+            "rmse_ci95": [
+              5.957,
+              6.777
+            ],
+            "coverage_ci95": [
+              90.93,
+              93.49
+            ],
+            "wape_ci95": [
+              3.66,
+              4.48
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 12.6631,
+          "rmse": 22.3587,
+          "wape_pct": 10.58,
+          "wape_explanation": null,
+          "interval_coverage_pct": 87.61,
+          "interval_mean_width": 52.482,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.475,
+              14.653
+            ],
+            "rmse_ci95": [
+              16.528,
+              25.43
+            ],
+            "coverage_ci95": [
+              82.7,
+              94.18
+            ],
+            "wape_ci95": [
+              7.88,
+              12.41
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 13.4772,
+          "rmse": 23.918,
+          "wape_pct": 11.26,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.57,
+          "interval_mean_width": 62.142,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -6.43,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.765,
+              15.418
+            ],
+            "rmse_ci95": [
+              15.304,
+              28.325
+            ],
+            "coverage_ci95": [
+              90.42,
+              97.95
+            ],
+            "wape_ci95": [
+              8.72,
+              12.25
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 9.3687,
+          "rmse": 16.4656,
+          "wape_pct": 7.82,
+          "wape_explanation": null,
+          "interval_coverage_pct": 92.46,
+          "interval_mean_width": 36.402,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.02,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.537,
+              10.766
+            ],
+            "rmse_ci95": [
+              11.268,
+              19.309
+            ],
+            "coverage_ci95": [
+              90.16,
+              96.2
+            ],
+            "wape_ci95": [
+              6.54,
+              8.64
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 7.8605,
+          "rmse": 15.0127,
+          "wape_pct": 6.57,
+          "wape_explanation": null,
+          "interval_coverage_pct": 94.23,
+          "interval_mean_width": 35.663,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 37.93,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.402,
+              9.387
+            ],
+            "rmse_ci95": [
+              10.299,
+              18.159
+            ],
+            "coverage_ci95": [
+              91.49,
+              96.45
+            ],
+            "wape_ci95": [
+              5.63,
+              7.44
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 7.8605,
+          "rmse": 15.0127,
+          "wape_pct": 6.57,
+          "wape_explanation": null,
+          "interval_coverage_pct": 94.23,
+          "interval_mean_width": 35.663,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 37.93,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.402,
+              9.387
+            ],
+            "rmse_ci95": [
+              10.299,
+              18.159
+            ],
+            "coverage_ci95": [
+              91.49,
+              96.45
+            ],
+            "wape_ci95": [
+              5.63,
+              7.44
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 12.8546,
+          "rmse": 23.7695,
+          "wape_pct": 10.63,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.522,
+              16.666
+            ],
+            "rmse_ci95": [
+              15.771,
+              30.449
+            ],
+            "coverage_ci95": [
+              88.48,
+              97.51
+            ],
+            "wape_ci95": [
+              8.33,
+              13.01
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 12.8546,
+          "rmse": 23.7695,
+          "wape_pct": 10.63,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.38,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.522,
+              16.666
+            ],
+            "rmse_ci95": [
+              15.771,
+              30.449
+            ],
+            "coverage_ci95": [
+              88.48,
+              97.51
+            ],
+            "wape_ci95": [
+              8.33,
+              13.01
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 10.2354,
+          "rmse": 17.123,
+          "wape_pct": 8.46,
+          "wape_explanation": null,
+          "interval_coverage_pct": 93.05,
+          "interval_mean_width": 42.064,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 20.38,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              8.218,
+              12.532
+            ],
+            "rmse_ci95": [
+              12.316,
+              21.362
+            ],
+            "coverage_ci95": [
+              89.11,
+              96.5
+            ],
+            "wape_ci95": [
+              7.12,
+              9.82
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 9.5084,
+          "rmse": 16.6666,
+          "wape_pct": 7.86,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.67,
+          "interval_mean_width": 47.766,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.03,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.47,
+              11.795
+            ],
+            "rmse_ci95": [
+              12.143,
+              20.616
+            ],
+            "coverage_ci95": [
+              87.28,
+              95.54
+            ],
+            "wape_ci95": [
+              6.61,
+              9.22
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 9.5084,
+          "rmse": 16.6666,
+          "wape_pct": 7.86,
+          "wape_explanation": null,
+          "interval_coverage_pct": 91.67,
+          "interval_mean_width": 47.766,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.03,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.47,
+              11.795
+            ],
+            "rmse_ci95": [
+              12.143,
+              20.616
+            ],
+            "coverage_ci95": [
+              87.28,
+              95.54
+            ],
+            "wape_ci95": [
+              6.61,
+              9.22
+            ]
+          }
+        }
+      }
+    }
+  },
+  "diagnostic_surge_test": {
+    "reservations": {
+      "1": {
+        "persistence": {
+          "mae": 12.4579,
+          "rmse": 17.5739,
+          "wape_pct": 7.33,
+          "wape_explanation": null,
+          "interval_coverage_pct": 51.61,
+          "interval_mean_width": 12.298,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              10.341,
+              10.873
+            ],
+            "rmse_ci95": [
+              15.515,
+              16.306
+            ],
+            "coverage_ci95": [
+              59.28,
+              60.59
+            ],
+            "wape_ci95": [
+              6.61,
+              6.72
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 94.519,
+          "rmse": 113.4686,
+          "wape_pct": 55.63,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -658.71,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              90.082,
+              94.775
+            ],
+            "rmse_ci95": [
+              110.086,
+              115.861
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              57.92,
+              58.19
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 11.3945,
+          "rmse": 14.5683,
+          "wape_pct": 6.71,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.79,
+          "interval_mean_width": 11.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 8.54,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.988,
+              10.454
+            ],
+            "rmse_ci95": [
+              13.227,
+              13.771
+            ],
+            "coverage_ci95": [
+              42.08,
+              44.75
+            ],
+            "wape_ci95": [
+              6.36,
+              6.49
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 57.5907,
+          "rmse": 77.2894,
+          "wape_pct": 33.89,
+          "wape_explanation": null,
+          "interval_coverage_pct": 3.15,
+          "interval_mean_width": 9.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -362.28,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              46.181,
+              53.66
+            ],
+            "rmse_ci95": [
+              65.891,
+              74.04
+            ],
+            "coverage_ci95": [
+              1.41,
+              4.69
+            ],
+            "wape_ci95": [
+              29.81,
+              32.86
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 16.6007,
+          "rmse": 19.5511,
+          "wape_pct": 9.77,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.72,
+          "interval_mean_width": 10.863,
+          "fallback_activation_rate_pct": 44.07,
+          "rel_improvement_vs_persistence_pct": -33.25,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              15.08,
+              18.106
+            ],
+            "rmse_ci95": [
+              17.68,
+              20.703
+            ],
+            "coverage_ci95": [
+              5.87,
+              9.34
+            ],
+            "wape_ci95": [
+              9.73,
+              11.08
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 54.8267,
+          "rmse": 74.2053,
+          "wape_pct": 32.27,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.39,
+          "interval_mean_width": 27.112,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              46.26,
+              48.607
+            ],
+            "rmse_ci95": [
+              67.008,
+              70.492
+            ],
+            "coverage_ci95": [
+              44.9,
+              45.86
+            ],
+            "wape_ci95": [
+              29.25,
+              29.42
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 106.1528,
+          "rmse": 122.6737,
+          "wape_pct": 62.47,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 31.504,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.62,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              93.361,
+              98.209
+            ],
+            "rmse_ci95": [
+              112.449,
+              118.353
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              59.06,
+              59.32
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 59.6841,
+          "rmse": 71.1793,
+          "wape_pct": 35.13,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.2,
+          "interval_mean_width": 19.08,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -8.86,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              54.347,
+              56.915
+            ],
+            "rmse_ci95": [
+              65.723,
+              68.699
+            ],
+            "coverage_ci95": [
+              8.34,
+              10.17
+            ],
+            "wape_ci95": [
+              34.25,
+              34.54
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 78.6127,
+          "rmse": 100.6238,
+          "wape_pct": 46.27,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.59,
+          "interval_mean_width": 18.127,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -43.38,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              67.326,
+              75.651
+            ],
+            "rmse_ci95": [
+              89.384,
+              98.135
+            ],
+            "coverage_ci95": [
+              0.0,
+              1.04
+            ],
+            "wape_ci95": [
+              42.77,
+              45.56
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 63.4337,
+          "rmse": 78.0295,
+          "wape_pct": 37.33,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.56,
+          "interval_mean_width": 18.547,
+          "fallback_activation_rate_pct": 44.07,
+          "rel_improvement_vs_persistence_pct": -15.7,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              55.778,
+              61.151
+            ],
+            "rmse_ci95": [
+              70.563,
+              75.619
+            ],
+            "coverage_ci95": [
+              1.8,
+              2.59
+            ],
+            "wape_ci95": [
+              35.42,
+              36.84
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 103.1441,
+          "rmse": 120.345,
+          "wape_pct": 64.54,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              100.535,
+              105.789
+            ],
+            "rmse_ci95": [
+              117.216,
+              123.372
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.39,
+              64.69
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 103.1441,
+          "rmse": 120.345,
+          "wape_pct": 64.54,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              100.535,
+              105.789
+            ],
+            "rmse_ci95": [
+              117.216,
+              123.372
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.39,
+              64.69
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 76.3911,
+          "rmse": 99.5857,
+          "wape_pct": 47.8,
+          "wape_explanation": null,
+          "interval_coverage_pct": 18.56,
+          "interval_mean_width": 23.234,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.94,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              74.46,
+              78.301
+            ],
+            "rmse_ci95": [
+              97.026,
+              102.043
+            ],
+            "coverage_ci95": [
+              18.03,
+              19.08
+            ],
+            "wape_ci95": [
+              47.67,
+              47.94
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 80.1404,
+          "rmse": 104.8631,
+          "wape_pct": 50.15,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.13,
+          "interval_mean_width": 23.516,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 22.3,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              75.828,
+              84.355
+            ],
+            "rmse_ci95": [
+              100.36,
+              109.107
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.33
+            ],
+            "wape_ci95": [
+              48.75,
+              51.45
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 86.144,
+          "rmse": 110.925,
+          "wape_pct": 53.9,
+          "wape_explanation": null,
+          "interval_coverage_pct": 13.64,
+          "interval_mean_width": 23.392,
+          "fallback_activation_rate_pct": 44.07,
+          "rel_improvement_vs_persistence_pct": 16.48,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              82.607,
+              89.658
+            ],
+            "rmse_ci95": [
+              106.595,
+              115.04
+            ],
+            "coverage_ci95": [
+              13.05,
+              14.16
+            ],
+            "wape_ci95": [
+              53.11,
+              54.66
+            ]
+          }
+        }
+      }
+    },
+    "crew": {
+      "1": {
+        "persistence": {
+          "mae": 7.012,
+          "rmse": 9.7664,
+          "wape_pct": 7.43,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.79,
+          "interval_mean_width": 7.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              5.854,
+              6.141
+            ],
+            "rmse_ci95": [
+              8.626,
+              9.062
+            ],
+            "coverage_ci95": [
+              60.16,
+              61.79
+            ],
+            "wape_ci95": [
+              6.73,
+              6.84
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 52.6832,
+          "rmse": 63.225,
+          "wape_pct": 55.83,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -651.33,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              50.166,
+              52.821
+            ],
+            "rmse_ci95": [
+              61.285,
+              64.564
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              58.17,
+              58.43
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 6.9223,
+          "rmse": 8.7616,
+          "wape_pct": 7.34,
+          "wape_explanation": null,
+          "interval_coverage_pct": 37.05,
+          "interval_mean_width": 7.31,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 1.28,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.013,
+              6.298
+            ],
+            "rmse_ci95": [
+              7.91,
+              8.229
+            ],
+            "coverage_ci95": [
+              42.45,
+              45.23
+            ],
+            "wape_ci95": [
+              6.91,
+              7.02
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 32.2792,
+          "rmse": 42.8431,
+          "wape_pct": 34.21,
+          "wape_explanation": null,
+          "interval_coverage_pct": 3.28,
+          "interval_mean_width": 5.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -360.34,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              26.026,
+              30.339
+            ],
+            "rmse_ci95": [
+              36.537,
+              41.177
+            ],
+            "coverage_ci95": [
+              1.12,
+              4.37
+            ],
+            "wape_ci95": [
+              30.27,
+              33.44
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 10.2956,
+          "rmse": 11.9639,
+          "wape_pct": 10.91,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.39,
+          "interval_mean_width": 6.493,
+          "fallback_activation_rate_pct": 43.48,
+          "rel_improvement_vs_persistence_pct": -46.83,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              9.381,
+              11.223
+            ],
+            "rmse_ci95": [
+              10.862,
+              12.658
+            ],
+            "coverage_ci95": [
+              5.23,
+              8.53
+            ],
+            "wape_ci95": [
+              10.91,
+              12.38
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 30.5757,
+          "rmse": 41.2761,
+          "wape_pct": 32.4,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.13,
+          "interval_mean_width": 15.522,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              25.826,
+              27.145
+            ],
+            "rmse_ci95": [
+              37.238,
+              39.231
+            ],
+            "coverage_ci95": [
+              44.73,
+              45.58
+            ],
+            "wape_ci95": [
+              29.41,
+              29.57
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 59.1651,
+          "rmse": 68.3379,
+          "wape_pct": 62.7,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 17.91,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.5,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              51.983,
+              54.751
+            ],
+            "rmse_ci95": [
+              62.59,
+              65.947
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              59.31,
+              59.56
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 33.3795,
+          "rmse": 39.8394,
+          "wape_pct": 35.37,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.52,
+          "interval_mean_width": 10.831,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -9.17,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              30.346,
+              31.845
+            ],
+            "rmse_ci95": [
+              36.753,
+              38.487
+            ],
+            "coverage_ci95": [
+              8.96,
+              10.59
+            ],
+            "wape_ci95": [
+              34.49,
+              34.77
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 43.6021,
+          "rmse": 56.1803,
+          "wape_pct": 46.21,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.1,
+          "interval_mean_width": 11.043,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -42.6,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              37.241,
+              42.022
+            ],
+            "rmse_ci95": [
+              49.926,
+              54.811
+            ],
+            "coverage_ci95": [
+              0.82,
+              3.55
+            ],
+            "wape_ci95": [
+              42.59,
+              45.56
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 35.1873,
+          "rmse": 43.5727,
+          "wape_pct": 37.29,
+          "wape_explanation": null,
+          "interval_coverage_pct": 3.34,
+          "interval_mean_width": 10.951,
+          "fallback_activation_rate_pct": 43.48,
+          "rel_improvement_vs_persistence_pct": -15.08,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              30.777,
+              33.994
+            ],
+            "rmse_ci95": [
+              39.311,
+              42.308
+            ],
+            "coverage_ci95": [
+              2.25,
+              4.0
+            ],
+            "wape_ci95": [
+              35.21,
+              36.84
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 57.4608,
+          "rmse": 67.0344,
+          "wape_pct": 64.79,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              55.951,
+              58.924
+            ],
+            "rmse_ci95": [
+              65.233,
+              68.735
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.64,
+              64.95
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 57.4608,
+          "rmse": 67.0344,
+          "wape_pct": 64.79,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              55.951,
+              58.924
+            ],
+            "rmse_ci95": [
+              65.233,
+              68.735
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.64,
+              64.95
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 41.7182,
+          "rmse": 54.6541,
+          "wape_pct": 47.04,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.21,
+          "interval_mean_width": 13.221,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 27.4,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              40.673,
+              42.763
+            ],
+            "rmse_ci95": [
+              53.214,
+              56.038
+            ],
+            "coverage_ci95": [
+              18.43,
+              20.0
+            ],
+            "wape_ci95": [
+              46.89,
+              47.19
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 44.01,
+          "rmse": 57.9831,
+          "wape_pct": 49.62,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.07,
+          "interval_mean_width": 13.392,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 23.41,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              41.625,
+              46.375
+            ],
+            "rmse_ci95": [
+              55.482,
+              60.35
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.2
+            ],
+            "wape_ci95": [
+              48.23,
+              50.93
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 47.3569,
+          "rmse": 61.1108,
+          "wape_pct": 53.39,
+          "wape_explanation": null,
+          "interval_coverage_pct": 13.51,
+          "interval_mean_width": 13.318,
+          "fallback_activation_rate_pct": 43.48,
+          "rel_improvement_vs_persistence_pct": 17.58,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              45.412,
+              49.259
+            ],
+            "rmse_ci95": [
+              58.711,
+              63.392
+            ],
+            "coverage_ci95": [
+              13.05,
+              13.94
+            ],
+            "wape_ci95": [
+              52.63,
+              54.12
+            ]
+          }
+        }
+      }
+    },
+    "baggage": {
+      "1": {
+        "persistence": {
+          "mae": 9.7412,
+          "rmse": 13.6785,
+          "wape_pct": 7.38,
+          "wape_explanation": null,
+          "interval_coverage_pct": 51.48,
+          "interval_mean_width": 10.06,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              8.086,
+              8.472
+            ],
+            "rmse_ci95": [
+              12.06,
+              12.693
+            ],
+            "coverage_ci95": [
+              58.51,
+              60.46
+            ],
+            "wape_ci95": [
+              6.65,
+              6.74
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 73.7007,
+          "rmse": 88.5214,
+          "wape_pct": 55.82,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -656.59,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              70.136,
+              73.91
+            ],
+            "rmse_ci95": [
+              85.767,
+              90.438
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              58.18,
+              58.33
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 9.0307,
+          "rmse": 11.4534,
+          "wape_pct": 6.84,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.28,
+          "interval_mean_width": 9.533,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 7.29,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              7.898,
+              8.244
+            ],
+            "rmse_ci95": [
+              10.382,
+              10.849
+            ],
+            "coverage_ci95": [
+              40.98,
+              43.82
+            ],
+            "wape_ci95": [
+              6.46,
+              6.59
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 44.0014,
+          "rmse": 60.518,
+          "wape_pct": 33.33,
+          "wape_explanation": null,
+          "interval_coverage_pct": 6.62,
+          "interval_mean_width": 7.948,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -351.7,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              34.945,
+              40.684
+            ],
+            "rmse_ci95": [
+              51.617,
+              57.862
+            ],
+            "coverage_ci95": [
+              3.62,
+              9.87
+            ],
+            "wape_ci95": [
+              29.01,
+              32.05
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 11.9366,
+          "rmse": 14.3561,
+          "wape_pct": 9.04,
+          "wape_explanation": null,
+          "interval_coverage_pct": 12.2,
+          "interval_mean_width": 8.639,
+          "fallback_activation_rate_pct": 43.61,
+          "rel_improvement_vs_persistence_pct": -22.54,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              10.555,
+              12.92
+            ],
+            "rmse_ci95": [
+              12.846,
+              15.07
+            ],
+            "coverage_ci95": [
+              8.18,
+              14.27
+            ],
+            "wape_ci95": [
+              8.77,
+              10.19
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 42.7007,
+          "rmse": 57.7955,
+          "wape_pct": 32.34,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.07,
+          "interval_mean_width": 20.61,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              36.026,
+              37.908
+            ],
+            "rmse_ci95": [
+              52.145,
+              54.96
+            ],
+            "coverage_ci95": [
+              44.59,
+              45.58
+            ],
+            "wape_ci95": [
+              29.34,
+              29.46
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 82.7823,
+          "rmse": 95.6874,
+          "wape_pct": 62.69,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 24.808,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.87,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              72.668,
+              76.617
+            ],
+            "rmse_ci95": [
+              87.594,
+              92.374
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              59.3,
+              59.48
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 46.9036,
+          "rmse": 55.795,
+          "wape_pct": 35.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 7.54,
+          "interval_mean_width": 14.282,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -9.84,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              42.896,
+              45.086
+            ],
+            "rmse_ci95": [
+              51.569,
+              54.132
+            ],
+            "coverage_ci95": [
+              7.89,
+              9.52
+            ],
+            "wape_ci95": [
+              34.89,
+              35.1
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 61.4293,
+          "rmse": 78.8694,
+          "wape_pct": 46.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.59,
+          "interval_mean_width": 13.287,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -43.86,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              52.788,
+              58.929
+            ],
+            "rmse_ci95": [
+              70.207,
+              76.855
+            ],
+            "coverage_ci95": [
+              0.17,
+              1.07
+            ],
+            "wape_ci95": [
+              43.12,
+              45.73
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 49.7104,
+          "rmse": 61.3503,
+          "wape_pct": 37.65,
+          "wape_explanation": null,
+          "interval_coverage_pct": 1.97,
+          "interval_mean_width": 13.721,
+          "fallback_activation_rate_pct": 43.61,
+          "rel_improvement_vs_persistence_pct": -16.42,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              43.797,
+              47.834
+            ],
+            "rmse_ci95": [
+              55.457,
+              59.445
+            ],
+            "coverage_ci95": [
+              1.52,
+              1.97
+            ],
+            "wape_ci95": [
+              35.79,
+              37.09
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 80.4601,
+          "rmse": 93.9095,
+          "wape_pct": 64.8,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              78.306,
+              82.55
+            ],
+            "rmse_ci95": [
+              91.35,
+              96.338
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.71,
+              64.89
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 80.4601,
+          "rmse": 93.9095,
+          "wape_pct": 64.8,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              78.306,
+              82.55
+            ],
+            "rmse_ci95": [
+              91.35,
+              96.338
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.71,
+              64.89
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 59.3564,
+          "rmse": 77.5224,
+          "wape_pct": 47.8,
+          "wape_explanation": null,
+          "interval_coverage_pct": 16.92,
+          "interval_mean_width": 17.482,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.23,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              57.763,
+              60.898
+            ],
+            "rmse_ci95": [
+              75.456,
+              79.489
+            ],
+            "coverage_ci95": [
+              16.33,
+              17.44
+            ],
+            "wape_ci95": [
+              47.7,
+              47.91
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 61.7725,
+          "rmse": 81.0155,
+          "wape_pct": 49.75,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.0,
+          "interval_mean_width": 16.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 23.23,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              58.547,
+              64.976
+            ],
+            "rmse_ci95": [
+              77.546,
+              84.31
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.0
+            ],
+            "wape_ci95": [
+              48.41,
+              51.01
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 66.61,
+          "rmse": 85.6182,
+          "wape_pct": 53.64,
+          "wape_explanation": null,
+          "interval_coverage_pct": 12.2,
+          "interval_mean_width": 17.087,
+          "fallback_activation_rate_pct": 43.61,
+          "rel_improvement_vs_persistence_pct": 17.21,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              63.833,
+              69.352
+            ],
+            "rmse_ci95": [
+              82.232,
+              88.809
+            ],
+            "coverage_ci95": [
+              11.67,
+              12.72
+            ],
+            "wape_ci95": [
+              52.81,
+              54.48
+            ]
+          }
+        }
+      }
+    },
+    "boundary-gateway": {
+      "1": {
+        "persistence": {
+          "mae": 24.6585,
+          "rmse": 34.5916,
+          "wape_pct": 7.25,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.59,
+          "interval_mean_width": 25.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              20.555,
+              21.58
+            ],
+            "rmse_ci95": [
+              30.582,
+              32.089
+            ],
+            "coverage_ci95": [
+              59.73,
+              61.71
+            ],
+            "wape_ci95": [
+              6.54,
+              6.67
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 186.2565,
+          "rmse": 223.4009,
+          "wape_pct": 54.79,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -655.34,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              177.352,
+              186.71
+            ],
+            "rmse_ci95": [
+              216.636,
+              228.156
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              57.01,
+              57.21
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 21.7468,
+          "rmse": 27.421,
+          "wape_pct": 6.4,
+          "wape_explanation": null,
+          "interval_coverage_pct": 34.56,
+          "interval_mean_width": 23.938,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 11.81,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              19.298,
+              20.124
+            ],
+            "rmse_ci95": [
+              25.039,
+              26.147
+            ],
+            "coverage_ci95": [
+              39.86,
+              42.67
+            ],
+            "wape_ci95": [
+              6.12,
+              6.25
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 112.5152,
+          "rmse": 152.1651,
+          "wape_pct": 33.1,
+          "wape_explanation": null,
+          "interval_coverage_pct": 4.52,
+          "interval_mean_width": 20.601,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -356.29,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              90.015,
+              104.444
+            ],
+            "rmse_ci95": [
+              129.818,
+              145.609
+            ],
+            "coverage_ci95": [
+              1.94,
+              6.48
+            ],
+            "wape_ci95": [
+              28.97,
+              31.95
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 30.2581,
+          "rmse": 36.3782,
+          "wape_pct": 8.9,
+          "wape_explanation": null,
+          "interval_coverage_pct": 12.39,
+          "interval_mean_width": 22.082,
+          "fallback_activation_rate_pct": 44.39,
+          "rel_improvement_vs_persistence_pct": -22.71,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              27.511,
+              33.193
+            ],
+            "rmse_ci95": [
+              32.859,
+              38.546
+            ],
+            "coverage_ci95": [
+              8.43,
+              13.12
+            ],
+            "wape_ci95": [
+              8.88,
+              10.16
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 107.9377,
+          "rmse": 146.111,
+          "wape_pct": 31.75,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.07,
+          "interval_mean_width": 53.862,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              91.154,
+              95.755
+            ],
+            "rmse_ci95": [
+              131.963,
+              138.718
+            ],
+            "coverage_ci95": [
+              44.62,
+              45.52
+            ],
+            "wape_ci95": [
+              28.79,
+              28.94
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 209.0541,
+          "rmse": 241.5753,
+          "wape_pct": 61.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.102,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.68,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              183.712,
+              193.35
+            ],
+            "rmse_ci95": [
+              221.295,
+              233.048
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              58.1,
+              58.3
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 115.6791,
+          "rmse": 137.9892,
+          "wape_pct": 34.03,
+          "wape_explanation": null,
+          "interval_coverage_pct": 7.93,
+          "interval_mean_width": 37.792,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -7.17,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              105.664,
+              110.725
+            ],
+            "rmse_ci95": [
+              127.581,
+              133.426
+            ],
+            "coverage_ci95": [
+              8.36,
+              9.63
+            ],
+            "wape_ci95": [
+              33.29,
+              33.5
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 154.1621,
+          "rmse": 197.5738,
+          "wape_pct": 45.35,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.52,
+          "interval_mean_width": 35.454,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -42.83,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              132.029,
+              148.228
+            ],
+            "rmse_ci95": [
+              175.784,
+              192.563
+            ],
+            "coverage_ci95": [
+              0.11,
+              1.07
+            ],
+            "wape_ci95": [
+              41.83,
+              44.61
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 123.4094,
+          "rmse": 152.1086,
+          "wape_pct": 36.31,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.3,
+          "interval_mean_width": 36.492,
+          "fallback_activation_rate_pct": 44.39,
+          "rel_improvement_vs_persistence_pct": -14.33,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              108.496,
+              118.918
+            ],
+            "rmse_ci95": [
+              137.657,
+              147.323
+            ],
+            "coverage_ci95": [
+              1.75,
+              2.51
+            ],
+            "wape_ci95": [
+              34.36,
+              35.8
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 203.223,
+          "rmse": 237.0795,
+          "wape_pct": 63.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              197.959,
+              208.392
+            ],
+            "rmse_ci95": [
+              230.758,
+              243.068
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.38,
+              63.61
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 203.223,
+          "rmse": 237.0795,
+          "wape_pct": 63.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              197.959,
+              208.392
+            ],
+            "rmse_ci95": [
+              230.758,
+              243.068
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.38,
+              63.61
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 149.4388,
+          "rmse": 196.1153,
+          "wape_pct": 46.69,
+          "wape_explanation": null,
+          "interval_coverage_pct": 18.69,
+          "interval_mean_width": 42.998,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.47,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              145.609,
+              153.276
+            ],
+            "rmse_ci95": [
+              190.911,
+              201.053
+            ],
+            "coverage_ci95": [
+              18.06,
+              19.21
+            ],
+            "wape_ci95": [
+              46.56,
+              46.81
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 157.0382,
+          "rmse": 205.9442,
+          "wape_pct": 49.07,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.0,
+          "interval_mean_width": 43.017,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 22.73,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              148.758,
+              165.393
+            ],
+            "rmse_ci95": [
+              197.241,
+              214.311
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.0
+            ],
+            "wape_ci95": [
+              47.71,
+              50.37
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 168.1123,
+          "rmse": 217.5272,
+          "wape_pct": 52.53,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.03,
+          "interval_mean_width": 43.009,
+          "fallback_activation_rate_pct": 44.39,
+          "rel_improvement_vs_persistence_pct": 17.28,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              161.306,
+              174.969
+            ],
+            "rmse_ci95": [
+              209.075,
+              225.62
+            ],
+            "coverage_ci95": [
+              13.51,
+              14.49
+            ],
+            "wape_ci95": [
+              51.74,
+              53.3
+            ]
+          }
+        }
+      }
+    },
+    "legacy-core": {
+      "1": {
+        "persistence": {
+          "mae": 24.3132,
+          "rmse": 33.9561,
+          "wape_pct": 7.3,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.2,
+          "interval_mean_width": 26.012,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              20.294,
+              21.338
+            ],
+            "rmse_ci95": [
+              30.045,
+              31.495
+            ],
+            "coverage_ci95": [
+              59.2,
+              61.39
+            ],
+            "wape_ci95": [
+              6.59,
+              6.72
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 182.5662,
+          "rmse": 218.9256,
+          "wape_pct": 54.81,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -650.89,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              173.845,
+              183.006
+            ],
+            "rmse_ci95": [
+              212.283,
+              223.567
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              57.02,
+              57.22
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 21.3837,
+          "rmse": 26.8681,
+          "wape_pct": 6.42,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.02,
+          "interval_mean_width": 24.411,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 12.05,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              19.005,
+              19.785
+            ],
+            "rmse_ci95": [
+              24.552,
+              25.62
+            ],
+            "coverage_ci95": [
+              40.64,
+              43.47
+            ],
+            "wape_ci95": [
+              6.13,
+              6.28
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 109.7218,
+          "rmse": 148.835,
+          "wape_pct": 32.94,
+          "wape_explanation": null,
+          "interval_coverage_pct": 5.44,
+          "interval_mean_width": 20.905,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -351.28,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              87.671,
+              102.202
+            ],
+            "rmse_ci95": [
+              127.003,
+              142.543
+            ],
+            "coverage_ci95": [
+              2.48,
+              7.71
+            ],
+            "wape_ci95": [
+              28.8,
+              31.9
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 29.3866,
+          "rmse": 35.8546,
+          "wape_pct": 8.82,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.49,
+          "interval_mean_width": 22.454,
+          "fallback_activation_rate_pct": 44.2,
+          "rel_improvement_vs_persistence_pct": -20.87,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              26.646,
+              32.538
+            ],
+            "rmse_ci95": [
+              32.367,
+              38.227
+            ],
+            "coverage_ci95": [
+              9.97,
+              15.12
+            ],
+            "wape_ci95": [
+              8.76,
+              10.16
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 105.8268,
+          "rmse": 143.1753,
+          "wape_pct": 31.77,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.07,
+          "interval_mean_width": 52.482,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              89.391,
+              93.938
+            ],
+            "rmse_ci95": [
+              129.341,
+              135.96
+            ],
+            "coverage_ci95": [
+              44.56,
+              45.58
+            ],
+            "wape_ci95": [
+              28.8,
+              28.97
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 204.9113,
+          "rmse": 236.7333,
+          "wape_pct": 61.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.142,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.63,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              180.083,
+              189.547
+            ],
+            "rmse_ci95": [
+              216.847,
+              228.358
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              58.11,
+              58.32
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 113.3481,
+          "rmse": 135.1293,
+          "wape_pct": 34.03,
+          "wape_explanation": null,
+          "interval_coverage_pct": 7.61,
+          "interval_mean_width": 36.402,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -7.11,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              103.655,
+              108.62
+            ],
+            "rmse_ci95": [
+              125.029,
+              130.749
+            ],
+            "coverage_ci95": [
+              8.11,
+              9.52
+            ],
+            "wape_ci95": [
+              33.33,
+              33.53
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 152.9097,
+          "rmse": 196.5822,
+          "wape_pct": 45.91,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.59,
+          "interval_mean_width": 35.663,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -44.49,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              131.007,
+              146.996
+            ],
+            "rmse_ci95": [
+              174.978,
+              191.516
+            ],
+            "coverage_ci95": [
+              0.28,
+              1.07
+            ],
+            "wape_ci95": [
+              42.35,
+              45.14
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 121.4698,
+          "rmse": 149.9952,
+          "wape_pct": 36.47,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.43,
+          "interval_mean_width": 35.989,
+          "fallback_activation_rate_pct": 44.2,
+          "rel_improvement_vs_persistence_pct": -14.78,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              106.851,
+              117.048
+            ],
+            "rmse_ci95": [
+              135.769,
+              145.248
+            ],
+            "coverage_ci95": [
+              1.92,
+              2.54
+            ],
+            "wape_ci95": [
+              34.54,
+              35.95
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 199.1691,
+          "rmse": 232.3148,
+          "wape_pct": 63.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              193.995,
+              204.243
+            ],
+            "rmse_ci95": [
+              226.107,
+              238.149
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.38,
+              63.61
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 199.1691,
+          "rmse": 232.3148,
+          "wape_pct": 63.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              193.995,
+              204.243
+            ],
+            "rmse_ci95": [
+              226.107,
+              238.149
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.38,
+              63.61
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 146.197,
+          "rmse": 192.2163,
+          "wape_pct": 46.61,
+          "wape_explanation": null,
+          "interval_coverage_pct": 18.95,
+          "interval_mean_width": 42.064,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.6,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              142.431,
+              149.986
+            ],
+            "rmse_ci95": [
+              187.06,
+              197.115
+            ],
+            "coverage_ci95": [
+              18.43,
+              19.45
+            ],
+            "wape_ci95": [
+              46.47,
+              46.73
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 154.5389,
+          "rmse": 202.4885,
+          "wape_pct": 49.27,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.07,
+          "interval_mean_width": 47.766,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 22.41,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              146.494,
+              162.57
+            ],
+            "rmse_ci95": [
+              194.082,
+              210.499
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.2
+            ],
+            "wape_ci95": [
+              47.94,
+              50.52
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 164.7908,
+          "rmse": 213.4922,
+          "wape_pct": 52.54,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.1,
+          "interval_mean_width": 45.246,
+          "fallback_activation_rate_pct": 44.2,
+          "rel_improvement_vs_persistence_pct": 17.26,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              158.297,
+              171.512
+            ],
+            "rmse_ci95": [
+              205.395,
+              221.328
+            ],
+            "coverage_ci95": [
+              13.51,
+              14.69
+            ],
+            "wape_ci95": [
+              51.77,
+              53.29
+            ]
+          }
+        }
+      }
+    }
+  },
+  "locked_surge_test": {
+    "reservations": {
+      "1": {
+        "persistence": {
+          "mae": 12.7077,
+          "rmse": 18.0332,
+          "wape_pct": 7.26,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.52,
+          "interval_mean_width": 12.298,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              10.475,
+              11.079
+            ],
+            "rmse_ci95": [
+              15.895,
+              16.779
+            ],
+            "coverage_ci95": [
+              60.11,
+              61.87
+            ],
+            "wape_ci95": [
+              6.51,
+              6.61
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 97.4675,
+          "rmse": 117.1157,
+          "wape_pct": 55.66,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -667.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              92.773,
+              98.155
+            ],
+            "rmse_ci95": [
+              113.622,
+              120.074
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              58.01,
+              58.15
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 11.685,
+          "rmse": 14.8685,
+          "wape_pct": 6.67,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.8,
+          "interval_mean_width": 11.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 8.05,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              10.238,
+              10.696
+            ],
+            "rmse_ci95": [
+              13.484,
+              14.108
+            ],
+            "coverage_ci95": [
+              41.49,
+              43.63
+            ],
+            "wape_ci95": [
+              6.3,
+              6.44
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 62.4286,
+          "rmse": 82.557,
+          "wape_pct": 35.65,
+          "wape_explanation": null,
+          "interval_coverage_pct": 1.9,
+          "interval_mean_width": 9.981,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -391.27,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              50.616,
+              58.817
+            ],
+            "rmse_ci95": [
+              70.841,
+              79.558
+            ],
+            "coverage_ci95": [
+              0.43,
+              3.15
+            ],
+            "wape_ci95": [
+              31.67,
+              34.81
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 18.3695,
+          "rmse": 21.4005,
+          "wape_pct": 10.49,
+          "wape_explanation": null,
+          "interval_coverage_pct": 6.89,
+          "interval_mean_width": 10.884,
+          "fallback_activation_rate_pct": 45.11,
+          "rel_improvement_vs_persistence_pct": -44.55,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              17.09,
+              20.315
+            ],
+            "rmse_ci95": [
+              19.824,
+              22.909
+            ],
+            "coverage_ci95": [
+              4.4,
+              7.23
+            ],
+            "wape_ci95": [
+              10.68,
+              12.03
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 56.42,
+          "rmse": 76.4865,
+          "wape_pct": 32.22,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.2,
+          "interval_mean_width": 27.112,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              47.525,
+              50.297
+            ],
+            "rmse_ci95": [
+              69.076,
+              72.968
+            ],
+            "coverage_ci95": [
+              44.73,
+              45.66
+            ],
+            "wape_ci95": [
+              29.21,
+              29.35
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 109.4831,
+          "rmse": 126.5997,
+          "wape_pct": 62.52,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 31.504,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -94.05,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              96.16,
+              101.755
+            ],
+            "rmse_ci95": [
+              116.044,
+              122.635
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              59.15,
+              59.31
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 61.2987,
+          "rmse": 73.1443,
+          "wape_pct": 35.01,
+          "wape_explanation": null,
+          "interval_coverage_pct": 7.61,
+          "interval_mean_width": 19.08,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -8.65,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              55.883,
+              58.772
+            ],
+            "rmse_ci95": [
+              67.575,
+              70.927
+            ],
+            "coverage_ci95": [
+              8.11,
+              9.52
+            ],
+            "wape_ci95": [
+              34.18,
+              34.46
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 83.7779,
+          "rmse": 106.1879,
+          "wape_pct": 47.84,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.33,
+          "interval_mean_width": 18.127,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -48.49,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              72.202,
+              81.268
+            ],
+            "rmse_ci95": [
+              94.838,
+              104.056
+            ],
+            "coverage_ci95": [
+              0.06,
+              0.56
+            ],
+            "wape_ci95": [
+              44.44,
+              47.33
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 66.8964,
+          "rmse": 81.5735,
+          "wape_pct": 38.2,
+          "wape_explanation": null,
+          "interval_coverage_pct": 1.97,
+          "interval_mean_width": 18.557,
+          "fallback_activation_rate_pct": 45.11,
+          "rel_improvement_vs_persistence_pct": -18.57,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              59.166,
+              65.127
+            ],
+            "rmse_ci95": [
+              74.013,
+              79.445
+            ],
+            "coverage_ci95": [
+              1.52,
+              1.92
+            ],
+            "wape_ci95": [
+              36.41,
+              37.91
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 106.4156,
+          "rmse": 124.2175,
+          "wape_pct": 64.63,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              103.587,
+              109.65
+            ],
+            "rmse_ci95": [
+              120.975,
+              127.888
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.54,
+              64.72
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 106.4156,
+          "rmse": 124.2175,
+          "wape_pct": 64.63,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 30.622,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              103.587,
+              109.65
+            ],
+            "rmse_ci95": [
+              120.975,
+              127.888
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.54,
+              64.72
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 78.7807,
+          "rmse": 102.735,
+          "wape_pct": 47.84,
+          "wape_explanation": null,
+          "interval_coverage_pct": 18.62,
+          "interval_mean_width": 23.234,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 25.97,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              76.747,
+              81.197
+            ],
+            "rmse_ci95": [
+              100.075,
+              105.811
+            ],
+            "coverage_ci95": [
+              18.1,
+              19.15
+            ],
+            "wape_ci95": [
+              47.74,
+              47.95
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 84.8475,
+          "rmse": 109.9337,
+          "wape_pct": 51.53,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.07,
+          "interval_mean_width": 23.516,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 20.27,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              80.631,
+              89.729
+            ],
+            "rmse_ci95": [
+              105.579,
+              114.875
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.2
+            ],
+            "wape_ci95": [
+              50.27,
+              52.92
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 90.2876,
+          "rmse": 116.0027,
+          "wape_pct": 54.83,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.1,
+          "interval_mean_width": 23.389,
+          "fallback_activation_rate_pct": 45.11,
+          "rel_improvement_vs_persistence_pct": 15.16,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              86.818,
+              94.333
+            ],
+            "rmse_ci95": [
+              111.743,
+              120.806
+            ],
+            "coverage_ci95": [
+              13.57,
+              14.59
+            ],
+            "wape_ci95": [
+              54.07,
+              55.66
+            ]
+          }
+        }
+      }
+    },
+    "crew": {
+      "1": {
+        "persistence": {
+          "mae": 7.2048,
+          "rmse": 10.0693,
+          "wape_pct": 7.41,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.46,
+          "interval_mean_width": 7.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.029,
+              6.339
+            ],
+            "rmse_ci95": [
+              8.901,
+              9.369
+            ],
+            "coverage_ci95": [
+              59.06,
+              60.96
+            ],
+            "wape_ci95": [
+              6.73,
+              6.83
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 54.263,
+          "rmse": 65.1494,
+          "wape_pct": 55.78,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -653.15,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              51.66,
+              54.605
+            ],
+            "rmse_ci95": [
+              63.196,
+              66.763
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              58.1,
+              58.34
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 7.0994,
+          "rmse": 8.9609,
+          "wape_pct": 7.3,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.02,
+          "interval_mean_width": 7.31,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 1.46,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              6.235,
+              6.497
+            ],
+            "rmse_ci95": [
+              8.125,
+              8.456
+            ],
+            "coverage_ci95": [
+              40.21,
+              42.86
+            ],
+            "wape_ci95": [
+              6.89,
+              7.05
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 35.01,
+          "rmse": 45.8142,
+          "wape_pct": 35.99,
+          "wape_explanation": null,
+          "interval_coverage_pct": 1.84,
+          "interval_mean_width": 5.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -385.93,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              28.576,
+              33.207
+            ],
+            "rmse_ci95": [
+              39.365,
+              44.242
+            ],
+            "coverage_ci95": [
+              0.37,
+              3.23
+            ],
+            "wape_ci95": [
+              32.2,
+              35.38
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 11.2427,
+          "rmse": 12.8884,
+          "wape_pct": 11.56,
+          "wape_explanation": null,
+          "interval_coverage_pct": 6.16,
+          "interval_mean_width": 6.509,
+          "fallback_activation_rate_pct": 44.52,
+          "rel_improvement_vs_persistence_pct": -56.04,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              10.535,
+              12.382
+            ],
+            "rmse_ci95": [
+              11.988,
+              13.76
+            ],
+            "coverage_ci95": [
+              3.86,
+              6.64
+            ],
+            "wape_ci95": [
+              11.87,
+              13.19
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 31.4606,
+          "rmse": 42.5246,
+          "wape_pct": 32.34,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.93,
+          "interval_mean_width": 15.522,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              26.575,
+              28.032
+            ],
+            "rmse_ci95": [
+              38.427,
+              40.554
+            ],
+            "coverage_ci95": [
+              44.59,
+              45.3
+            ],
+            "wape_ci95": [
+              29.35,
+              29.49
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 60.9659,
+          "rmse": 70.4217,
+          "wape_pct": 62.67,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 17.91,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.78,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              53.564,
+              56.617
+            ],
+            "rmse_ci95": [
+              64.55,
+              68.181
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              59.26,
+              59.48
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 34.424,
+          "rmse": 40.9597,
+          "wape_pct": 35.39,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.2,
+          "interval_mean_width": 10.831,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -9.42,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              31.366,
+              33.017
+            ],
+            "rmse_ci95": [
+              37.879,
+              39.734
+            ],
+            "coverage_ci95": [
+              8.56,
+              10.34
+            ],
+            "wape_ci95": [
+              34.52,
+              34.85
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 46.3037,
+          "rmse": 59.0889,
+          "wape_pct": 47.6,
+          "wape_explanation": null,
+          "interval_coverage_pct": 1.57,
+          "interval_mean_width": 11.043,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -47.18,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              39.863,
+              44.912
+            ],
+            "rmse_ci95": [
+              52.802,
+              57.842
+            ],
+            "coverage_ci95": [
+              0.34,
+              2.82
+            ],
+            "wape_ci95": [
+              44.21,
+              47.05
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 36.8871,
+          "rmse": 45.162,
+          "wape_pct": 37.92,
+          "wape_explanation": null,
+          "interval_coverage_pct": 3.02,
+          "interval_mean_width": 10.948,
+          "fallback_activation_rate_pct": 44.52,
+          "rel_improvement_vs_persistence_pct": -17.25,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              32.625,
+              35.908
+            ],
+            "rmse_ci95": [
+              41.03,
+              43.942
+            ],
+            "coverage_ci95": [
+              1.92,
+              3.61
+            ],
+            "wape_ci95": [
+              36.09,
+              37.62
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 59.219,
+          "rmse": 69.1169,
+          "wape_pct": 64.75,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              57.657,
+              60.97
+            ],
+            "rmse_ci95": [
+              67.328,
+              71.125
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.62,
+              64.9
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 59.219,
+          "rmse": 69.1169,
+          "wape_pct": 64.75,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 18.662,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              57.657,
+              60.97
+            ],
+            "rmse_ci95": [
+              67.328,
+              71.125
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.62,
+              64.9
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 43.1314,
+          "rmse": 56.4584,
+          "wape_pct": 47.16,
+          "wape_explanation": null,
+          "interval_coverage_pct": 17.9,
+          "interval_mean_width": 13.221,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 27.17,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              41.986,
+              44.419
+            ],
+            "rmse_ci95": [
+              55.025,
+              58.086
+            ],
+            "coverage_ci95": [
+              17.18,
+              18.56
+            ],
+            "wape_ci95": [
+              47.02,
+              47.31
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 46.7344,
+          "rmse": 60.8368,
+          "wape_pct": 51.1,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.07,
+          "interval_mean_width": 13.392,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 21.08,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              44.347,
+              49.503
+            ],
+            "rmse_ci95": [
+              58.436,
+              63.534
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.2
+            ],
+            "wape_ci95": [
+              49.78,
+              52.54
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 49.6865,
+          "rmse": 63.8713,
+          "wape_pct": 54.33,
+          "wape_explanation": null,
+          "interval_coverage_pct": 13.31,
+          "interval_mean_width": 13.316,
+          "fallback_activation_rate_pct": 44.52,
+          "rel_improvement_vs_persistence_pct": 16.1,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              47.732,
+              51.926
+            ],
+            "rmse_ci95": [
+              61.535,
+              66.507
+            ],
+            "coverage_ci95": [
+              12.79,
+              13.84
+            ],
+            "wape_ci95": [
+              53.54,
+              55.21
+            ]
+          }
+        }
+      }
+    },
+    "baggage": {
+      "1": {
+        "persistence": {
+          "mae": 9.9988,
+          "rmse": 14.0661,
+          "wape_pct": 7.34,
+          "wape_explanation": null,
+          "interval_coverage_pct": 51.67,
+          "interval_mean_width": 10.06,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              8.297,
+              8.705
+            ],
+            "rmse_ci95": [
+              12.41,
+              13.105
+            ],
+            "coverage_ci95": [
+              58.9,
+              60.8
+            ],
+            "wape_ci95": [
+              6.59,
+              6.73
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 76.0066,
+          "rmse": 91.254,
+          "wape_pct": 55.79,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -660.16,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              72.299,
+              76.51
+            ],
+            "rmse_ci95": [
+              88.476,
+              93.491
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              58.09,
+              58.27
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 9.2626,
+          "rmse": 11.7215,
+          "wape_pct": 6.8,
+          "wape_explanation": null,
+          "interval_coverage_pct": 34.89,
+          "interval_mean_width": 9.533,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 7.36,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              8.161,
+              8.529
+            ],
+            "rmse_ci95": [
+              10.664,
+              11.162
+            ],
+            "coverage_ci95": [
+              40.21,
+              42.77
+            ],
+            "wape_ci95": [
+              6.46,
+              6.6
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 47.9045,
+          "rmse": 64.6667,
+          "wape_pct": 35.16,
+          "wape_explanation": null,
+          "interval_coverage_pct": 4.26,
+          "interval_mean_width": 7.948,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -379.1,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              38.476,
+              44.83
+            ],
+            "rmse_ci95": [
+              55.506,
+              62.117
+            ],
+            "coverage_ci95": [
+              1.2,
+              8.14
+            ],
+            "wape_ci95": [
+              30.95,
+              34.1
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 13.2666,
+          "rmse": 15.6673,
+          "wape_pct": 9.74,
+          "wape_explanation": null,
+          "interval_coverage_pct": 10.16,
+          "interval_mean_width": 8.655,
+          "fallback_activation_rate_pct": 44.59,
+          "rel_improvement_vs_persistence_pct": -32.68,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              12.059,
+              14.616
+            ],
+            "rmse_ci95": [
+              14.305,
+              16.606
+            ],
+            "coverage_ci95": [
+              5.65,
+              13.42
+            ],
+            "wape_ci95": [
+              9.68,
+              11.1
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 44.0216,
+          "rmse": 59.5792,
+          "wape_pct": 32.31,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.26,
+          "interval_mean_width": 20.61,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              37.087,
+              39.217
+            ],
+            "rmse_ci95": [
+              53.79,
+              56.851
+            ],
+            "coverage_ci95": [
+              44.85,
+              45.63
+            ],
+            "wape_ci95": [
+              29.29,
+              29.41
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 85.2976,
+          "rmse": 98.6254,
+          "wape_pct": 62.6,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 24.808,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.76,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              74.873,
+              79.258
+            ],
+            "rmse_ci95": [
+              90.375,
+              95.491
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              59.17,
+              59.38
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 48.0368,
+          "rmse": 57.2053,
+          "wape_pct": 35.25,
+          "wape_explanation": null,
+          "interval_coverage_pct": 7.54,
+          "interval_mean_width": 14.282,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -9.12,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              44.022,
+              46.43
+            ],
+            "rmse_ci95": [
+              52.967,
+              55.684
+            ],
+            "coverage_ci95": [
+              7.61,
+              9.3
+            ],
+            "wape_ci95": [
+              34.67,
+              34.9
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 65.3371,
+          "rmse": 83.0331,
+          "wape_pct": 47.95,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.46,
+          "interval_mean_width": 13.287,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -48.42,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              56.358,
+              63.191
+            ],
+            "rmse_ci95": [
+              74.219,
+              81.213
+            ],
+            "coverage_ci95": [
+              0.0,
+              1.01
+            ],
+            "wape_ci95": [
+              44.59,
+              47.28
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 51.9056,
+          "rmse": 63.4974,
+          "wape_pct": 38.09,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.36,
+          "interval_mean_width": 13.731,
+          "fallback_activation_rate_pct": 44.59,
+          "rel_improvement_vs_persistence_pct": -17.91,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              45.893,
+              50.397
+            ],
+            "rmse_ci95": [
+              57.667,
+              61.672
+            ],
+            "coverage_ci95": [
+              1.83,
+              2.37
+            ],
+            "wape_ci95": [
+              36.27,
+              37.7
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 82.8519,
+          "rmse": 96.7227,
+          "wape_pct": 64.67,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              80.692,
+              85.38
+            ],
+            "rmse_ci95": [
+              94.223,
+              99.534
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.58,
+              64.78
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 82.8519,
+          "rmse": 96.7227,
+          "wape_pct": 64.67,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 25.712,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              80.692,
+              85.38
+            ],
+            "rmse_ci95": [
+              94.223,
+              99.534
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              64.58,
+              64.78
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 61.0879,
+          "rmse": 79.77,
+          "wape_pct": 47.68,
+          "wape_explanation": null,
+          "interval_coverage_pct": 17.38,
+          "interval_mean_width": 17.482,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.27,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              59.538,
+              62.925
+            ],
+            "rmse_ci95": [
+              77.721,
+              82.102
+            ],
+            "coverage_ci95": [
+              16.75,
+              17.97
+            ],
+            "wape_ci95": [
+              47.58,
+              47.78
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 65.7087,
+          "rmse": 85.1489,
+          "wape_pct": 51.29,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.2,
+          "interval_mean_width": 16.782,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 20.69,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              62.338,
+              69.507
+            ],
+            "rmse_ci95": [
+              81.686,
+              88.976
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.56
+            ],
+            "wape_ci95": [
+              49.99,
+              52.69
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 69.6883,
+          "rmse": 89.496,
+          "wape_pct": 54.4,
+          "wape_explanation": null,
+          "interval_coverage_pct": 12.98,
+          "interval_mean_width": 17.094,
+          "fallback_activation_rate_pct": 44.59,
+          "rel_improvement_vs_persistence_pct": 15.89,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              66.898,
+              72.896
+            ],
+            "rmse_ci95": [
+              86.172,
+              93.22
+            ],
+            "coverage_ci95": [
+              12.46,
+              13.57
+            ],
+            "wape_ci95": [
+              53.58,
+              55.23
+            ]
+          }
+        }
+      }
+    },
+    "boundary-gateway": {
+      "1": {
+        "persistence": {
+          "mae": 25.1763,
+          "rmse": 35.4972,
+          "wape_pct": 7.19,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.52,
+          "interval_mean_width": 25.866,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              20.897,
+              21.824
+            ],
+            "rmse_ci95": [
+              31.293,
+              32.994
+            ],
+            "coverage_ci95": [
+              59.76,
+              61.39
+            ],
+            "wape_ci95": [
+              6.43,
+              6.55
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 192.0127,
+          "rmse": 230.5949,
+          "wape_pct": 54.81,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -662.67,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              182.614,
+              193.237
+            ],
+            "rmse_ci95": [
+              223.552,
+              236.397
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              56.98,
+              57.18
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 21.9738,
+          "rmse": 27.8538,
+          "wape_pct": 6.27,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.34,
+          "interval_mean_width": 23.938,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 12.72,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              19.48,
+              20.336
+            ],
+            "rmse_ci95": [
+              25.468,
+              26.621
+            ],
+            "coverage_ci95": [
+              40.59,
+              43.04
+            ],
+            "wape_ci95": [
+              5.99,
+              6.11
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 121.9991,
+          "rmse": 162.5647,
+          "wape_pct": 34.82,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.82,
+          "interval_mean_width": 20.601,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -384.58,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              98.612,
+              114.441
+            ],
+            "rmse_ci95": [
+              139.575,
+              156.297
+            ],
+            "coverage_ci95": [
+              0.69,
+              5.47
+            ],
+            "wape_ci95": [
+              30.8,
+              33.81
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 33.2307,
+          "rmse": 39.3142,
+          "wape_pct": 9.49,
+          "wape_explanation": null,
+          "interval_coverage_pct": 10.95,
+          "interval_mean_width": 22.117,
+          "fallback_activation_rate_pct": 45.44,
+          "rel_improvement_vs_persistence_pct": -31.99,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              31.015,
+              36.917
+            ],
+            "rmse_ci95": [
+              36.519,
+              42.129
+            ],
+            "coverage_ci95": [
+              7.17,
+              12.05
+            ],
+            "wape_ci95": [
+              9.68,
+              10.9
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 111.1769,
+          "rmse": 150.5093,
+          "wape_pct": 31.73,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.07,
+          "interval_mean_width": 53.862,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              93.748,
+              99.04
+            ],
+            "rmse_ci95": [
+              135.957,
+              143.576
+            ],
+            "coverage_ci95": [
+              44.56,
+              45.58
+            ],
+            "wape_ci95": [
+              28.73,
+              28.88
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 215.5658,
+          "rmse": 249.2089,
+          "wape_pct": 61.53,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.102,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.89,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              189.31,
+              200.279
+            ],
+            "rmse_ci95": [
+              228.33,
+              241.45
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              58.11,
+              58.31
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 118.5393,
+          "rmse": 141.7481,
+          "wape_pct": 33.83,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.33,
+          "interval_mean_width": 37.792,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -6.62,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              108.348,
+              114.046
+            ],
+            "rmse_ci95": [
+              131.08,
+              137.77
+            ],
+            "coverage_ci95": [
+              8.73,
+              10.08
+            ],
+            "wape_ci95": [
+              33.15,
+              33.33
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 164.2491,
+          "rmse": 208.1535,
+          "wape_pct": 46.88,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.39,
+          "interval_mean_width": 35.454,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -47.74,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              141.457,
+              159.34
+            ],
+            "rmse_ci95": [
+              185.926,
+              203.828
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.85
+            ],
+            "wape_ci95": [
+              43.47,
+              46.36
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 129.4335,
+          "rmse": 158.0068,
+          "wape_pct": 36.94,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.23,
+          "interval_mean_width": 36.517,
+          "fallback_activation_rate_pct": 45.44,
+          "rel_improvement_vs_persistence_pct": -16.42,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              114.327,
+              126.026
+            ],
+            "rmse_ci95": [
+              143.272,
+              153.981
+            ],
+            "coverage_ci95": [
+              1.69,
+              2.31
+            ],
+            "wape_ci95": [
+              35.14,
+              36.69
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 209.3788,
+          "rmse": 244.4536,
+          "wape_pct": 63.48,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              203.835,
+              215.715
+            ],
+            "rmse_ci95": [
+              238.02,
+              251.749
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.38,
+              63.6
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 209.3788,
+          "rmse": 244.4536,
+          "wape_pct": 63.48,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 64.324,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              203.835,
+              215.715
+            ],
+            "rmse_ci95": [
+              238.02,
+              251.749
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.38,
+              63.6
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 153.7846,
+          "rmse": 202.0185,
+          "wape_pct": 46.63,
+          "wape_explanation": null,
+          "interval_coverage_pct": 18.82,
+          "interval_mean_width": 42.998,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.55,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              149.753,
+              158.378
+            ],
+            "rmse_ci95": [
+              196.711,
+              207.96
+            ],
+            "coverage_ci95": [
+              18.46,
+              19.21
+            ],
+            "wape_ci95": [
+              46.53,
+              46.73
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 166.5465,
+          "rmse": 215.919,
+          "wape_pct": 50.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.0,
+          "interval_mean_width": 43.017,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 20.46,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              158.168,
+              176.211
+            ],
+            "rmse_ci95": [
+              207.234,
+              225.7
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.0
+            ],
+            "wape_ci95": [
+              49.2,
+              51.91
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 175.7164,
+          "rmse": 227.0511,
+          "wape_pct": 53.28,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.56,
+          "interval_mean_width": 43.009,
+          "fallback_activation_rate_pct": 45.44,
+          "rel_improvement_vs_persistence_pct": 16.08,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              168.819,
+              183.729
+            ],
+            "rmse_ci95": [
+              218.604,
+              236.593
+            ],
+            "coverage_ci95": [
+              14.23,
+              14.89
+            ],
+            "wape_ci95": [
+              52.51,
+              54.16
+            ]
+          }
+        }
+      }
+    },
+    "legacy-core": {
+      "1": {
+        "persistence": {
+          "mae": 24.8054,
+          "rmse": 34.8188,
+          "wape_pct": 7.22,
+          "wape_explanation": null,
+          "interval_coverage_pct": 52.52,
+          "interval_mean_width": 26.012,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              20.599,
+              21.533
+            ],
+            "rmse_ci95": [
+              30.709,
+              32.364
+            ],
+            "coverage_ci95": [
+              60.05,
+              61.6
+            ],
+            "wape_ci95": [
+              6.47,
+              6.6
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 188.2499,
+          "rmse": 226.0234,
+          "wape_pct": 54.83,
+          "wape_explanation": null,
+          "interval_coverage_pct": 19.67,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -658.91,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              179.024,
+              189.476
+            ],
+            "rmse_ci95": [
+              219.169,
+              231.755
+            ],
+            "coverage_ci95": [
+              22.67,
+              22.67
+            ],
+            "wape_ci95": [
+              57.01,
+              57.22
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 21.6104,
+          "rmse": 27.253,
+          "wape_pct": 6.29,
+          "wape_explanation": null,
+          "interval_coverage_pct": 35.74,
+          "interval_mean_width": 24.411,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 12.88,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              19.186,
+              20.026
+            ],
+            "rmse_ci95": [
+              24.959,
+              26.076
+            ],
+            "coverage_ci95": [
+              41.04,
+              43.63
+            ],
+            "wape_ci95": [
+              6.01,
+              6.14
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 119.2716,
+          "rmse": 159.1493,
+          "wape_pct": 34.74,
+          "wape_explanation": null,
+          "interval_coverage_pct": 4.0,
+          "interval_mean_width": 20.905,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -380.83,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              96.426,
+              112.252
+            ],
+            "rmse_ci95": [
+              136.672,
+              153.239
+            ],
+            "coverage_ci95": [
+              1.01,
+              7.36
+            ],
+            "wape_ci95": [
+              30.73,
+              33.87
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 32.5329,
+          "rmse": 38.9575,
+          "wape_pct": 9.48,
+          "wape_explanation": null,
+          "interval_coverage_pct": 12.98,
+          "interval_mean_width": 22.493,
+          "fallback_activation_rate_pct": 45.31,
+          "rel_improvement_vs_persistence_pct": -31.15,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              30.411,
+              36.588
+            ],
+            "rmse_ci95": [
+              36.165,
+              41.913
+            ],
+            "coverage_ci95": [
+              8.32,
+              14.48
+            ],
+            "wape_ci95": [
+              9.68,
+              11.04
+            ]
+          }
+        }
+      },
+      "5": {
+        "persistence": {
+          "mae": 109.0621,
+          "rmse": 147.505,
+          "wape_pct": 31.76,
+          "wape_explanation": null,
+          "interval_coverage_pct": 36.0,
+          "interval_mean_width": 52.482,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              91.969,
+              97.218
+            ],
+            "rmse_ci95": [
+              133.242,
+              140.718
+            ],
+            "coverage_ci95": [
+              44.56,
+              45.52
+            ],
+            "wape_ci95": [
+              28.75,
+              28.91
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 211.3366,
+          "rmse": 244.2955,
+          "wape_pct": 61.55,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.142,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -93.78,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              185.58,
+              196.325
+            ],
+            "rmse_ci95": [
+              223.858,
+              236.701
+            ],
+            "coverage_ci95": [
+              21.13,
+              21.13
+            ],
+            "wape_ci95": [
+              58.12,
+              58.33
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 116.1761,
+          "rmse": 138.8781,
+          "wape_pct": 33.83,
+          "wape_explanation": null,
+          "interval_coverage_pct": 8.52,
+          "interval_mean_width": 36.402,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -6.52,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              106.328,
+              111.961
+            ],
+            "rmse_ci95": [
+              128.551,
+              135.102
+            ],
+            "coverage_ci95": [
+              9.01,
+              10.48
+            ],
+            "wape_ci95": [
+              33.19,
+              33.38
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 162.8192,
+          "rmse": 207.0036,
+          "wape_pct": 47.42,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.52,
+          "interval_mean_width": 35.663,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": -49.29,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              140.316,
+              157.724
+            ],
+            "rmse_ci95": [
+              185.033,
+              202.588
+            ],
+            "coverage_ci95": [
+              0.0,
+              1.13
+            ],
+            "wape_ci95": [
+              43.98,
+              46.83
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 127.489,
+          "rmse": 155.8826,
+          "wape_pct": 37.13,
+          "wape_explanation": null,
+          "interval_coverage_pct": 2.49,
+          "interval_mean_width": 35.998,
+          "fallback_activation_rate_pct": 45.31,
+          "rel_improvement_vs_persistence_pct": -16.9,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              112.768,
+              124.018
+            ],
+            "rmse_ci95": [
+              141.495,
+              151.774
+            ],
+            "coverage_ci95": [
+              1.83,
+              2.54
+            ],
+            "wape_ci95": [
+              35.37,
+              36.83
+            ]
+          }
+        }
+      },
+      "15": {
+        "persistence": {
+          "mae": 205.2611,
+          "rmse": 239.6187,
+          "wape_pct": 63.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              199.826,
+              211.469
+            ],
+            "rmse_ci95": [
+              233.35,
+              246.782
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.4,
+              63.62
+            ]
+          }
+        },
+        "seasonal_naive": {
+          "mae": 205.2611,
+          "rmse": 239.6187,
+          "wape_pct": 63.5,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.75,
+          "interval_mean_width": 62.926,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 0.0,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              199.826,
+              211.469
+            ],
+            "rmse_ci95": [
+              233.35,
+              246.782
+            ],
+            "coverage_ci95": [
+              14.75,
+              14.75
+            ],
+            "wape_ci95": [
+              63.4,
+              63.62
+            ]
+          }
+        },
+        "autoregressive_ridge": {
+          "mae": 150.4761,
+          "rmse": 198.0302,
+          "wape_pct": 46.55,
+          "wape_explanation": null,
+          "interval_coverage_pct": 18.82,
+          "interval_mean_width": 42.064,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 26.69,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              146.568,
+              155.016
+            ],
+            "rmse_ci95": [
+              192.883,
+              203.929
+            ],
+            "coverage_ci95": [
+              18.49,
+              19.15
+            ],
+            "wape_ci95": [
+              46.46,
+              46.66
+            ]
+          }
+        },
+        "gradient_boosting": {
+          "mae": 163.9035,
+          "rmse": 212.3675,
+          "wape_pct": 50.71,
+          "wape_explanation": null,
+          "interval_coverage_pct": 0.07,
+          "interval_mean_width": 47.766,
+          "fallback_activation_rate_pct": 0.0,
+          "rel_improvement_vs_persistence_pct": 20.15,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              155.7,
+              173.394
+            ],
+            "rmse_ci95": [
+              203.891,
+              221.878
+            ],
+            "coverage_ci95": [
+              0.0,
+              0.2
+            ],
+            "wape_ci95": [
+              49.42,
+              52.13
+            ]
+          }
+        },
+        "auto_fallback": {
+          "mae": 172.3937,
+          "rmse": 223.0067,
+          "wape_pct": 53.34,
+          "wape_explanation": null,
+          "interval_coverage_pct": 14.62,
+          "interval_mean_width": 45.183,
+          "fallback_activation_rate_pct": 45.31,
+          "rel_improvement_vs_persistence_pct": 16.01,
+          "bootstrap_ci95": {
+            "mae_ci95": [
+              165.646,
+              180.269
+            ],
+            "rmse_ci95": [
+              214.817,
+              232.33
+            ],
+            "coverage_ci95": [
+              14.23,
+              15.02
+            ],
+            "wape_ci95": [
+              52.56,
+              54.21
+            ]
+          }
+        }
+      }
+    }
+  }
+}

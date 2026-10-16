@@ -1,0 +1,106 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-8.4.2, pluggy-1.6.0 -- /Users/raghavnaidu/Cloud Airlines Service Health/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/raghavnaidu/Cloud Airlines Service Health/repo
+plugins: anyio-4.12.1
+collecting ... collected 69 items
+
+ai-models/tests/test_degradation_prediction.py::test_contract_and_horizons PASSED [  1%]
+ai-models/tests/test_degradation_prediction.py::test_causal_queue_conservation_and_drops PASSED [  2%]
+ai-models/tests/test_degradation_prediction.py::test_target_alignment_endpoint_vs_window PASSED [  4%]
+ai-models/tests/test_degradation_prediction.py::test_anti_leakage_and_future_data_isolation PASSED [  5%]
+ai-models/tests/test_degradation_prediction.py::test_whole_incident_partition_disjointness PASSED [  7%]
+ai-models/tests/test_degradation_prediction.py::test_unknown_legacy_capacity_preserved_as_none PASSED [  8%]
+ai-models/tests/test_degradation_prediction.py::test_boundary_sync_drift_exact_repository_formula PASSED [ 10%]
+ai-models/tests/test_degradation_prediction.py::test_inference_and_missing_telemetry_resilience PASSED [ 11%]
+ai-models/tests/test_degradation_prediction.py::test_forecast_ablation_toggling PASSED [ 13%]
+ai-models/tests/test_degradation_prediction.py::test_ai_models_package_bridge PASSED [ 14%]
+ai-models/tests/test_degradation_prediction.py::test_non_finite_inputs_sanitized PASSED [ 15%]
+ai-models/tests/test_degradation_prediction.py::test_strict_early_warning_lead_time_accounting PASSED [ 17%]
+ai-models/tests/test_degradation_prediction.py::test_causal_queue_rollout_physical_cases PASSED [ 18%]
+ai-models/tests/test_degradation_prediction.py::test_missing_telemetry_imputation_reliability_flag PASSED [ 20%]
+ai-models/tests/test_degradation_prediction.py::test_system_wide_prediction_interface PASSED [ 21%]
+ai-models/tests/test_degradation_prediction.py::test_feature_provenance_catalog_completeness PASSED [ 23%]
+ai-models/tests/test_degradation_prediction.py::test_episode_origin_eligibility_consistency PASSED [ 24%]
+ai-models/tests/test_degradation_prediction.py::test_causal_rollout_queue_mass_balance_and_units PASSED [ 26%]
+ai-models/tests/test_degradation_prediction.py::test_synthetic_provenance_propagation PASSED [ 27%]
+ai-models/tests/test_degradation_prediction.py::test_stale_and_missing_boundary_telemetry PASSED [ 28%]
+ai-models/tests/test_degradation_prediction.py::test_calibration_and_threshold_ordering PASSED [ 30%]
+ai-models/tests/test_degradation_prediction.py::test_training_inference_feature_parity PASSED [ 31%]
+ai-models/tests/test_degradation_prediction.py::test_sustained_breach_three_consecutive_rule PASSED [ 33%]
+ai-models/tests/test_degradation_prediction.py::test_censoring_and_conditional_time_to_onset PASSED [ 34%]
+ai-models/tests/test_degradation_prediction.py::test_versioned_feature_name_lookup_and_schema_assertions PASSED [ 36%]
+ai-models/tests/test_degradation_prediction.py::test_upstream_forecaster_trajectory_isolation PASSED [ 37%]
+ai-models/tests/test_degradation_prediction.py::test_alert_exposure_and_deduplication_cooldown PASSED [ 39%]
+ai-models/tests/test_degradation_prediction.py::test_temporal_gru_comparator_shape_and_inference PASSED [ 40%]
+ai-models/tests/test_degradation_prediction.py::test_priority_weighting_formula PASSED [ 42%]
+ai-models/tests/test_degradation_prediction.py::test_lead_time_40s_impossibility_at_h1 PASSED [ 43%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_model_a_forecaster_invariance PASSED [ 44%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_trailing_unresolved_breaches_observability_mask PASSED [ 46%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_origin_only_current_state_determination PASSED [ 47%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_recovery_rule_and_episode_eligibility PASSED [ 49%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_unequal_stream_lengths_and_timestamp_alignment PASSED [ 50%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_missing_boundary_imputed_via_repo_formula PASSED [ 52%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_calibrator_variant_and_service_subset_restrictions PASSED [ 53%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_boundary_gateway_drift_only_type_and_severity PASSED [ 55%]
+ai-models/tests/test_degradation_prediction.py::test_task2d_computed_comparison_tables_no_hardcoded_counts PASSED [ 56%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_workload_forecaster_adapter_deterministic_reproduction PASSED [ 57%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_workload_adapter_five_prediction_states_and_no_silent_fallback PASSED [ 59%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_causal_alignment_future_only_stream_rejection PASSED [ 60%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_causal_alignment_staleness_limit_and_carried_forward PASSED [ 62%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_causal_alignment_duplicate_timestamps_and_sampling_gaps PASSED [ 63%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_causal_alignment_rolling_buffer_nonzero_physical_timestamps PASSED [ 65%]
+ai-models/tests/test_degradation_prediction.py::test_task2e_equal_length_arrays_not_equated_with_timestamp_alignment PASSED [ 66%]
+ai-models/tests/test_degradation_prediction.py::test_task4a_baseline_inputs_sensitivity_and_validation PASSED [ 68%]
+ai-models/tests/test_degradation_prediction.py::test_task4a_reconciled_metrics_and_cache_consistency PASSED [ 69%]
+ai-models/tests/test_degradation_explanations.py::test_prerequisite_1_timestamp_consistency_regular_grid PASSED [ 71%]
+ai-models/tests/test_degradation_explanations.py::test_prerequisite_1_unsupported_gap_abstention PASSED [ 72%]
+ai-models/tests/test_degradation_explanations.py::test_prerequisite_2_uncertainty_fallback_uncalibrated PASSED [ 73%]
+ai-models/tests/test_degradation_explanations.py::test_prerequisite_3_artifact_availability_assertion PASSED [ 75%]
+ai-models/tests/test_degradation_explanations.py::test_prerequisite_4_packaging_manifest_exclusion PASSED [ 76%]
+ai-models/tests/test_degradation_explanations.py::test_explain_prediction_tree_shap_interface PASSED [ 78%]
+ai-models/tests/test_degradation_explanations.py::test_integrated_gradients_model_c PASSED [ 79%]
+ai-models/tests/test_degradation_explanations.py::test_raw_margin_never_added_directly_to_calibrated_probability PASSED [ 81%]
+ai-models/tests/test_degradation_explanations.py::test_graph_localization_and_generation_labels PASSED [ 82%]
+ai-models/tests/test_degradation_explanations.py::test_deterministic_incident_brief_formatting PASSED [ 84%]
+ai-models/tests/test_degradation_explanations.py::test_regression_active_alert_displays_20s_conditional_estimate PASSED [ 85%]
+ai-models/tests/test_degradation_explanations.py::test_regression_brief_replaces_flawed_inferences_with_4_states PASSED [ 86%]
+ai-models/tests/test_degradation_explanations.py::test_regression_exact_treeshap_machine_precision_across_models_and_horizons PASSED [ 88%]
+ai-models/tests/test_degradation_explanations.py::test_regression_faithfulness_source_group_mapping_and_signed_deltas PASSED [ 89%]
+ai-models/tests/test_degradation_explanations.py::test_regression_localization_independent_query_and_tie_detection PASSED [ 91%]
+ai-models/tests/test_degradation_explanations.py::test_regression_checksums_separate_file_avoids_circular_hashing PASSED [ 92%]
+ai-models/tests/test_degradation_explanations.py::test_regression_task3b_counterfactual_boundary_dependency_rules PASSED [ 94%]
+ai-models/tests/test_degradation_explanations.py::test_regression_task3b_timestamp_alignment_non_matching_indices PASSED [ 95%]
+ai-models/tests/test_degradation_explanations.py::test_regression_task3b_signed_driver_ranking_prevents_protective_features_as_drivers PASSED [ 97%]
+ai-models/tests/test_degradation_explanations.py::test_regression_task3b_localization_full_precision_and_unrounded_decisions PASSED [ 98%]
+ai-models/tests/test_degradation_explanations.py::test_regression_task4_future_telemetry_invariance_unmatched_timestamps PASSED [100%]
+
+=============================== warnings summary ===============================
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:64
+  /Users/raghavnaidu/Cloud Airlines Service Health/.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:64: PyparsingDeprecationWarning: 'oneOf' deprecated - use 'one_of'
+    prop = Group((name + Suppress("=") + comma_separated(value)) | oneOf(_CONSTANTS))
+
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85
+  /Users/raghavnaidu/Cloud Airlines Service Health/.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:85: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'
+    parse = parser.parseString(pattern)
+
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89
+../.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89
+  /Users/raghavnaidu/Cloud Airlines Service Health/.venv/lib/python3.9/site-packages/matplotlib/_fontconfig_pattern.py:89: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'
+    parser.resetCache()
+
+../.venv/lib/python3.9/site-packages/matplotlib/_mathtext.py:45
+  /Users/raghavnaidu/Cloud Airlines Service Health/.venv/lib/python3.9/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'
+    ParserElement.enablePackrat()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 69 passed, 14 warnings in 10.81s =======================

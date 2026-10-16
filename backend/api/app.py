@@ -12,12 +12,13 @@ import argparse
 import datetime
 import json
 import logging
+import math
 from pathlib import Path
 import sys
 import time
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 # Ensure root directory is on sys.path
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,6 +36,8 @@ from backend.cloud.sagemaker import (
 )
 from backend.cloud.sns import SNSPublisher
 from backend.cloud.xray import XRayTraceRecorder
+from backend.ml.inference_service import MLInferenceService
+from backend.ml.metrics import BACCPMLMetrics
 
 logging.basicConfig(
     level=logging.INFO,
@@ -48,6 +51,8 @@ xray = XRayTraceRecorder()
 sagemaker = SageMakerCascadePredictor()
 lambda_client = LambdaMitigationClient()
 sns = SNSPublisher()
+ml_service = MLInferenceService.get_instance()
+ml_metrics = BACCPMLMetrics.get_instance()
 
 # Simulated state for interactive demo & chaos telemetry
 simulated_state = {
@@ -159,6 +164,38 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
         self.end_headers()
 
+    def _parse_replay_params(self, query_params: Dict[str, List[str]]) -> Tuple[Optional[int], Optional[float], Optional[str], Optional[Dict[str, Any]]]:
+        r_step_str = query_params.get("replay_step", [None])[0]
+        r_time_str = query_params.get("replay_time_sec", [None])[0]
+        inc_id = query_params.get("incident_id", [None])[0]
+
+        r_step = None
+        r_time = None
+
+        if r_step_str is not None:
+            try:
+                r_step = int(r_step_str)
+                if r_step < 0:
+                    raise ValueError()
+            except (ValueError, TypeError):
+                return None, None, None, {
+                    "error": "INVALID_REPLAY_PARAMETER",
+                    "message": f"Query parameter 'replay_step' must be a non-negative integer, got '{r_step_str}'.",
+                }
+
+        if r_time_str is not None:
+            try:
+                r_time = float(r_time_str)
+                if math.isnan(r_time) or math.isinf(r_time) or r_time < 0.0:
+                    raise ValueError()
+            except (ValueError, TypeError):
+                return None, None, None, {
+                    "error": "INVALID_REPLAY_PARAMETER",
+                    "message": f"Query parameter 'replay_time_sec' must be a non-negative finite number, got '{r_time_str}'.",
+                }
+
+        return r_step, r_time, inc_id, None
+
     def do_OPTIONS(self):
         self._set_cors_headers(204)
 
@@ -250,6 +287,108 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
                 self._set_cors_headers(200)
                 self.wfile.write(json.dumps(cloud_status, indent=2).encode("utf-8"))
 
+            elif path in ("/forecast/workload", "/api/forecast/workload"):
+                query_params = parse_qs(parsed.query)
+                service = query_params.get("service", [""])[0]
+                horizon_str = query_params.get("horizon", [""])[0]
+
+                if not service:
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps({"error": "INVALID_SERVICE", "message": "Query parameter 'service' is required."}).encode("utf-8"))
+                    return
+
+                try:
+                    horizon = int(horizon_str)
+                except (ValueError, TypeError):
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps({"error": "INVALID_HORIZON", "message": f"Query parameter 'horizon' must be an integer, got '{horizon_str}'."}).encode("utf-8"))
+                    return
+
+                r_step, r_time, inc_id, r_err = self._parse_replay_params(query_params)
+                if r_err:
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps(r_err, indent=2).encode("utf-8"))
+                    return
+
+                status_code, body = ml_service.handle_workload_forecast(
+                    service=service,
+                    horizon=horizon,
+                    replay_step=r_step,
+                    replay_time_sec=r_time,
+                    incident_id=inc_id,
+                )
+                self._set_cors_headers(status_code)
+                self.wfile.write(json.dumps(body, indent=2).encode("utf-8"))
+
+            elif path in ("/predict/degradation", "/api/predict/degradation"):
+                query_params = parse_qs(parsed.query)
+                service = query_params.get("service", [""])[0]
+                horizon_str = query_params.get("horizon", [""])[0]
+
+                if not service:
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps({"error": "INVALID_SERVICE", "message": "Query parameter 'service' is required."}).encode("utf-8"))
+                    return
+
+                try:
+                    horizon = int(horizon_str)
+                except (ValueError, TypeError):
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps({"error": "INVALID_HORIZON", "message": f"Query parameter 'horizon' must be an integer, got '{horizon_str}'."}).encode("utf-8"))
+                    return
+
+                m_variant = query_params.get("model_variant", ["model_b_telemetry_forecast"])[0]
+                r_step, r_time, inc_id, r_err = self._parse_replay_params(query_params)
+                if r_err:
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps(r_err, indent=2).encode("utf-8"))
+                    return
+
+                status_code, body = ml_service.handle_degradation_prediction(
+                    service=service,
+                    horizon=horizon,
+                    replay_step=r_step,
+                    replay_time_sec=r_time,
+                    incident_id=inc_id,
+                    model_variant=m_variant,
+                )
+                self._set_cors_headers(status_code)
+                self.wfile.write(json.dumps(body, indent=2).encode("utf-8"))
+
+            elif path.startswith("/explain/") or path.startswith("/api/explain/"):
+                service = path.split("/")[-1]
+                if not service:
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps({"error": "INVALID_SERVICE", "message": "Service name required in URL path /explain/{service}."}).encode("utf-8"))
+                    return
+
+                query_params = parse_qs(parsed.query)
+                horizon_str = query_params.get("horizon", ["1"])[0]
+                try:
+                    horizon = int(horizon_str)
+                except (ValueError, TypeError):
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps({"error": "INVALID_HORIZON", "message": f"Query parameter 'horizon' must be an integer, got '{horizon_str}'."}).encode("utf-8"))
+                    return
+
+                m_variant = query_params.get("model_variant", ["model_b_telemetry_forecast"])[0]
+                r_step, r_time, inc_id, r_err = self._parse_replay_params(query_params)
+                if r_err:
+                    self._set_cors_headers(400)
+                    self.wfile.write(json.dumps(r_err, indent=2).encode("utf-8"))
+                    return
+
+                status_code, body = ml_service.handle_explanation(
+                    service=service,
+                    horizon=horizon,
+                    replay_step=r_step,
+                    replay_time_sec=r_time,
+                    incident_id=inc_id,
+                    model_variant=m_variant,
+                )
+                self._set_cors_headers(status_code)
+                self.wfile.write(json.dumps(body, indent=2).encode("utf-8"))
+
             elif path == "/metrics":
                 health = compute_boundary_health()
                 drift = health.get("sync_drift_score", 12.4)
@@ -274,6 +413,8 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
                     "# TYPE baccp_telemetry_requests_total counter",
                     "baccp_telemetry_requests_total 42",
                 ]
+                # Append ML metrics from registry (no model inference during Prometheus scraping)
+                prom_lines.extend(ml_metrics.format_prometheus_lines())
                 prom_body = "\n".join(prom_lines) + "\n"
                 self.send_response(200)
                 self.send_header("Content-Type", "text/plain; version=0.0.4; charset=utf-8")
@@ -441,7 +582,7 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
 
 def run_server(host: str = "0.0.0.0", port: int = 8000):
     server_address = (host, port)
-    httpd = HTTPServer(server_address, BACCPRequestHandler)
+    httpd = ThreadingHTTPServer(server_address, BACCPRequestHandler)
     print(f"BACCP API Server running on http://{host}:{port} (Cloud mode: {config.aws.cloud_mode})")
     try:
         httpd.serve_forever()

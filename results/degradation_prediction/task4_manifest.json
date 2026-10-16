@@ -1,0 +1,162 @@
+{
+  "manifest_version": "baccp-task4-manifest-v1.0.0",
+  "description": "Task 4 Final Evaluation, Comparisons, Robustness, and Limitations Review Bundle (manifest strictly excluded from files list)",
+  "file_count": 32,
+  "files": {
+    "ai-models/degradation_prediction/data_contract.py": {
+      "size_bytes": 25715,
+      "sha256": "dc88fa114636967a5b6a7916c7f9536ddfa9f7d90467cbec3d7eef4123a72774"
+    },
+    "ai-models/degradation_prediction/features.py": {
+      "size_bytes": 25973,
+      "sha256": "896893c725db3cd03f1eb14adb5768f60a50cb6236b74b0d257f7f86224e26de"
+    },
+    "ai-models/degradation_prediction/models.py": {
+      "size_bytes": 25324,
+      "sha256": "9dda4e336afc7f77aec308624e3951390a9efbd8a5441ed39ad8faf76f5caa72"
+    },
+    "ai-models/degradation_prediction/inference.py": {
+      "size_bytes": 47537,
+      "sha256": "2b0fd49714971834c2b75d845547ee41e7e3713250721e2975382119bb4c4a10"
+    },
+    "ai-models/degradation_prediction/explanation.py": {
+      "size_bytes": 71417,
+      "sha256": "66763a6879abee4402555c901f4e707b9421ced3909a3ca470c2808b0e525c38"
+    },
+    "ai-models/degradation_prediction/evaluate_explanations.py": {
+      "size_bytes": 51276,
+      "sha256": "e3ff60837209999742ff4f29a3e511d96f36d8b9d7ab683144d53e0c75307701"
+    },
+    "ai-models/degradation_prediction/evaluate_task4.py": {
+      "size_bytes": 73319,
+      "sha256": "7efadd9e7d7db2a8d4362659aeae5e2ca5df8de925281a1b44a765d4b323ad5d"
+    },
+    "ai-models/degradation_prediction/train.py": {
+      "size_bytes": 21716,
+      "sha256": "21979bdbb5bd00dcd504fe15b6c41fdcef00410449932204a1af4a21ca936bc9"
+    },
+    "ai-models/degradation_prediction/package_task4_bundle.py": {
+      "size_bytes": 10091,
+      "sha256": "3349674720fd1e3f7da60cab9dc3a3345932a156fa6173f5e0aff9eafca98a2f"
+    },
+    "ai-models/degradation_prediction/__init__.py": {
+      "size_bytes": 1511,
+      "sha256": "90a9797c8dd259357438627daf3a76ce5c5d46052f7fbffeb1e34f163bd6167a"
+    },
+    "ai-models/workload_forecasting/__init__.py": {
+      "size_bytes": 1669,
+      "sha256": "2749d7e1f35dd64fe45c1b2479d4d2d04d0bdc94c27463dbf39b63010010e895"
+    },
+    "ai-models/workload_forecasting/data_contract.py": {
+      "size_bytes": 6626,
+      "sha256": "376f27aef4a37ca42253568c900808f68f16571a206707999c47c47522d1d2e8"
+    },
+    "ai-models/workload_forecasting/features.py": {
+      "size_bytes": 7434,
+      "sha256": "c10cd8ea7c7379081bcc483e27fc6e1696feb5df973a3836745e19ffd809e93a"
+    },
+    "ai-models/workload_forecasting/models.py": {
+      "size_bytes": 8294,
+      "sha256": "dde8e067b3ea0f61197f4d99e75f7347ef31d477398bf1f60826b0e92b0a78ed"
+    },
+    "ai-models/workload_forecasting/inference.py": {
+      "size_bytes": 12037,
+      "sha256": "9e35123af644b77faa168ce88ba46a752aa119a115f932b05bb75d218fd605ca"
+    },
+    "ai-models/tests/test_degradation_prediction.py": {
+      "size_bytes": 73755,
+      "sha256": "9f567fd8586a03bb85ddccecef6b0299042e2990527a8e6f3b42abd847c1504a"
+    },
+    "ai-models/tests/test_degradation_explanations.py": {
+      "size_bytes": 43826,
+      "sha256": "c4076ba174387f12b0ea407ff86111676d6f7d6d91949d1cbbfdd24d0e37cb98"
+    },
+    "results/degradation_prediction/evaluation_protocol.md": {
+      "size_bytes": 3688,
+      "sha256": "993b444b1f9dd6eb47a966f3289eb7c7475f2170fe704891c7b4056b5777d213"
+    },
+    "results/degradation_prediction/model_card.md": {
+      "size_bytes": 1507,
+      "sha256": "7ed8a7edbd16cfe30e538ed219245f82ba82fe423bd5e2619d00bea21e71c2bc"
+    },
+    "results/degradation_prediction/limitations.md": {
+      "size_bytes": 2003,
+      "sha256": "f4865d69e93cc81d6f15643e61f343aa9a386410d687a9376c9d2309e6808a77"
+    },
+    "results/degradation_prediction/task4_evaluation_metrics.json": {
+      "size_bytes": 403301,
+      "sha256": "c9b52db33b2706a108d7dd48c3ec79b14ad9d5158a2c6bbfe0be7825fabc66a6"
+    },
+    "results/degradation_prediction/cached_predictions.json": {
+      "size_bytes": 4751133,
+      "sha256": "2883f1227f3170f35c4bf3e775e2bc5d0a7582b838f8007bcd9f16599167762f"
+    },
+    "results/degradation_prediction/explanation_metrics.json": {
+      "size_bytes": 52438,
+      "sha256": "89eea71defc2f07811e6abdb5aff1651d0f1ea58fa7440488bbb4ba673ecb480"
+    },
+    "results/degradation_prediction/representative_incident_briefs.md": {
+      "size_bytes": 14907,
+      "sha256": "01e3011f773d4a00a159171d25ca608b4344986ad58ddd22fe9a74d600af0fef"
+    },
+    "results/degradation_prediction/reconciled_evaluation_tables.md": {
+      "size_bytes": 12237,
+      "sha256": "e7557c8c252f5683ad58acdc7e7eb87ebd92cff7be5cfb2bd7af3838b0c6f495"
+    },
+    "results/degradation_prediction/plots/pr_curve_comparison.png": {
+      "size_bytes": 131061,
+      "sha256": "9c019fef5a72fbd72480ab2f06e5ff7910c47627ba955dd47d82746446cfcd5a"
+    },
+    "results/degradation_prediction/plots/reliability_diagram.png": {
+      "size_bytes": 176458,
+      "sha256": "e718939955f6ae2652ab3a8d59f8bc4629cd37ec5cbaac47e7b51648fb3d527b"
+    },
+    "results/degradation_prediction/plots/lead_time_distribution.png": {
+      "size_bytes": 122611,
+      "sha256": "11da006208b0cf5839dff2acd32bab56d1eab699503e5681e2e5ad7c8f881a60"
+    },
+    "results/degradation_prediction/plots/ablation_comparison.png": {
+      "size_bytes": 97323,
+      "sha256": "22615c89ffeb8c6dc95093d7ad86111dce74ce93c386d89fe69c1b596b94ea0b"
+    },
+    "results/degradation_prediction/plots/attribution_summary.png": {
+      "size_bytes": 82154,
+      "sha256": "7dd5757fe450bb8e64fec91758b1684a6841147046413d381e6d09e171f41932"
+    },
+    "results/degradation_prediction/task4_diff.patch": {
+      "size_bytes": 281,
+      "sha256": "ae46b6b3d55ca35ea5bbab371140aac79eb30bbebfebe94c31dfeef5b51cca89"
+    },
+    "results/degradation_prediction/targeted_test_output.txt": {
+      "size_bytes": 10491,
+      "sha256": "83483b8ebc58a48221a8f1f821f2bc5cfa543015101219e702e5076653320971"
+    }
+  },
+  "reused_model_bundles_by_hash": {
+    "degradation_models_bundle.pkl": {
+      "path": "ai-models/weights/degradation_prediction/degradation_models_bundle.pkl",
+      "sha256": "3587d73ef55a06cb618b4277ab2ea030c2ad3c4b9b8dc0aabeb8c858776da885",
+      "status": "strictly_frozen_reused_by_hash"
+    },
+    "workload_models_bundle.pkl": {
+      "path": "ai-models/weights/workload_forecasting/workload_models_bundle.pkl",
+      "sha256": "20c632c399997c7644f6e493e8a51d176ad3b3dc54272ed9df75b319624fa9f5",
+      "status": "strictly_frozen_reused_by_hash"
+    },
+    "degradation_dataset.json": {
+      "path": "ai-models/data/degradation_prediction/degradation_dataset.json",
+      "sha256": "b19ef70240364d34120fee019c6aa23c292643f8a5dff622ca1d4ba537f7768d",
+      "status": "evaluated_dataset_provenance"
+    }
+  },
+  "archive": {
+    "name": "baccp_task4_review_bundle.zip",
+    "sha256": "35b6d7f833967275186f605a650e19a8b426e5d01c0123c0ee8590060f4d2494"
+  },
+  "reproducibility": {
+    "evaluation_command": "PYTHONPATH=ai-models python ai-models/degradation_prediction/evaluate_task4.py",
+    "test_command": "PYTHONPATH=ai-models pytest ai-models/tests/test_degradation_prediction.py ai-models/tests/test_degradation_explanations.py",
+    "python_environment": "Python 3.9+, numpy>=1.24.0, scipy>=1.11.0, scikit-learn>=1.3.0, shap>=0.42.0, matplotlib>=3.7.0, pytest>=7.4.0",
+    "hardware_constraints": "Max 2 CPU threads (OMP_NUM_THREADS=2, torch.set_num_threads(2))"
+  }
+}
