@@ -1,0 +1,105 @@
+{
+  "dataset_version": "baccp-trace-v2.0",
+  "train_source": "WN:202212",
+  "test_source": "DL:202407",
+  "visibility": {
+    "0.5min": {
+      "cascades": 500,
+      "precursor_visible": 321,
+      "share": 0.642
+    },
+    "1min": {
+      "cascades": 500,
+      "precursor_visible": 293,
+      "share": 0.586
+    },
+    "2min": {
+      "cascades": 500,
+      "precursor_visible": 269,
+      "share": 0.538
+    },
+    "5min": {
+      "cascades": 500,
+      "precursor_visible": 222,
+      "share": 0.444
+    }
+  },
+  "split_protocol_2min": {
+    "random_split_within_WN:202212 (LEAKS)": {
+      "n_train": 250,
+      "n_test": 250,
+      "logistic_auc": 0.821,
+      "gbm_auc": 0.957
+    },
+    "day_split_within_WN:202212": {
+      "n_train": 245,
+      "n_test": 255,
+      "logistic_auc": 0.656,
+      "gbm_auc": 0.672
+    },
+    "event_split_WN:202212_to_DL:202407": {
+      "n_train": 500,
+      "n_test": 500,
+      "logistic_auc": 0.584,
+      "gbm_auc": 0.613
+    }
+  },
+  "horizon": {
+    "0.5min": {
+      "event_split": {
+        "n_train": 500,
+        "n_test": 500,
+        "logistic_auc": 0.716,
+        "gbm_auc": 0.715
+      },
+      "day_split_both_airlines": {
+        "n_train": 468,
+        "n_test": 532,
+        "logistic_auc": 0.691,
+        "gbm_auc": 0.665
+      }
+    },
+    "1min": {
+      "event_split": {
+        "n_train": 500,
+        "n_test": 500,
+        "logistic_auc": 0.629,
+        "gbm_auc": 0.656
+      },
+      "day_split_both_airlines": {
+        "n_train": 468,
+        "n_test": 532,
+        "logistic_auc": 0.62,
+        "gbm_auc": 0.613
+      }
+    },
+    "2min": {
+      "event_split": {
+        "n_train": 500,
+        "n_test": 500,
+        "logistic_auc": 0.584,
+        "gbm_auc": 0.613
+      },
+      "day_split_both_airlines": {
+        "n_train": 468,
+        "n_test": 532,
+        "logistic_auc": 0.595,
+        "gbm_auc": 0.633
+      }
+    },
+    "5min": {
+      "event_split": {
+        "n_train": 500,
+        "n_test": 500,
+        "logistic_auc": 0.575,
+        "gbm_auc": 0.64
+      },
+      "day_split_both_airlines": {
+        "n_train": 468,
+        "n_test": 532,
+        "logistic_auc": 0.591,
+        "gbm_auc": 0.662
+      }
+    }
+  }
+}

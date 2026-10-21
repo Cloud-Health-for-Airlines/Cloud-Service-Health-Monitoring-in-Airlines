@@ -42,7 +42,7 @@ class CircuitBreakerInferenceEngine:
         if getattr(self, "_initialized", False):
             return
 
-        self.agent = PPOAgent(state_dim=5, hidden_dim=64)
+        self.agent = PPOAgent(state_dim=6, hidden_dim=64)
         self.is_loaded = False
 
         if WEIGHTS_PATH.exists():

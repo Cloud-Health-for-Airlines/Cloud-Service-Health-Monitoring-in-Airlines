@@ -23,10 +23,14 @@ import logging
 from pathlib import Path
 import random
 import sys
-from typing import Any, Dict, List, Tuple
-import matplotlib
-matplotlib.use("Agg")  # Non-interactive backend
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use("Agg")  # Non-interactive backend
+    import matplotlib.pyplot as plt
+    HAS_MPL = True
+except ImportError:
+    HAS_MPL = False
+    plt = None
 import numpy as np
 import torch
 
@@ -172,6 +176,9 @@ def generate_plots(
 ) -> List[str]:
     """Generate publication-ready figures using matplotlib."""
     plot_dir.mkdir(parents=True, exist_ok=True)
+    if not HAS_MPL:
+        logger.warning("matplotlib not available; retaining existing plots in results/plots/")
+        return [p.name for p in plot_dir.glob("*.png")]
     generated_files = []
 
     # Palette

@@ -1,0 +1,1568 @@
+{
+  "dataset": "RCAEval RE1-TT (Train-Ticket, metrics only)",
+  "source": "https://zenodo.org/records/14590730 (concept record 14504481), arXiv 2412.17015, CC-BY 4.0",
+  "n_cases": 125,
+  "n_samples": 250,
+  "cascade_definition": "fault propagates beyond the root-cause service: at least one other service's p90 latency median over the 5 min after injection is >= 2x its pre-injection median and >= 8 robust z-scores (MAD) above it; services averaging < 0.5 req/s are ignored",
+  "label_noise_check": {
+    "window_s": 150.0,
+    "cases": 125,
+    "fault_windows_flagged": 69,
+    "fault_free_windows_flagged": 1
+  },
+  "sample_definition": "per case: 5 snapshots over the 5 min before injection (label 0) and 5 over the 5 min after (label = cascade); each snapshot is the mean of a 1-min bucket",
+  "cascade_rate_by_fault_type": {
+    "cpu": {
+      "cases": 25,
+      "cascades": 9
+    },
+    "mem": {
+      "cases": 25,
+      "cascades": 23
+    },
+    "disk": {
+      "cases": 25,
+      "cascades": 2
+    },
+    "delay": {
+      "cases": 25,
+      "cascades": 20
+    },
+    "loss": {
+      "cases": 25,
+      "cascades": 17
+    }
+  },
+  "node_mapping": {
+    "reservations": [
+      "ts-admin-order-service",
+      "ts-admin-travel-service",
+      "ts-basic-service",
+      "ts-cancel-service",
+      "ts-contacts-service",
+      "ts-execute-service",
+      "ts-inside-payment-service",
+      "ts-notification-service",
+      "ts-order-other-service",
+      "ts-order-service",
+      "ts-payment-service",
+      "ts-preserve-other-service",
+      "ts-preserve-service",
+      "ts-price-service",
+      "ts-rebook-service",
+      "ts-seat-service",
+      "ts-ticket-office-service",
+      "ts-ticketinfo-service",
+      "ts-travel-service",
+      "ts-travel2-service",
+      "ts-voucher-service"
+    ],
+    "crew": [
+      "ts-admin-basic-info-service",
+      "ts-admin-route-service",
+      "ts-config-service",
+      "ts-route-plan-service",
+      "ts-route-service",
+      "ts-station-service",
+      "ts-train-service",
+      "ts-travel-plan-service"
+    ],
+    "baggage": [
+      "ts-assurance-service",
+      "ts-consign-price-service",
+      "ts-consign-service",
+      "ts-food-map-service",
+      "ts-food-service"
+    ],
+    "boundary-gateway": [
+      "ts-ui-dashboard"
+    ],
+    "legacy-core": [
+      "ts-admin-user-service",
+      "ts-assurance-mongo",
+      "ts-auth-mongo",
+      "ts-auth-service",
+      "ts-config-mongo",
+      "ts-consign-mongo",
+      "ts-consign-price-mongo",
+      "ts-contacts-mongo",
+      "ts-food-map-mongo",
+      "ts-food-mongo",
+      "ts-inside-payment-mongo",
+      "ts-order-mongo",
+      "ts-order-other-mongo",
+      "ts-payment-mongo",
+      "ts-price-mongo",
+      "ts-route-mongo",
+      "ts-security-mongo",
+      "ts-security-service",
+      "ts-station-mongo",
+      "ts-ticket-office-mongo",
+      "ts-train-mongo",
+      "ts-travel-mongo",
+      "ts-travel2-mongo",
+      "ts-user-mongo",
+      "ts-user-service",
+      "ts-verification-code-service",
+      "ts-voucher-mysql"
+    ]
+  },
+  "unmapped_services": [
+    "ts-avatar-service",
+    "ts-news-service"
+  ],
+  "results": {
+    "zero_shot": {
+      "baccp_hetero_rgcn trace_full (zero-shot)": {
+        "all_windows": {
+          "n": 250,
+          "positives": 71,
+          "precision": 1.0,
+          "recall": 0.2817,
+          "f1": 0.4396,
+          "roc_auc": 0.8223,
+          "pr_auc": 0.6883
+        },
+        "post_injection_only": {
+          "n": 125,
+          "positives": 71,
+          "precision": 1.0,
+          "recall": 0.2817,
+          "f1": 0.4396,
+          "roc_auc": 0.7042,
+          "pr_auc": 0.7778
+        }
+      },
+      "baccp_hetero_rgcn trace_early (zero-shot)": {
+        "all_windows": {
+          "n": 250,
+          "positives": 71,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "roc_auc": 0.1998,
+          "pr_auc": 0.3144
+        },
+        "post_injection_only": {
+          "n": 125,
+          "positives": 71,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "roc_auc": 0.2047,
+          "pr_auc": 0.5174
+        }
+      }
+    },
+    "drift_rule_eps_ge_45": {
+      "all_windows": {
+        "n": 250,
+        "positives": 71,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": 0.5,
+        "pr_auc": 0.284
+      },
+      "post_injection_only": {
+        "n": 125,
+        "positives": 71,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": 0.5,
+        "pr_auc": 0.568
+      }
+    },
+    "drift_score_max (ranking)": {
+      "all_windows": {
+        "n": 250,
+        "positives": 71,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": 0.6033,
+        "pr_auc": 0.4334
+      },
+      "post_injection_only": {
+        "n": 125,
+        "positives": 71,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "roc_auc": 0.5978,
+        "pr_auc": 0.6574
+      }
+    },
+    "trained_on_rcaeval (leave-one-root-service-out CV)": {
+      "baccp_hetero_rgcn": {
+        "all_windows": {
+          "n": 250,
+          "positives": 71,
+          "precision": 0.7206,
+          "recall": 0.6901,
+          "f1": 0.705,
+          "roc_auc": 0.8433,
+          "pr_auc": 0.7854
+        },
+        "post_injection_only": {
+          "n": 125,
+          "positives": 71,
+          "precision": 0.8448,
+          "recall": 0.6901,
+          "f1": 0.7597,
+          "roc_auc": 0.8336,
+          "pr_auc": 0.888
+        }
+      },
+      "logistic_regression_flat": {
+        "all_windows": {
+          "n": 250,
+          "positives": 71,
+          "precision": 0.6842,
+          "recall": 0.7324,
+          "f1": 0.7075,
+          "roc_auc": 0.8596,
+          "pr_auc": 0.8026
+        },
+        "post_injection_only": {
+          "n": 125,
+          "positives": 71,
+          "precision": 0.6933,
+          "recall": 0.7324,
+          "f1": 0.7123,
+          "roc_auc": 0.7517,
+          "pr_auc": 0.837
+        }
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "ts-auth-service_cpu/1",
+      "fault_type": "cpu",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_cpu/2",
+      "fault_type": "cpu",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_cpu/3",
+      "fault_type": "cpu",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_cpu/4",
+      "fault_type": "cpu",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_cpu/5",
+      "fault_type": "cpu",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_delay/1",
+      "fault_type": "delay",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_delay/2",
+      "fault_type": "delay",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_delay/3",
+      "fault_type": "delay",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_delay/4",
+      "fault_type": "delay",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_delay/5",
+      "fault_type": "delay",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_disk/1",
+      "fault_type": "disk",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_disk/2",
+      "fault_type": "disk",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_disk/3",
+      "fault_type": "disk",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_disk/4",
+      "fault_type": "disk",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_disk/5",
+      "fault_type": "disk",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_loss/1",
+      "fault_type": "loss",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_loss/2",
+      "fault_type": "loss",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_loss/3",
+      "fault_type": "loss",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_loss/4",
+      "fault_type": "loss",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-auth-service_loss/5",
+      "fault_type": "loss",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_mem/1",
+      "fault_type": "mem",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_mem/2",
+      "fault_type": "mem",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_mem/3",
+      "fault_type": "mem",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_mem/4",
+      "fault_type": "mem",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-auth-service_mem/5",
+      "fault_type": "mem",
+      "root_service": "ts-auth-service",
+      "root_node": "legacy-core",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_cpu/1",
+      "fault_type": "cpu",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_cpu/2",
+      "fault_type": "cpu",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_cpu/3",
+      "fault_type": "cpu",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_cpu/4",
+      "fault_type": "cpu",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_cpu/5",
+      "fault_type": "cpu",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_delay/1",
+      "fault_type": "delay",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_delay/2",
+      "fault_type": "delay",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_delay/3",
+      "fault_type": "delay",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_delay/4",
+      "fault_type": "delay",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_delay/5",
+      "fault_type": "delay",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_disk/1",
+      "fault_type": "disk",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_disk/2",
+      "fault_type": "disk",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_disk/3",
+      "fault_type": "disk",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_disk/4",
+      "fault_type": "disk",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_disk/5",
+      "fault_type": "disk",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_loss/1",
+      "fault_type": "loss",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_loss/2",
+      "fault_type": "loss",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_loss/3",
+      "fault_type": "loss",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_loss/4",
+      "fault_type": "loss",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_loss/5",
+      "fault_type": "loss",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_mem/1",
+      "fault_type": "mem",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_mem/2",
+      "fault_type": "mem",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_mem/3",
+      "fault_type": "mem",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-order-service_mem/4",
+      "fault_type": "mem",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service",
+        "ts-travel-service"
+      ]
+    },
+    {
+      "case_id": "ts-order-service_mem/5",
+      "fault_type": "mem",
+      "root_service": "ts-order-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel2-service"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_cpu/1",
+      "fault_type": "cpu",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_cpu/2",
+      "fault_type": "cpu",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-travel-service"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_cpu/3",
+      "fault_type": "cpu",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_cpu/4",
+      "fault_type": "cpu",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_cpu/5",
+      "fault_type": "cpu",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_delay/1",
+      "fault_type": "delay",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-basic-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_delay/2",
+      "fault_type": "delay",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-basic-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_delay/3",
+      "fault_type": "delay",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-basic-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_delay/4",
+      "fault_type": "delay",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_delay/5",
+      "fault_type": "delay",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_disk/1",
+      "fault_type": "disk",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_disk/2",
+      "fault_type": "disk",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_disk/3",
+      "fault_type": "disk",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_disk/4",
+      "fault_type": "disk",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-route-service_disk/5",
+      "fault_type": "disk",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_loss/1",
+      "fault_type": "loss",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_loss/2",
+      "fault_type": "loss",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_loss/3",
+      "fault_type": "loss",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_loss/4",
+      "fault_type": "loss",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_loss/5",
+      "fault_type": "loss",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_mem/1",
+      "fault_type": "mem",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-order-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_mem/2",
+      "fault_type": "mem",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_mem/3",
+      "fault_type": "mem",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_mem/4",
+      "fault_type": "mem",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-route-service_mem/5",
+      "fault_type": "mem",
+      "root_service": "ts-route-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_cpu/1",
+      "fault_type": "cpu",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_cpu/2",
+      "fault_type": "cpu",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_cpu/3",
+      "fault_type": "cpu",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_cpu/4",
+      "fault_type": "cpu",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_cpu/5",
+      "fault_type": "cpu",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-travel2-service"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_delay/1",
+      "fault_type": "delay",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-basic-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_delay/2",
+      "fault_type": "delay",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-basic-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_delay/3",
+      "fault_type": "delay",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-basic-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_delay/4",
+      "fault_type": "delay",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_delay/5",
+      "fault_type": "delay",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_disk/1",
+      "fault_type": "disk",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_disk/2",
+      "fault_type": "disk",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_disk/3",
+      "fault_type": "disk",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_disk/4",
+      "fault_type": "disk",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_disk/5",
+      "fault_type": "disk",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-train-service_loss/1",
+      "fault_type": "loss",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_loss/2",
+      "fault_type": "loss",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_loss/3",
+      "fault_type": "loss",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_loss/4",
+      "fault_type": "loss",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_loss/5",
+      "fault_type": "loss",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_mem/1",
+      "fault_type": "mem",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_mem/2",
+      "fault_type": "mem",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_mem/3",
+      "fault_type": "mem",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-seat-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_mem/4",
+      "fault_type": "mem",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-train-service_mem/5",
+      "fault_type": "mem",
+      "root_service": "ts-train-service",
+      "root_node": "crew",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-travel-service",
+        "ts-travel2-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_cpu/1",
+      "fault_type": "cpu",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_cpu/2",
+      "fault_type": "cpu",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service",
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_cpu/3",
+      "fault_type": "cpu",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service",
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_cpu/4",
+      "fault_type": "cpu",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_cpu/5",
+      "fault_type": "cpu",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-food-service"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_delay/1",
+      "fault_type": "delay",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-order-service",
+        "ts-route-service",
+        "ts-seat-service",
+        "ts-ticketinfo-service",
+        "ts-train-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_delay/2",
+      "fault_type": "delay",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_delay/3",
+      "fault_type": "delay",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-route-service",
+        "ts-ticketinfo-service",
+        "ts-train-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_delay/4",
+      "fault_type": "delay",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-route-service",
+        "ts-ticketinfo-service",
+        "ts-train-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_delay/5",
+      "fault_type": "delay",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-route-service",
+        "ts-ticketinfo-service",
+        "ts-train-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_disk/1",
+      "fault_type": "disk",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_disk/2",
+      "fault_type": "disk",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_disk/3",
+      "fault_type": "disk",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_disk/4",
+      "fault_type": "disk",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_disk/5",
+      "fault_type": "disk",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_loss/1",
+      "fault_type": "loss",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-seat-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_loss/2",
+      "fault_type": "loss",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 0,
+      "affected_services": []
+    },
+    {
+      "case_id": "ts-travel-service_loss/3",
+      "fault_type": "loss",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_loss/4",
+      "fault_type": "loss",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_loss/5",
+      "fault_type": "loss",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_mem/1",
+      "fault_type": "mem",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-seat-service"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_mem/2",
+      "fault_type": "mem",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_mem/3",
+      "fault_type": "mem",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_mem/4",
+      "fault_type": "mem",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-ui-dashboard"
+      ]
+    },
+    {
+      "case_id": "ts-travel-service_mem/5",
+      "fault_type": "mem",
+      "root_service": "ts-travel-service",
+      "root_node": "reservations",
+      "cascade": 1,
+      "affected_services": [
+        "ts-admin-travel-service",
+        "ts-food-service",
+        "ts-seat-service"
+      ]
+    }
+  ]
+}

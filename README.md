@@ -186,6 +186,9 @@ All master technical reports, implementation guides, and architectural designs a
 | Document | Purpose |
 |---|---|
 | 📖 [**LOCAL_RUN_GUIDE.md**](./LOCAL_RUN_GUIDE.md) | Comprehensive step-by-step guide for local setup, testing, and troubleshooting |
+| 🧭 [**REVIEW_RESPONSE_GAP_AND_DATA.md**](./documentation/REVIEW_RESPONSE_GAP_AND_DATA.md) | Research gap, how it led to BACCP, real-data results, glossary (Review 1 response) |
+| 🗂️ [**REAL_DATASETS.md**](./documentation/REAL_DATASETS.md) | Survey of real public datasets (BTS, DB1B, Azure, Alibaba, Google Borg, GCP incidents, RCAEval) |
+| ✈️ [**ai-models/real_data/**](./ai-models/real_data/README.md) | Pipeline that builds the trace-driven dataset from real airline + cloud data |
 | 📋 [**phase1-comprehensive-report.md**](./documentation/phase1-comprehensive-report.md) | 35+ page master academic technical report with formal proofs and literature review |
 | 🧠 [**ai-models/README.md**](./ai-models/README.md) | AI/ML layer production specifications, PyTorch architectures, and training workflows |
 | 📊 [**ai-models-evaluation.md**](./results/ai-models-evaluation.md) | Empirical benchmark evaluation results, comparative baseline tables, and loss curves |

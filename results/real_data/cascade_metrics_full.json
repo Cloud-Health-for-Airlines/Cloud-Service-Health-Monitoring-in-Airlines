@@ -1,0 +1,42 @@
+{
+  "dataset_version": "baccp-trace-v2.0",
+  "observation_mode": "full",
+  "horizon_min": null,
+  "split_strategy": "event",
+  "train_sources": [
+    "WN:202212"
+  ],
+  "test_sources": [
+    "DL:202407"
+  ],
+  "n": {
+    "train": 400,
+    "val": 100,
+    "test": 500
+  },
+  "test_positive_rate": 0.5,
+  "models": {
+    "baccp_hetero_rgcn (cascade_predictor)": {
+      "precision": 0.963,
+      "recall": 0.728,
+      "f1": 0.8292,
+      "roc_auc": 0.8699,
+      "pr_auc": 0.9198,
+      "lead_time_mae_s": 410.13
+    },
+    "drift_rule_eps_ge_45": {
+      "precision": 1.0,
+      "recall": 0.672,
+      "f1": 0.8038,
+      "roc_auc": 0.8554,
+      "pr_auc": 0.836
+    },
+    "logistic_regression_flat": {
+      "precision": 0.9502,
+      "recall": 0.764,
+      "f1": 0.847,
+      "roc_auc": 0.9115,
+      "pr_auc": 0.9348
+    }
+  }
+}

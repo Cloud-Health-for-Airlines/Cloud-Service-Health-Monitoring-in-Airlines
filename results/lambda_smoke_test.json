@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-22T17:45:00.154952+00:00",
+  "timestamp": "2026-09-23T08:12:02.577821+00:00",
   "overall_status": "LOCAL_VERIFIED (LIVE AWS PENDING CREDENTIALS)",
   "local_status": "LOCAL_VERIFIED",
   "live_aws_status": "PENDING_CREDENTIALS",
@@ -19,7 +19,7 @@
     "2_high_risk_state": {
       "status": "PASS",
       "action": "THROTTLED",
-      "throttle_rate": 0.3537,
+      "throttle_rate": 0.28,
       "engine_mode": "trained-ppo"
     },
     "3_critical_cascade": {
@@ -32,13 +32,13 @@
       "status": "PASS",
       "statusCode": 400,
       "error": "ValidationError",
-      "message": "cascade_probability must be a float in [0.0, 1.0], got 2.5"
+      "message": "Invalid cascade_probability: 2.5. Must be numeric within [0.0, 1.0]"
     },
     "5_missing_fields": {
       "status": "PASS",
       "statusCode": 200,
-      "action": "CLOSED",
-      "throttle_rate": 0.0
+      "action": "THROTTLED",
+      "throttle_rate": 0.13
     },
     "6_repeated_mitigation": {
       "status": "PASS",

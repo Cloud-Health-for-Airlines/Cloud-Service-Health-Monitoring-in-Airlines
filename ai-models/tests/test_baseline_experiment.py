@@ -19,13 +19,16 @@ for p in (ROOT, PREDICTOR_DIR, CB_DIR, EVAL_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-try:
-    from baselines import DomainTypedCascadePredictor, FlatGraphCascadePredictor
-    from model import HeteroCascadePredictor
-    from ppo_agent import PPOAgent
-    from run_full_evaluation import validate_checkpoints, validate_dataset
-except ImportError:
-    pass
+import importlib.util
+_spec = importlib.util.spec_from_file_location("cascade_baselines", PREDICTOR_DIR / "baselines.py")
+_cascade_baselines = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_cascade_baselines)
+DomainTypedCascadePredictor = _cascade_baselines.DomainTypedCascadePredictor
+FlatGraphCascadePredictor = _cascade_baselines.FlatGraphCascadePredictor
+
+from model import HeteroCascadePredictor
+from ppo_agent import PPOAgent
+from run_full_evaluation import validate_checkpoints, validate_dataset
 
 
 class TestBaselineModels(unittest.TestCase):

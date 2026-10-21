@@ -1,57 +1,89 @@
 """Tier 1F: Proximal Policy Optimization (PPO) Actor-Critic Circuit Breaker.
 
-Replaces discrete DQN with continuous/hybrid action space PPO:
-- Continuous throttle rate in [0.0, 1.0]
-- Discrete mitigation mode: CLOSED (0.0), THROTTLED (0.1 - 0.8), OPEN (1.0)
-- Critic estimating baseline state value V(s)
-- Generalized Advantage Estimation (GAE) with clipped surrogate objective
-- Numerically bounded Beta policy with nominal-state bias initialization
+Continuous/hybrid action space PPO:
+- Continuous policy raw action in [-1.0, 1.0] mapped to continuous throttle rate in [0.0, 1.0]
+- Discrete mitigation mode: CLOSED (0.0), THROTTLED (0.10 - 0.90), OPEN (1.0)
+- Gaussian Actor-Critic with Generalized Advantage Estimation (GAE)
+- Direct load/save compatibility with ai-models/weights/circuit_breaker_ppo.pt
 """
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.distributions import Beta
+
+try:
+    from .env import map_action_to_state
+except (ImportError, ValueError):
+    from env import map_action_to_state
 
 
 class ActorCritic(nn.Module):
-    """Dual-head Actor-Critic network with Beta distribution for [0, 1] actions."""
+    """Actor-Critic network matching the trained checkpoint circuit_breaker_ppo.pt."""
 
-    def __init__(self, state_dim: int = 5, hidden_dim: int = 64):
+    def __init__(self, state_dim: int = 6, action_dim: int = 1, hidden_dim: int = 64):
         super().__init__()
-        # Shared feature extractor
-        self.shared = nn.Sequential(
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+
+        # Actor network
+        self.actor = nn.Sequential(
             nn.Linear(state_dim, hidden_dim),
             nn.Tanh(),
             nn.Linear(hidden_dim, hidden_dim),
             nn.Tanh(),
+            nn.Linear(hidden_dim, action_dim),
+        )
+        self.actor_logstd = nn.Parameter(torch.zeros(action_dim))
+
+        # Critic network
+        self.critic = nn.Sequential(
+            nn.Linear(state_dim, hidden_dim),
+            nn.Tanh(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.Tanh(),
+            nn.Linear(hidden_dim, 1),
         )
 
-        # Actor: alpha and beta parameters for Beta distribution
-        self.actor_alpha = nn.Linear(hidden_dim, 1)
-        self.actor_beta = nn.Linear(hidden_dim, 1)
+    def forward(self, state: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        mean = self.actor(state)
+        val = self.critic(state)
+        return mean, self.actor_logstd, val
 
-        # Bias initialization: beta > alpha so initial policy leans towards low throttle (< 15%)
-        # preventing false-alarm throttling of healthy airline booking traffic
-        nn.init.constant_(self.actor_beta.bias, 1.5)
-        nn.init.constant_(self.actor_alpha.bias, -0.5)
+    def get_action(self, state: torch.Tensor, deterministic: bool = False) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Sample action, calculate log probability and state value."""
+        mean, logstd, val = self.forward(state)
+        std = torch.exp(torch.clamp(logstd, -20.0, 2.0))
 
-        # Critic: outputs state value V(s)
-        self.critic = nn.Linear(hidden_dim, 1)
+        if deterministic:
+            action = mean
+        else:
+            action = mean + std * torch.randn_like(mean)
 
-    def forward(self, state: torch.Tensor) -> Tuple[Beta, torch.Tensor]:
-        features = self.shared(state)
-        # alpha and beta must be > 1.0 for unimodal density; clamp to 50.0 to prevent steep gradients
-        alpha = torch.clamp(F.softplus(self.actor_alpha(features)) + 1.0, 1.001, 50.0)
-        beta = torch.clamp(F.softplus(self.actor_beta(features)) + 1.0, 1.001, 50.0)
-        dist = Beta(alpha, beta)
-        val = self.critic(features)
-        return dist, val
+        action_clamped = torch.clamp(action, -1.0, 1.0)
+        var = std ** 2
+        log_prob = -((action_clamped - mean) ** 2) / (2 * var) - logstd - math.log(math.sqrt(2 * math.pi))
+        log_prob = log_prob.sum(dim=-1)
+
+        return action_clamped, log_prob, val.squeeze(-1)
+
+    def evaluate_actions(self, state: torch.Tensor, action: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Evaluate log probability, entropy and value of given actions."""
+        mean, logstd, val = self.forward(state)
+        std = torch.exp(torch.clamp(logstd, -20.0, 2.0))
+        var = std ** 2
+
+        action_clamped = torch.clamp(action, -1.0, 1.0)
+        log_prob = -((action_clamped - mean) ** 2) / (2 * var) - logstd - math.log(math.sqrt(2 * math.pi))
+        log_prob = log_prob.sum(dim=-1)
+        entropy = (0.5 + 0.5 * math.log(2 * math.pi) + logstd).sum(dim=-1)
+
+        return log_prob, val.squeeze(-1), entropy
 
 
 class PPOAgent:
@@ -59,7 +91,8 @@ class PPOAgent:
 
     def __init__(
         self,
-        state_dim: int = 5,
+        state_dim: int = 6,
+        action_dim: int = 1,
         hidden_dim: int = 64,
         lr: float = 3e-4,
         gamma: float = 0.99,
@@ -67,35 +100,40 @@ class PPOAgent:
         clip_epsilon: float = 0.2,
         value_coef: float = 0.5,
         entropy_coef: float = 0.01,
+        device: Optional[str] = None,
     ):
+        self.state_dim = state_dim
+        self.action_dim = action_dim
         self.gamma = gamma
         self.gae_lambda = gae_lambda
         self.clip_epsilon = clip_epsilon
         self.value_coef = value_coef
         self.entropy_coef = entropy_coef
 
-        self.model = ActorCritic(state_dim=state_dim, hidden_dim=hidden_dim)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
+        self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
+        self.ac = ActorCritic(state_dim=state_dim, action_dim=action_dim, hidden_dim=hidden_dim).to(self.device)
+        self.model = self.ac  # Backward-compatible alias
+        self.optimizer = torch.optim.Adam(self.ac.parameters(), lr=lr)
 
-    def select_action(self, state: np.ndarray, deterministic: bool = False) -> Tuple[float, float, float]:
-        """Sample action from policy.
-        
+    def act(self, obs: np.ndarray, deterministic: bool = True) -> Tuple[float, str, float]:
+        """Compute action from observation vector.
+
         Returns:
-            action: float in [0.0, 1.0]
-            log_prob: float
-            value: float
+            raw_action: float in [-1.0, 1.0]
+            state_name: str in ("CLOSED", "THROTTLED", "OPEN")
+            throttle: float in [0.0, 1.0]
         """
-        state_t = torch.as_tensor(state, dtype=torch.float32).unsqueeze(0)
-        with torch.no_grad():
-            dist, val = self.model(state_t)
-            if deterministic:
-                action_t = dist.mean
-            else:
-                action_t = dist.sample()
-            action_clamped = torch.clamp(action_t, 1e-4, 1.0 - 1e-4)
-            log_prob = dist.log_prob(action_clamped)
+        if any(np.isnan(obs)) or any(np.isinf(obs)):
+            raise ValueError(f"Observation contains non-finite values: {obs}")
 
-        return float(action_clamped.item()), float(log_prob.item()), float(val.item())
+        s_tensor = torch.as_tensor(obs, dtype=torch.float32, device=self.device).unsqueeze(0)
+        with torch.no_grad():
+            action_t, _, _ = self.ac.get_action(s_tensor, deterministic=deterministic)
+
+        raw_a = float(action_t.squeeze().cpu().item())
+        raw_a = max(-1.0, min(1.0, raw_a))
+        state_name, throttle = map_action_to_state(raw_a)
+        return raw_a, state_name, throttle
 
     def choose_mitigation(
         self,
@@ -104,131 +142,116 @@ class PPOAgent:
         gateway_latency_ms: float = 15.0,
         gateway_error_rate: float = 0.0,
         current_throttle_rate: float = 0.0,
+        queue_saturation: float = 0.0,
+        **kwargs: Any,
     ) -> Tuple[str, float, str]:
         """Inference entrypoint used by backend integration: returns (action, rate, reason)."""
-        state = np.array([
+        obs = np.array([
             float(cascade_probability),
             float(boundary_sync_drift) / 100.0,
             min(1.0, float(gateway_latency_ms) / 1500.0),
+            float(queue_saturation),
             float(gateway_error_rate),
             float(current_throttle_rate),
         ], dtype=np.float32)
 
-        raw_action, _, _ = self.select_action(state, deterministic=True)
-        throttle_rate = round(float(np.clip(raw_action, 0.0, 1.0)), 2)
+        raw_a, state_name, throttle = self.act(obs, deterministic=True)
+        reason = (
+            f"Learned PPO Policy: {state_name} actuated at rate {throttle:.0%} "
+            f"[P={cascade_probability:.2f}, drift={boundary_sync_drift:.1f}%]"
+        )
+        return state_name, throttle, reason
 
-        # Map continuous rate to standard airline circuit breaker actions
-        if throttle_rate >= 0.85:
-            action_name = "OPEN"
-            throttle_rate = 1.0
-            reason = f"Learned PPO Policy: boundary isolation actuated (rate=100%) due to critical cascade hazard [P={cascade_probability:.2f}, drift={boundary_sync_drift:.1f}%]"
-        elif throttle_rate >= 0.15:
-            action_name = "THROTTLED"
-            reason = f"Learned PPO Policy: dynamic continuous rate-limiting at {throttle_rate:.0%} [P={cascade_probability:.2f}, drift={boundary_sync_drift:.1f}%]"
-        else:
-            action_name = "CLOSED"
-            throttle_rate = 0.0
-            reason = f"Learned PPO Policy: nominal health verified, circuit breaker CLOSED [P={cascade_probability:.2f}, drift={boundary_sync_drift:.1f}%]"
+    def compute_gae(
+        self,
+        rewards: List[float],
+        values: List[float],
+        dones: List[bool],
+        next_value: float,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Compute Generalized Advantage Estimation in O(N)."""
+        advantages = []
+        gae = 0.0
+        n_steps = len(rewards)
 
-        return action_name, throttle_rate, reason
+        vals = values + [next_value]
+        for t in reversed(range(n_steps)):
+            delta = rewards[t] + self.gamma * vals[t + 1] * (1.0 - float(dones[t])) - vals[t]
+            gae = delta + self.gamma * self.gae_lambda * (1.0 - float(dones[t])) * gae
+            advantages.insert(0, gae)
 
-    def train_on_trajectories(
+        advantages_t = torch.tensor(advantages, dtype=torch.float32, device=self.device)
+        returns_t = advantages_t + torch.tensor(values, dtype=torch.float32, device=self.device)
+        advantages_t = (advantages_t - advantages_t.mean()) / (advantages_t.std() + 1e-8)
+        return advantages_t, returns_t
+
+    def update(
         self,
         states: List[np.ndarray],
         actions: List[float],
         log_probs: List[float],
-        rewards: List[float],
-        values: List[float],
-        dones: List[bool],
-        epochs: int = 4,
+        returns: torch.Tensor,
+        advantages: torch.Tensor,
+        ppo_epochs: int = 4,
         batch_size: int = 32,
     ) -> Dict[str, float]:
-        """PPO update with Generalized Advantage Estimation."""
-        n_steps = len(rewards)
-        if n_steps == 0:
-            return {"ppo_loss": 0.0}
-
-        states_t = torch.tensor(np.array(states), dtype=torch.float32)
-        actions_t = torch.tensor(np.array(actions), dtype=torch.float32).unsqueeze(-1)
-        old_log_probs_t = torch.tensor(np.array(log_probs), dtype=torch.float32).unsqueeze(-1)
-
-        # 1. Compute GAE in O(N) using append + reverse
-        advantages = []
-        returns = []
-        gae = 0.0
-        
-        for t in reversed(range(n_steps)):
-            next_val = values[t + 1] if t + 1 < n_steps and not dones[t] else 0.0
-            delta = rewards[t] + self.gamma * next_val - values[t]
-            gae = delta + self.gamma * self.gae_lambda * (0.0 if dones[t] else 1.0) * gae
-            advantages.append(gae)
-            returns.append(gae + values[t])
-
-        advantages.reverse()
-        returns.reverse()
-
-        advantages_t = torch.tensor(advantages, dtype=torch.float32).unsqueeze(-1)
-        returns_t = torch.tensor(returns, dtype=torch.float32).unsqueeze(-1)
-
-        # Normalize advantages with variance guard
-        adv_std = advantages_t.std()
-        if not torch.isnan(adv_std) and adv_std > 1e-6:
-            advantages_t = (advantages_t - advantages_t.mean()) / (adv_std + 1e-8)
-        else:
-            advantages_t = advantages_t - advantages_t.mean()
+        """PPO update with clipped surrogate objective and value function loss."""
+        states_t = torch.tensor(np.array(states), dtype=torch.float32, device=self.device)
+        actions_t = torch.tensor(np.array(actions), dtype=torch.float32, device=self.device).unsqueeze(-1)
+        old_log_probs_t = torch.tensor(np.array(log_probs), dtype=torch.float32, device=self.device)
 
         total_loss = 0.0
-        num_updates = 0
+        n_samples = len(states)
+        indices = np.arange(n_samples)
 
-        for _ in range(epochs):
-            indices = list(range(n_steps))
+        for _ in range(ppo_epochs):
             np.random.shuffle(indices)
+            for start in range(0, n_samples, batch_size):
+                idx = indices[start:start + batch_size]
+                b_states = states_t[idx]
+                b_actions = actions_t[idx]
+                b_old_log_probs = old_log_probs_t[idx]
+                b_returns = returns[idx]
+                b_advantages = advantages[idx]
 
-            for start in range(0, n_steps, batch_size):
-                b_idx = indices[start:start + batch_size]
-                b_states = states_t[b_idx]
-                b_actions = actions_t[b_idx]
-                b_old_log_probs = old_log_probs_t[b_idx]
-                b_adv = advantages_t[b_idx]
-                b_ret = returns_t[b_idx]
+                new_log_probs, val, entropy = self.ac.evaluate_actions(b_states, b_actions)
+                ratio = torch.exp(torch.clamp(new_log_probs - b_old_log_probs, -20.0, 20.0))
 
-                dist, val = self.model(b_states)
-                new_log_prob = dist.log_prob(b_actions.clamp(1e-4, 1.0 - 1e-4))
-                entropy = dist.entropy().mean()
-
-                # Ratio r(theta) with exponent clamping to prevent numerical explosion
-                log_ratio = torch.clamp(new_log_prob - b_old_log_probs, -20.0, 20.0)
-                ratio = torch.exp(log_ratio)
-
-                # Clipped surrogate objective
-                surr1 = ratio * b_adv
-                surr2 = torch.clamp(ratio, 1.0 - self.clip_epsilon, 1.0 + self.clip_epsilon) * b_adv
+                surr1 = ratio * b_advantages
+                surr2 = torch.clamp(ratio, 1.0 - self.clip_epsilon, 1.0 + self.clip_epsilon) * b_advantages
                 policy_loss = -torch.min(surr1, surr2).mean()
+                val_loss = F.mse_loss(val, b_returns)
 
-                # Value function loss
-                val_loss = F.mse_loss(val, b_ret)
-
-                loss = policy_loss + self.value_coef * val_loss - self.entropy_coef * entropy
+                loss = policy_loss + self.value_coef * val_loss - self.entropy_coef * entropy.mean()
 
                 self.optimizer.zero_grad()
                 loss.backward()
-                nn.utils.clip_grad_norm_(self.model.parameters(), 0.5)
+                nn.utils.clip_grad_norm_(self.ac.parameters(), 0.5)
                 self.optimizer.step()
-
                 total_loss += float(loss.item())
-                num_updates += 1
 
-        avg_loss = total_loss / max(1, num_updates)
-        return {"ppo_loss": round(avg_loss, 4)}
+        return {"loss_total": round(total_loss / max(1, ppo_epochs * math.ceil(n_samples / batch_size)), 4)}
 
     def save_checkpoint(self, path: str | Path) -> None:
-        Path(path).parent.mkdir(parents=True, exist_ok=True)
-        torch.save(self.model.state_dict(), path)
+        """Save model state dictionary to disk."""
+        target = Path(path).resolve()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        torch.save(
+            {
+                "state_dict": self.ac.state_dict(),
+                "state_dim": self.state_dim,
+                "action_dim": self.action_dim,
+            },
+            target,
+        )
 
     def load_checkpoint(self, path: str | Path) -> None:
-        try:
-            state_dict = torch.load(path, map_location="cpu", weights_only=True)
-        except TypeError:
-            state_dict = torch.load(path, map_location="cpu")
-        self.model.load_state_dict(state_dict)
-        self.model.eval()
+        """Load model state dictionary from disk."""
+        target = Path(path).resolve()
+        ckpt = torch.load(target, map_location=self.device, weights_only=False)
+        if isinstance(ckpt, dict) and "state_dict" in ckpt:
+            state_dict = ckpt["state_dict"]
+        else:
+            state_dict = ckpt
+        self.ac.load_state_dict(state_dict)
+        self.ac.eval()

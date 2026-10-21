@@ -1,0 +1,425 @@
+[
+  {
+    "carrier": "WN",
+    "start": "2022-12-22",
+    "end": "2022-12-29",
+    "peak_cancel_rate": 0.7751403777437468,
+    "baseline_cancel_rate": 0.004244031830238726,
+    "cancelled_flights": 16435,
+    "month": "202212"
+  },
+  {
+    "carrier": "DL",
+    "start": "2022-12-22",
+    "end": "2022-12-26",
+    "peak_cancel_rate": 0.2580299785867238,
+    "baseline_cancel_rate": 0.0007601672367920942,
+    "cancelled_flights": 1680,
+    "month": "202212"
+  },
+  {
+    "carrier": "UA",
+    "start": "2022-12-22",
+    "end": "2022-12-26",
+    "peak_cancel_rate": 0.1899696048632219,
+    "baseline_cancel_rate": 0.004199475065616798,
+    "cancelled_flights": 1115,
+    "month": "202212"
+  },
+  {
+    "carrier": "OO",
+    "start": "2022-12-21",
+    "end": "2022-12-24",
+    "peak_cancel_rate": 0.28438228438228436,
+    "baseline_cancel_rate": 0.0163727959697733,
+    "cancelled_flights": 1072,
+    "month": "202212"
+  },
+  {
+    "carrier": "AS",
+    "start": "2022-12-23",
+    "end": "2022-12-27",
+    "peak_cancel_rate": 0.7254623044096729,
+    "baseline_cancel_rate": 0.0243531202435312,
+    "cancelled_flights": 1070,
+    "month": "202212"
+  },
+  {
+    "carrier": "NK",
+    "start": "2022-12-22",
+    "end": "2022-12-28",
+    "peak_cancel_rate": 0.33670520231213874,
+    "baseline_cancel_rate": 0.005625879043600563,
+    "cancelled_flights": 892,
+    "month": "202212"
+  },
+  {
+    "carrier": "AA",
+    "start": "2022-12-22",
+    "end": "2022-12-23",
+    "peak_cancel_rate": 0.16850934044986657,
+    "baseline_cancel_rate": 0.005720823798627002,
+    "cancelled_flights": 634,
+    "month": "202212"
+  },
+  {
+    "carrier": "YX",
+    "start": "2022-12-22",
+    "end": "2022-12-25",
+    "peak_cancel_rate": 0.40960809102402024,
+    "baseline_cancel_rate": 0.0012674271229404308,
+    "cancelled_flights": 504,
+    "month": "202212"
+  },
+  {
+    "carrier": "9E",
+    "start": "2022-12-22",
+    "end": "2022-12-25",
+    "peak_cancel_rate": 0.44764795144157815,
+    "baseline_cancel_rate": 0.0,
+    "cancelled_flights": 464,
+    "month": "202212"
+  },
+  {
+    "carrier": "F9",
+    "start": "2022-12-22",
+    "end": "2022-12-26",
+    "peak_cancel_rate": 0.2890295358649789,
+    "baseline_cancel_rate": 0.023554603854389723,
+    "cancelled_flights": 430,
+    "month": "202212"
+  },
+  {
+    "carrier": "G4",
+    "start": "2022-12-21",
+    "end": "2022-12-25",
+    "peak_cancel_rate": 0.4423963133640553,
+    "baseline_cancel_rate": 0.007177033492822967,
+    "cancelled_flights": 427,
+    "month": "202212"
+  },
+  {
+    "carrier": "MQ",
+    "start": "2022-12-22",
+    "end": "2022-12-24",
+    "peak_cancel_rate": 0.30060422960725075,
+    "baseline_cancel_rate": 0.0048543689320388345,
+    "cancelled_flights": 370,
+    "month": "202212"
+  },
+  {
+    "carrier": "B6",
+    "start": "2022-12-23",
+    "end": "2022-12-26",
+    "peak_cancel_rate": 0.13351877607788595,
+    "baseline_cancel_rate": 0.005076142131979695,
+    "cancelled_flights": 296,
+    "month": "202212"
+  },
+  {
+    "carrier": "QX",
+    "start": "2022-12-23",
+    "end": "2022-12-24",
+    "peak_cancel_rate": 0.6485148514851485,
+    "baseline_cancel_rate": 0.04455445544554455,
+    "cancelled_flights": 175,
+    "month": "202212"
+  },
+  {
+    "carrier": "OO",
+    "start": "2022-12-13",
+    "end": "2022-12-13",
+    "peak_cancel_rate": 0.1044776119402985,
+    "baseline_cancel_rate": 0.0163727959697733,
+    "cancelled_flights": 161,
+    "month": "202212"
+  },
+  {
+    "carrier": "AS",
+    "start": "2022-12-01",
+    "end": "2022-12-01",
+    "peak_cancel_rate": 0.22590361445783133,
+    "baseline_cancel_rate": 0.0243531202435312,
+    "cancelled_flights": 150,
+    "month": "202212"
+  },
+  {
+    "carrier": "HA",
+    "start": "2022-12-18",
+    "end": "2022-12-21",
+    "peak_cancel_rate": 0.2672413793103448,
+    "baseline_cancel_rate": 0.00510204081632653,
+    "cancelled_flights": 140,
+    "month": "202212"
+  },
+  {
+    "carrier": "OH",
+    "start": "2022-12-23",
+    "end": "2022-12-24",
+    "peak_cancel_rate": 0.2505263157894737,
+    "baseline_cancel_rate": 0.0,
+    "cancelled_flights": 140,
+    "month": "202212"
+  },
+  {
+    "carrier": "OO",
+    "start": "2022-12-28",
+    "end": "2022-12-28",
+    "peak_cancel_rate": 0.08154761904761905,
+    "baseline_cancel_rate": 0.0163727959697733,
+    "cancelled_flights": 137,
+    "month": "202212"
+  },
+  {
+    "carrier": "AS",
+    "start": "2022-12-20",
+    "end": "2022-12-20",
+    "peak_cancel_rate": 0.13636363636363635,
+    "baseline_cancel_rate": 0.0243531202435312,
+    "cancelled_flights": 90,
+    "month": "202212"
+  },
+  {
+    "carrier": "AS",
+    "start": "2022-12-03",
+    "end": "2022-12-03",
+    "peak_cancel_rate": 0.10714285714285714,
+    "baseline_cancel_rate": 0.0243531202435312,
+    "cancelled_flights": 60,
+    "month": "202212"
+  },
+  {
+    "carrier": "9E",
+    "start": "2022-12-16",
+    "end": "2022-12-16",
+    "peak_cancel_rate": 0.07877813504823152,
+    "baseline_cancel_rate": 0.0,
+    "cancelled_flights": 49,
+    "month": "202212"
+  },
+  {
+    "carrier": "QX",
+    "start": "2022-12-20",
+    "end": "2022-12-20",
+    "peak_cancel_rate": 0.24705882352941178,
+    "baseline_cancel_rate": 0.04455445544554455,
+    "cancelled_flights": 42,
+    "month": "202212"
+  },
+  {
+    "carrier": "HA",
+    "start": "2022-12-23",
+    "end": "2022-12-24",
+    "peak_cancel_rate": 0.08050847457627118,
+    "baseline_cancel_rate": 0.00510204081632653,
+    "cancelled_flights": 34,
+    "month": "202212"
+  },
+  {
+    "carrier": "G4",
+    "start": "2022-12-31",
+    "end": "2022-12-31",
+    "peak_cancel_rate": 0.07142857142857142,
+    "baseline_cancel_rate": 0.007177033492822967,
+    "cancelled_flights": 32,
+    "month": "202212"
+  },
+  {
+    "carrier": "OH",
+    "start": "2022-12-06",
+    "end": "2022-12-06",
+    "peak_cancel_rate": 0.05942622950819672,
+    "baseline_cancel_rate": 0.0,
+    "cancelled_flights": 29,
+    "month": "202212"
+  },
+  {
+    "carrier": "YV",
+    "start": "2022-12-23",
+    "end": "2022-12-23",
+    "peak_cancel_rate": 0.10583941605839416,
+    "baseline_cancel_rate": 0.00784313725490196,
+    "cancelled_flights": 29,
+    "month": "202212"
+  },
+  {
+    "carrier": "DL",
+    "start": "2024-07-19",
+    "end": "2024-07-23",
+    "peak_cancel_rate": 0.47368421052631576,
+    "baseline_cancel_rate": 0.0006879944960440316,
+    "cancelled_flights": 5737,
+    "month": "202407"
+  },
+  {
+    "carrier": "UA",
+    "start": "2024-07-19",
+    "end": "2024-07-21",
+    "peak_cancel_rate": 0.2587476979742173,
+    "baseline_cancel_rate": 0.016203703703703703,
+    "cancelled_flights": 1185,
+    "month": "202407"
+  },
+  {
+    "carrier": "9E",
+    "start": "2024-07-17",
+    "end": "2024-07-22",
+    "peak_cancel_rate": 0.49,
+    "baseline_cancel_rate": 0.024213075060532687,
+    "cancelled_flights": 984,
+    "month": "202407"
+  },
+  {
+    "carrier": "AA",
+    "start": "2024-07-19",
+    "end": "2024-07-19",
+    "peak_cancel_rate": 0.13967819239986307,
+    "baseline_cancel_rate": 0.015272474835126693,
+    "cancelled_flights": 408,
+    "month": "202407"
+  },
+  {
+    "carrier": "NK",
+    "start": "2024-07-19",
+    "end": "2024-07-20",
+    "peak_cancel_rate": 0.30684596577017115,
+    "baseline_cancel_rate": 0.03740648379052369,
+    "cancelled_flights": 380,
+    "month": "202407"
+  },
+  {
+    "carrier": "G4",
+    "start": "2024-07-18",
+    "end": "2024-07-19",
+    "peak_cancel_rate": 0.588126159554731,
+    "baseline_cancel_rate": 0.001869158878504673,
+    "cancelled_flights": 347,
+    "month": "202407"
+  },
+  {
+    "carrier": "WN",
+    "start": "2024-07-08",
+    "end": "2024-07-08",
+    "peak_cancel_rate": 0.07973345588235294,
+    "baseline_cancel_rate": 0.0021344717182497333,
+    "cancelled_flights": 347,
+    "month": "202407"
+  },
+  {
+    "carrier": "UA",
+    "start": "2024-07-08",
+    "end": "2024-07-08",
+    "peak_cancel_rate": 0.16003700277520813,
+    "baseline_cancel_rate": 0.016203703703703703,
+    "cancelled_flights": 346,
+    "month": "202407"
+  },
+  {
+    "carrier": "F9",
+    "start": "2024-07-18",
+    "end": "2024-07-19",
+    "peak_cancel_rate": 0.3166926677067083,
+    "baseline_cancel_rate": 0.02926829268292683,
+    "cancelled_flights": 288,
+    "month": "202407"
+  },
+  {
+    "carrier": "AA",
+    "start": "2024-07-17",
+    "end": "2024-07-17",
+    "peak_cancel_rate": 0.07676419965576592,
+    "baseline_cancel_rate": 0.015272474835126693,
+    "cancelled_flights": 223,
+    "month": "202407"
+  },
+  {
+    "carrier": "YX",
+    "start": "2024-07-17",
+    "end": "2024-07-17",
+    "peak_cancel_rate": 0.20765661252900233,
+    "baseline_cancel_rate": 0.008645533141210375,
+    "cancelled_flights": 179,
+    "month": "202407"
+  },
+  {
+    "carrier": "OH",
+    "start": "2024-07-23",
+    "end": "2024-07-23",
+    "peak_cancel_rate": 0.2127659574468085,
+    "baseline_cancel_rate": 0.026490066225165563,
+    "cancelled_flights": 140,
+    "month": "202407"
+  },
+  {
+    "carrier": "YX",
+    "start": "2024-07-19",
+    "end": "2024-07-19",
+    "peak_cancel_rate": 0.1347926267281106,
+    "baseline_cancel_rate": 0.008645533141210375,
+    "cancelled_flights": 117,
+    "month": "202407"
+  },
+  {
+    "carrier": "OH",
+    "start": "2024-07-19",
+    "end": "2024-07-19",
+    "peak_cancel_rate": 0.16939078751857356,
+    "baseline_cancel_rate": 0.026490066225165563,
+    "cancelled_flights": 114,
+    "month": "202407"
+  },
+  {
+    "carrier": "YX",
+    "start": "2024-07-22",
+    "end": "2024-07-22",
+    "peak_cancel_rate": 0.10392609699769054,
+    "baseline_cancel_rate": 0.008645533141210375,
+    "cancelled_flights": 90,
+    "month": "202407"
+  },
+  {
+    "carrier": "YX",
+    "start": "2024-07-10",
+    "end": "2024-07-10",
+    "peak_cancel_rate": 0.07076566125290024,
+    "baseline_cancel_rate": 0.008645533141210375,
+    "cancelled_flights": 61,
+    "month": "202407"
+  },
+  {
+    "carrier": "MQ",
+    "start": "2024-07-08",
+    "end": "2024-07-08",
+    "peak_cancel_rate": 0.0676605504587156,
+    "baseline_cancel_rate": 0.0035294117647058825,
+    "cancelled_flights": 59,
+    "month": "202407"
+  },
+  {
+    "carrier": "B6",
+    "start": "2024-07-17",
+    "end": "2024-07-17",
+    "peak_cancel_rate": 0.08580343213728549,
+    "baseline_cancel_rate": 0.004885993485342019,
+    "cancelled_flights": 55,
+    "month": "202407"
+  },
+  {
+    "carrier": "YX",
+    "start": "2024-07-01",
+    "end": "2024-07-01",
+    "peak_cancel_rate": 0.05812574139976275,
+    "baseline_cancel_rate": 0.008645533141210375,
+    "cancelled_flights": 49,
+    "month": "202407"
+  },
+  {
+    "carrier": "HA",
+    "start": "2024-07-07",
+    "end": "2024-07-07",
+    "peak_cancel_rate": 0.05106382978723404,
+    "baseline_cancel_rate": 0.0047169811320754715,
+    "cancelled_flights": 12,
+    "month": "202407"
+  }
+]

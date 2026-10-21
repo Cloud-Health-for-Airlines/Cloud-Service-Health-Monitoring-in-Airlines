@@ -1,0 +1,533 @@
+{
+  "generated_utc": "2026-10-19T04:50:19+00:00",
+  "provenance": "derived exclusively from real public datasets; see ai-models/real_data/catalog.py",
+  "bts_ontime": {
+    "source_files": [
+      "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2022_12.zip",
+      "On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2024_7.zip"
+    ],
+    "series": [
+      {
+        "carrier": "WN",
+        "month": "202212",
+        "file": "bts_schedule_WN_202212_1min.csv.gz",
+        "flights": 116229,
+        "cancellations": 17000
+      },
+      {
+        "carrier": "DL",
+        "month": "202212",
+        "file": "bts_schedule_DL_202212_1min.csv.gz",
+        "flights": 75771,
+        "cancellations": 1851
+      },
+      {
+        "carrier": "AA",
+        "month": "202212",
+        "file": "bts_schedule_AA_202212_1min.csv.gz",
+        "flights": 76149,
+        "cancellations": 1174
+      },
+      {
+        "carrier": "UA",
+        "month": "202212",
+        "file": "bts_schedule_UA_202212_1min.csv.gz",
+        "flights": 58417,
+        "cancellations": 1420
+      },
+      {
+        "carrier": "AS",
+        "month": "202212",
+        "file": "bts_schedule_AS_202212_1min.csv.gz",
+        "flights": 20079,
+        "cancellations": 1735
+      },
+      {
+        "carrier": "WN",
+        "month": "202407",
+        "file": "bts_schedule_WN_202407_1min.csv.gz",
+        "flights": 127642,
+        "cancellations": 849
+      },
+      {
+        "carrier": "DL",
+        "month": "202407",
+        "file": "bts_schedule_DL_202407_1min.csv.gz",
+        "flights": 92296,
+        "cancellations": 6053
+      },
+      {
+        "carrier": "AA",
+        "month": "202407",
+        "file": "bts_schedule_AA_202407_1min.csv.gz",
+        "flights": 88291,
+        "cancellations": 2208
+      },
+      {
+        "carrier": "UA",
+        "month": "202407",
+        "file": "bts_schedule_UA_202407_1min.csv.gz",
+        "flights": 65463,
+        "cancellations": 2452
+      },
+      {
+        "carrier": "AS",
+        "month": "202407",
+        "file": "bts_schedule_AS_202407_1min.csv.gz",
+        "flights": 23884,
+        "cancellations": 220
+      }
+    ],
+    "flights_per_month": {
+      "202212": {
+        "9E": 16660,
+        "AA": 76149,
+        "AS": 20079,
+        "B6": 23881,
+        "DL": 75771,
+        "F9": 13895,
+        "G4": 10421,
+        "HA": 6642,
+        "MQ": 18808,
+        "NK": 21236,
+        "OH": 14156,
+        "OO": 50430,
+        "QX": 5553,
+        "UA": 58417,
+        "WN": 116229,
+        "YV": 7995,
+        "YX": 20773
+      },
+      "202407": {
+        "9E": 17257,
+        "AA": 88291,
+        "AS": 23884,
+        "B6": 20182,
+        "DL": 92296,
+        "F9": 19432,
+        "G4": 12861,
+        "HA": 6820,
+        "MQ": 26111,
+        "NK": 24769,
+        "OH": 20078,
+        "OO": 63914,
+        "UA": 65463,
+        "WN": 127642,
+        "YX": 25613
+      }
+    }
+  },
+  "bts_db1b": {
+    "source_file": "Origin_and_Destination_Survey_DB1BMarket_2024_3.zip",
+    "year": 2024,
+    "quarter": 3,
+    "sample_rate": 0.1,
+    "passenger_trips_per_quarter": {
+      "WN": 33768570,
+      "AA": 30020240,
+      "DL": 29109500,
+      "UA": 23349180,
+      "AS": 9633970,
+      "NK": 8956550,
+      "F9": 7199730,
+      "B6": 6626530,
+      "G4": 3973150,
+      "HA": 2183430,
+      "99": 1435910,
+      "MX": 1033570,
+      "SY": 1008880,
+      "XP": 638730,
+      "3M": 83170,
+      "--": 12000,
+      "LF": 1310,
+      "QR": 470,
+      "VC": 380,
+      "9X": 340,
+      "PR": 250,
+      "KG": 240,
+      "9K": 230,
+      "RJ": 190,
+      "BA": 60
+    },
+    "passengers_per_departure": {
+      "AA": 113.3,
+      "AS": 134.5,
+      "B6": 109.4,
+      "DL": 105.1,
+      "F9": 123.5,
+      "G4": 103.0,
+      "HA": 106.7,
+      "NK": 120.5,
+      "UA": 118.9,
+      "WN": 88.2
+    },
+    "top_markets": {
+      "WN": [
+        {
+          "Origin": "SAN",
+          "Dest": "SMF",
+          "passengers": 112930.0,
+          "mean_fare": 163.5117972831766
+        },
+        {
+          "Origin": "SMF",
+          "Dest": "SAN",
+          "passengers": 112160.0,
+          "mean_fare": 164.71213319458894
+        },
+        {
+          "Origin": "SAN",
+          "Dest": "SJC",
+          "passengers": 100340.0,
+          "mean_fare": 171.38608716475096
+        },
+        {
+          "Origin": "SJC",
+          "Dest": "SAN",
+          "passengers": 99550.0,
+          "mean_fare": 171.78584477046851
+        },
+        {
+          "Origin": "PHX",
+          "Dest": "DEN",
+          "passengers": 91320.0,
+          "mean_fare": 165.54410411622274
+        },
+        {
+          "Origin": "DEN",
+          "Dest": "PHX",
+          "passengers": 90720.0,
+          "mean_fare": 165.5225527678216
+        },
+        {
+          "Origin": "OAK",
+          "Dest": "LAS",
+          "passengers": 76820.0,
+          "mean_fare": 170.3185753931545
+        },
+        {
+          "Origin": "DEN",
+          "Dest": "DAL",
+          "passengers": 76720.0,
+          "mean_fare": 174.56772122879414
+        },
+        {
+          "Origin": "DAL",
+          "Dest": "DEN",
+          "passengers": 75960.0,
+          "mean_fare": 166.937144802542
+        },
+        {
+          "Origin": "MDW",
+          "Dest": "MCO",
+          "passengers": 75790.0,
+          "mean_fare": 187.2491929537075
+        }
+      ],
+      "DL": [
+        {
+          "Origin": "LAX",
+          "Dest": "JFK",
+          "passengers": 138120.0,
+          "mean_fare": 660.1902355752817
+        },
+        {
+          "Origin": "JFK",
+          "Dest": "LAX",
+          "passengers": 137510.0,
+          "mean_fare": 656.7671187584345
+        },
+        {
+          "Origin": "ATL",
+          "Dest": "LGA",
+          "passengers": 116160.0,
+          "mean_fare": 279.083428917609
+        },
+        {
+          "Origin": "LGA",
+          "Dest": "ATL",
+          "passengers": 114500.0,
+          "mean_fare": 283.93663400085217
+        },
+        {
+          "Origin": "ATL",
+          "Dest": "BOS",
+          "passengers": 84480.0,
+          "mean_fare": 307.9323559408465
+        },
+        {
+          "Origin": "BOS",
+          "Dest": "ATL",
+          "passengers": 83460.0,
+          "mean_fare": 310.52987584066216
+        },
+        {
+          "Origin": "SFO",
+          "Dest": "JFK",
+          "passengers": 82350.0,
+          "mean_fare": 631.4583035714286
+        },
+        {
+          "Origin": "JFK",
+          "Dest": "SFO",
+          "passengers": 79510.0,
+          "mean_fare": 617.9322725129656
+        },
+        {
+          "Origin": "LGA",
+          "Dest": "MCO",
+          "passengers": 74290.0,
+          "mean_fare": 250.79153174603175
+        },
+        {
+          "Origin": "MCO",
+          "Dest": "LGA",
+          "passengers": 73270.0,
+          "mean_fare": 256.5502996845426
+        }
+      ],
+      "AA": [
+        {
+          "Origin": "MIA",
+          "Dest": "LGA",
+          "passengers": 88200.0,
+          "mean_fare": 276.2212804232804
+        },
+        {
+          "Origin": "LGA",
+          "Dest": "MIA",
+          "passengers": 87940.0,
+          "mean_fare": 325.72266103484685
+        },
+        {
+          "Origin": "LAX",
+          "Dest": "DFW",
+          "passengers": 84920.0,
+          "mean_fare": 341.9481149301826
+        },
+        {
+          "Origin": "ORD",
+          "Dest": "DFW",
+          "passengers": 83760.0,
+          "mean_fare": 304.7544212962963
+        },
+        {
+          "Origin": "DFW",
+          "Dest": "LAX",
+          "passengers": 83260.0,
+          "mean_fare": 338.79065113816836
+        },
+        {
+          "Origin": "DFW",
+          "Dest": "ORD",
+          "passengers": 82740.0,
+          "mean_fare": 304.2277404073899
+        },
+        {
+          "Origin": "ORD",
+          "Dest": "LAX",
+          "passengers": 79330.0,
+          "mean_fare": 351.75612984398595
+        },
+        {
+          "Origin": "LGA",
+          "Dest": "DFW",
+          "passengers": 79200.0,
+          "mean_fare": 365.0630844793713
+        },
+        {
+          "Origin": "LAX",
+          "Dest": "ORD",
+          "passengers": 78270.0,
+          "mean_fare": 345.43847347347344
+        },
+        {
+          "Origin": "DFW",
+          "Dest": "LGA",
+          "passengers": 78190.0,
+          "mean_fare": 352.8477559253656
+        }
+      ],
+      "UA": [
+        {
+          "Origin": "LAX",
+          "Dest": "EWR",
+          "passengers": 138550.0,
+          "mean_fare": 647.2762849090443
+        },
+        {
+          "Origin": "SFO",
+          "Dest": "EWR",
+          "passengers": 136920.0,
+          "mean_fare": 730.0515184958103
+        },
+        {
+          "Origin": "EWR",
+          "Dest": "LAX",
+          "passengers": 136750.0,
+          "mean_fare": 652.1897969000535
+        },
+        {
+          "Origin": "EWR",
+          "Dest": "SFO",
+          "passengers": 136590.0,
+          "mean_fare": 724.8680336850649
+        },
+        {
+          "Origin": "LGA",
+          "Dest": "ORD",
+          "passengers": 127920.0,
+          "mean_fare": 256.8410818438382
+        },
+        {
+          "Origin": "ORD",
+          "Dest": "LGA",
+          "passengers": 125660.0,
+          "mean_fare": 256.35916183682565
+        },
+        {
+          "Origin": "ORD",
+          "Dest": "SFO",
+          "passengers": 112770.0,
+          "mean_fare": 407.8649779864984
+        },
+        {
+          "Origin": "SFO",
+          "Dest": "ORD",
+          "passengers": 112560.0,
+          "mean_fare": 413.9920890207715
+        },
+        {
+          "Origin": "EWR",
+          "Dest": "ORD",
+          "passengers": 107430.0,
+          "mean_fare": 290.6465117219078
+        },
+        {
+          "Origin": "ORD",
+          "Dest": "EWR",
+          "passengers": 107240.0,
+          "mean_fare": 293.79600796812747
+        }
+      ],
+      "AS": [
+        {
+          "Origin": "SEA",
+          "Dest": "LAX",
+          "passengers": 100050.0,
+          "mean_fare": 230.2664977728285
+        },
+        {
+          "Origin": "LAX",
+          "Dest": "SEA",
+          "passengers": 99050.0,
+          "mean_fare": 229.4867505720824
+        },
+        {
+          "Origin": "SAN",
+          "Dest": "SEA",
+          "passengers": 93590.0,
+          "mean_fare": 246.028676872608
+        },
+        {
+          "Origin": "SEA",
+          "Dest": "SAN",
+          "passengers": 93350.0,
+          "mean_fare": 251.94991744634012
+        },
+        {
+          "Origin": "SEA",
+          "Dest": "SFO",
+          "passengers": 92590.0,
+          "mean_fare": 224.55288262910798
+        },
+        {
+          "Origin": "SFO",
+          "Dest": "SEA",
+          "passengers": 91640.0,
+          "mean_fare": 221.3065906886518
+        },
+        {
+          "Origin": "SEA",
+          "Dest": "LAS",
+          "passengers": 80720.0,
+          "mean_fare": 225.1134248554913
+        },
+        {
+          "Origin": "LAS",
+          "Dest": "SEA",
+          "passengers": 79270.0,
+          "mean_fare": 233.5727850877193
+        },
+        {
+          "Origin": "SNA",
+          "Dest": "SEA",
+          "passengers": 79180.0,
+          "mean_fare": 253.13738544474393
+        },
+        {
+          "Origin": "SEA",
+          "Dest": "SNA",
+          "passengers": 78220.0,
+          "mean_fare": 259.09315860215054
+        }
+      ]
+    },
+    "matched_ontime_month": "202407"
+  },
+  "azure_functions_2019": {
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "functions_used": 400,
+    "minutes": 10080,
+    "human_driven_functions": 202,
+    "peak_to_trough": 3.53,
+    "residual_cv": 0.688
+  },
+  "alibaba_ms_2022_node": {
+    "source_file": "NodeMetricsUpdate_0.tar.gz",
+    "cpu": {
+      "mean": 20.35986328627636,
+      "p50": 18.49893162385171,
+      "p90": 32.397379420355875,
+      "p99": 55.49786963980312,
+      "per_node_std_median": 3.7388973772508534,
+      "n_nodes": 1000,
+      "n_samples": 707995
+    },
+    "memory": {
+      "mean": 26.841998916567807,
+      "p50": 24.05624469621126,
+      "p90": 45.67995285028381,
+      "p99": 84.91550445556607,
+      "per_node_std_median": 0.3365008200063648,
+      "n_nodes": 1000,
+      "n_samples": 707995
+    }
+  },
+  "gcp_incidents": {
+    "n_incidents": 902,
+    "span_days": 2134.4,
+    "incidents_per_30d": 12.68,
+    "duration_median_min": 191.3,
+    "duration_p90_min": 2199.0,
+    "duration_mean_min": 923.0,
+    "fault_class_share": {
+      "connection-drop": 0.629,
+      "network-delay": 0.262,
+      "batch-job-stall": 0.11
+    },
+    "severity_share": {
+      "low": 0.558,
+      "medium": 0.356,
+      "high": 0.086
+    }
+  }
+}

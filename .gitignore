@@ -30,3 +30,9 @@ results/*.csv
 testbed/results/*.json
 testbed/results/*.jsonl
 frontend/dist_preview/
+
+# Real public datasets (downloaded via ai-models/real_data/download.py)
+data/raw/
+data/processed/
+ai-models/data/dataset_trace/*.json
+!ai-models/data/dataset_trace/manifest.json

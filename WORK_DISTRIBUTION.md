@@ -60,7 +60,7 @@ Bhiwanshu Sharma took ownership of the remaining AI and cloud integration pass, 
 | **Amazon SNS Alert Adapter** | Bhiwanshu | `Locally Verified` / `Live AWS Pending Credentials` | `backend/cloud/sns.py`. Dispatches structured incident brief with 8 attributes. Local logger / live Topic ARN publishing. |
 | **Frontend Monitoring Dashboard**| Bhiwanshu | `Integration Tested` | React 18, Vite 5, Lucide icons. 7 panels: dependency topology SVG, radial drift gauge, countdown alert cards, circuit breaker control, chaos playground. Production build in 385ms. |
 | **Backend REST API** | Bhiwanshu / Ragghav | `Integration Tested` | Zero-dependency Python HTTP server (`backend/api/app.py`). Real-time digital-twin sync drift $\epsilon(t)$ computation. 35 backend tests passing. |
-| **Full End-to-End Pipeline** | Bhiwanshu | `Integration Tested` | `backend/tests/verify_end_to_end.py`. Verified complete pipeline under Normal and Cascade scenarios. **76/76 automated tests pass cleanly (exit code 0)**. |
+| **Full End-to-End Pipeline** | Bhiwanshu | `Integration Tested` | `backend/tests/verify_end_to_end.py`. Verified complete pipeline under Normal and Cascade scenarios. **80/80 automated tests pass cleanly (exit code 0)**. |
 | **Testbed & Chaos Profiles** | Ragghav | `Implemented` | 5 Docker containers, isolated legacy network, chaos injection engine (`network-delay`, `connection-drop`, `batch-job-stall`). |
 | **eBPF Tracing** | Ragghav | `Implemented` | `tcp_v4_connect.bt` + `collect.py`. Non-intrusive kernel tracing on gateway host. |
 | **Database Schema** | Ragghav | `Implemented` | PostgreSQL tables for graph nodes, edges, and telemetry records (`schema.sql`). |

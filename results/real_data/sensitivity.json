@@ -1,0 +1,272 @@
+[
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 2,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 86,
+    "overload_min_normal_days": 66,
+    "mean_demand_disruption_vs_normal": 1.07
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 2,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 1,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.07
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 2,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 0,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.07
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 4,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 700,
+    "overload_min_normal_days": 67,
+    "mean_demand_disruption_vs_normal": 1.27
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 4,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 123,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.27
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 4,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 0,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.27
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 6,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 2553,
+    "overload_min_normal_days": 69,
+    "mean_demand_disruption_vs_normal": 1.47
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 6,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 1049,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.47
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 6,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 89,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.47
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 8,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 4893,
+    "overload_min_normal_days": 76,
+    "mean_demand_disruption_vs_normal": 1.67
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 8,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 2804,
+    "overload_min_normal_days": 2,
+    "mean_demand_disruption_vs_normal": 1.67
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 8,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 614,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.67
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 10,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 5781,
+    "overload_min_normal_days": 79,
+    "mean_demand_disruption_vs_normal": 1.86
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 10,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 4644,
+    "overload_min_normal_days": 4,
+    "mean_demand_disruption_vs_normal": 1.86
+  },
+  {
+    "carrier": "WN",
+    "month": "202212",
+    "rebooking_calls_per_pax": 10,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 1979,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.86
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 2,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 49,
+    "overload_min_normal_days": 108,
+    "mean_demand_disruption_vs_normal": 1.09
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 2,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 3,
+    "overload_min_normal_days": 3,
+    "mean_demand_disruption_vs_normal": 1.09
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 2,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 0,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.09
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 4,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 133,
+    "overload_min_normal_days": 104,
+    "mean_demand_disruption_vs_normal": 1.23
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 4,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 29,
+    "overload_min_normal_days": 3,
+    "mean_demand_disruption_vs_normal": 1.23
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 4,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 0,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.23
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 6,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 639,
+    "overload_min_normal_days": 107,
+    "mean_demand_disruption_vs_normal": 1.38
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 6,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 100,
+    "overload_min_normal_days": 3,
+    "mean_demand_disruption_vs_normal": 1.38
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 6,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 4,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.38
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 8,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 1608,
+    "overload_min_normal_days": 109,
+    "mean_demand_disruption_vs_normal": 1.52
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 8,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 530,
+    "overload_min_normal_days": 3,
+    "mean_demand_disruption_vs_normal": 1.52
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 8,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 32,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.52
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 10,
+    "legacy_headroom": 1.1,
+    "overload_min_disruption_days": 2769,
+    "overload_min_normal_days": 111,
+    "mean_demand_disruption_vs_normal": 1.66
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 10,
+    "legacy_headroom": 1.25,
+    "overload_min_disruption_days": 1306,
+    "overload_min_normal_days": 3,
+    "mean_demand_disruption_vs_normal": 1.66
+  },
+  {
+    "carrier": "DL",
+    "month": "202407",
+    "rebooking_calls_per_pax": 10,
+    "legacy_headroom": 1.5,
+    "overload_min_disruption_days": 115,
+    "overload_min_normal_days": 0,
+    "mean_demand_disruption_vs_normal": 1.66
+  }
+]

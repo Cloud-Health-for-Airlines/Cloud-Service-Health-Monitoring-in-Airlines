@@ -92,13 +92,36 @@ class LiveAirlineSimulator:
 
     def _init_models(self):
         try:
-            from importlib import import_module
-            pred_mod = import_module("cascade-predictor.inference")
-            self._predictor = pred_mod.CascadePredictorInferenceEngine()
-            cb_mod = import_module("circuit-breaker.inference")
-            self._breaker = cb_mod.CircuitBreakerInferenceEngine()
-        except Exception as exc:
-            pass
+            from backend.cloud.sagemaker import SageMakerCascadePredictor
+            self._predictor = SageMakerCascadePredictor()
+        except Exception:
+            try:
+                from importlib import import_module
+                pred_mod = import_module("cascade-predictor.inference")
+                self._predictor = pred_mod.CascadePredictorInferenceEngine()
+            except Exception:
+                self._predictor = None
+
+        try:
+            from backend.cloud.lambda_handler import ppo_inference
+
+            class BreakerWrapper:
+                def choose_action(self, cascade_probability, boundary_sync_drift, gateway_latency_ms=15.0, **kw):
+                    act, thr, reason, _ = ppo_inference.evaluate(
+                        cascade_prob=cascade_probability,
+                        boundary_drift=boundary_sync_drift,
+                        gateway_latency=gateway_latency_ms,
+                    )
+                    return act, thr, reason
+
+            self._breaker = BreakerWrapper()
+        except Exception:
+            try:
+                from importlib import import_module
+                cb_mod = import_module("circuit-breaker.inference")
+                self._breaker = cb_mod.CircuitBreakerInferenceEngine()
+            except Exception:
+                self._breaker = None
 
     def inject_fault(self, fault_type: str, level: str = "high"):
         self.active_fault = fault_type

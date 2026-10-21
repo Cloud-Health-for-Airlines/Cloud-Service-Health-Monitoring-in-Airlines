@@ -15,7 +15,7 @@ import logging
 from pathlib import Path
 import sys
 import time
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict
 from urllib.parse import urlparse
 
@@ -441,7 +441,8 @@ class BACCPRequestHandler(BaseHTTPRequestHandler):
 
 def run_server(host: str = "0.0.0.0", port: int = 8000):
     server_address = (host, port)
-    httpd = HTTPServer(server_address, BACCPRequestHandler)
+    # Threaded: browsers pre-open idle connections that would block a single-threaded server.
+    httpd = ThreadingHTTPServer(server_address, BACCPRequestHandler)
     print(f"BACCP API Server running on http://{host}:{port} (Cloud mode: {config.aws.cloud_mode})")
     try:
         httpd.serve_forever()

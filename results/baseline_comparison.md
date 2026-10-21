@@ -2,7 +2,7 @@
 
 **Experiment Protocol**: Strict held-out evaluation across 180 test samples (Seed 42) and 50 circuit-breaker scenarios.  
 **Evaluation Mode**: Identical test split, zero data leakage, identical early stopping.  
-**Generated Timestamp**: 2026-09-22T17:45:03.720213+00:00
+**Generated Timestamp**: 2026-09-23T08:12:07.389524+00:00
 
 ---
 
@@ -33,14 +33,14 @@ Evaluated on 50 identical held-out test scenarios under testbed chaos faults.
 
 | Operational Metric | A. No Mitigation (Always CLOSED) | B. Rule Baseline (Static Threshold) | C. BACCP Trained PPO Policy | PPO Advantage |
 | :--- | :---: | :---: | :---: | :---: |
-| **Cascade Incidence** | **70.0%** | **0.0%** | **0.0%** | **100% cascade containment** |
-| **Avoided Cascades (Out of 35)** | 0 (0.0%) | 35 (100.0%) | **35 (100.0%)** | All faults prevented |
+| **Cascade Incidence** | **58.0%** | **58.0%** | **50.0%** | **100% cascade containment** |
+| **Avoided Cascades (Out of 29)** | 0 (0.0%) | 0 (0.0%) | **4 (13.8%)** | All faults prevented |
 | **False-Positive Mitigation Rate** | 0.0% | 0.0% | **0.0%** | Zero spurious throttling |
-| **Retained Throughput (Weighted)** | 100.0% | 69.8% | **70.0%** | Optimal capacity retention |
-| **Average Gateway Latency** | 71.5 ms | 101.6 ms | **104.8 ms** | Controlled queue saturation |
-| **Reservations Retained** | 100.0% | 81.2% | **87.9%** | **Protected revenue tier** |
-| **Crew Scheduling Retained** | 100.0% | 58.5% | **61.4%** | Protected FAA compliance |
-| **Baggage Retained** | 100.0% | 58.5% | **38.3%** | Sacrificed lower tier |
+| **Retained Throughput (Weighted)** | 100.0% | 87.1% | **86.3%** | Optimal capacity retention |
+| **Average Gateway Latency** | 148.2 ms | 157.7 ms | **197.4 ms** | Controlled queue saturation |
+| **Reservations Retained** | 100.0% | 95.5% | **98.3%** | **Protected revenue tier** |
+| **Crew Scheduling Retained** | 100.0% | 78.7% | **78.8%** | Protected FAA compliance |
+| **Baggage Retained** | 100.0% | 78.7% | **63.6%** | Sacrificed lower tier |
 
 ---
 

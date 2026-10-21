@@ -606,7 +606,7 @@ Frontend-Compatible JSON Response
 """
 
     md_path = results_dir / "end_to_end_test.md"
-    md_path.write_text(md_content)
+    md_path.write_text(md_content, encoding="utf-8")
     logger.info(f"Saved end-to-end Markdown report to: {md_path}")
 
     logger.info("=================================================================")

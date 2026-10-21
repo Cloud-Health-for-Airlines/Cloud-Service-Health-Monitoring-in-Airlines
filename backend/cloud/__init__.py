@@ -2,7 +2,14 @@
 
 from .cloudwatch import CloudWatchPublisher
 from .config import AWSConfig, BackendConfig, config
-from .lambda_handler import CircuitBreakerManager, breaker_manager, lambda_handler
+from .lambda_handler import (
+    CircuitBreakerManager,
+    LambdaMitigationClient,
+    PPOCircuitBreakerInference,
+    breaker_manager,
+    lambda_handler,
+    ppo_inference,
+)
 from .sagemaker import (
     SageMakerCascadePredictor,
     SageMakerEndpointError,
@@ -28,6 +35,9 @@ __all__ = [
     "SageMakerEndpointError",
     "SNSPublisher",
     "CircuitBreakerManager",
+    "LambdaMitigationClient",
+    "PPOCircuitBreakerInference",
     "breaker_manager",
     "lambda_handler",
+    "ppo_inference",
 ]
