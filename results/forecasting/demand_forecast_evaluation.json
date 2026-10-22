@@ -1,0 +1,60 @@
+{
+  "pipeline_timestamp": "2026-10-22T09:23:31.615898+00:00",
+  "target_variable": "enplaned_passengers",
+  "total_observations": 730,
+  "chronological_splits": {
+    "train_records": 510,
+    "train_start": "2024-01-01 00:00:00",
+    "train_end": "2025-05-24 00:00:00",
+    "val_records": 110,
+    "val_start": "2025-05-25 00:00:00",
+    "val_end": "2025-09-11 00:00:00",
+    "test_records": 110,
+    "test_start": "2025-09-12 00:00:00",
+    "test_end": "2025-12-30 00:00:00"
+  },
+  "models_evaluated": {
+    "LastValueBaseline": {
+      "mae": 293134.38,
+      "rmse": 349146.86,
+      "smape": 13.7,
+      "mape": 15.17
+    },
+    "SeasonalNaiveBaseline_s7": {
+      "mae": 196447.7,
+      "rmse": 236314.3,
+      "smape": 9.12,
+      "mape": 9.76
+    },
+    "LightweightAutoRegressiveForecaster_Ridge": {
+      "mae": 117605.34,
+      "rmse": 177399.17,
+      "smape": 5.83,
+      "mape": 5.54
+    }
+  },
+  "improvement_vs_last_value": {
+    "mae_reduction_pct": 59.88,
+    "rmse_reduction_pct": 49.19
+  },
+  "improvement_vs_seasonal_naive": {
+    "mae_reduction_pct": 40.13,
+    "rmse_reduction_pct": 24.93
+  },
+  "sample_test_forecasts": [
+    2545774.93,
+    2076548.92,
+    2617847.0,
+    2373931.74,
+    2026524.25,
+    2094426.97,
+    2291389.8,
+    2494061.45,
+    2018307.02,
+    2565906.58,
+    2329590.45,
+    1972460.83,
+    2064858.92,
+    2239999.31
+  ]
+}
